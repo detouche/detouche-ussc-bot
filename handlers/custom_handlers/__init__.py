@@ -9,3 +9,4 @@ from . import user_end_assessment
 from . import user_finish
 from . import user_change_assessment
 from . import user_again_assessment
+from . import confirmation

@@ -6,9 +6,8 @@ from handlers.custom_handlers.user_start_evaluation import user_start_evaluation
 from handlers.custom_handlers.user_assessment import user_assessment_process
 from handlers.custom_handlers.user_last_assessment import assessment_last
 from handlers.custom_handlers.user_end_assessment import assessment_end
-from handlers.custom_handlers.user_finish import finish
 from handlers.custom_handlers.user_change_assessment import change_assessment
-from handlers.custom_handlers.user_again_assessment import assessment_again
+from handlers.custom_handlers.confirmation import confirmation_accept
 
 
 @bot.message_handler(content_types=['text'])
@@ -26,8 +25,8 @@ def text_recognizer(message: Message) -> None:
     elif message.text == "Оценить последнюю компетенцию":
         assessment_end(message)
     elif message.text == "Завершить проверку":
-        finish(message)
+        confirmation_accept(message)
     elif message.text == "Изменить оценку":
         change_assessment(message)
     elif message.text == "Заново оценить компетенцию":
-        assessment_again(message)
+        confirmation_accept(message)
