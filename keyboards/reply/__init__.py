@@ -8,3 +8,16 @@ from . import user_end_assessment
 from . import user_change_assessment
 from . import user_again_assessment
 from . import confirmation
+from . import admin_create_session
+from . import admin_successful_creation
+from . import admin_choosing_actions_competencies
+from . import admin_delete_competencies
+from . import admin_change_competencies
+from . import admin_change_competencies_name_or_description
+from . import admin_create_competencies
+from . import admin_choosing_actions_profile
+from . import admin_delete_profile
+from . import admin_change_profile
+from . import admin_change_profile_name_or_competencies
+from . import admin_create_profile
+from . import admin_successful_create_profile

@@ -8,10 +8,28 @@ from handlers.custom_handlers.user_last_assessment import assessment_last
 from handlers.custom_handlers.user_end_assessment import assessment_end
 from handlers.custom_handlers.user_change_assessment import change_assessment
 from handlers.custom_handlers.confirmation import confirmation_accept
+from handlers.custom_handlers.admin_successful_creation_session import successful_creation
+from handlers.custom_handlers.admin_choosing_actions_competencies import choosing_actions_competencies
+from handlers.custom_handlers.admin_create_competencies import add_competencies
+from handlers.custom_handlers.admin_delete_competencies import delete_competencies
+from handlers.custom_handlers.admin_change_competencies import change_competencies
+from handlers.custom_handlers.admin_change_competencies_name_or_description \
+    import change_competencies_name_or_description
+from handlers.custom_handlers.admin_change_competencies_description import change_competencies_description
+from handlers.custom_handlers.admin_change_competencies_name import change_competencies_name
+from handlers.custom_handlers.admin_choosing_actions_profile import choosing_actions_profile
+from handlers.custom_handlers.admin_create_session import create_session
+from handlers.custom_handlers.admin_change_profile import change_profile
+from handlers.custom_handlers.admin_delete_profile import delete_profile
+from handlers.custom_handlers.admin_change_profile_name_or_competencies import change_profile_name_or_competencies
+from handlers.custom_handlers.admin_change_profile_competencies import change_profile_competencies
+from handlers.custom_handlers.admin_change_profile_name import change_profile_name
+from handlers.custom_handlers.admin_create_profile import add_profile
 
 
 @bot.message_handler(content_types=['text'])
 def text_recognizer(message: Message) -> None:
+    # user
     if message.text == "Я пользователь":
         user_start(message)
     elif message.text == "Я админстратор":
@@ -30,3 +48,51 @@ def text_recognizer(message: Message) -> None:
         change_assessment(message)
     elif message.text == "Заново оценить компетенцию":
         confirmation_accept(message)
+    # admin
+    elif message.text == "Создать сессию":
+        create_session(message)
+    elif message.text == "Назад в главное меню":
+        admin_start(message)
+    elif message.text == "Назад в меню компетенций":
+        choosing_actions_competencies(message)
+    elif message.text == "Профили на выбор":
+        successful_creation(message)
+    elif message.text == "Завершить сессию":
+        confirmation_accept(message)
+    elif message.text == "Компетенции":
+        choosing_actions_competencies(message)
+    elif message.text == "Создать компетенцию":
+        add_competencies(message)
+    elif message.text == "Удалить компетенцию":
+        delete_competencies(message)
+    elif message.text == "Выбрать нужную компетенцию":
+        confirmation_accept(message)
+    elif message.text == "Изменить компетенцию":
+        change_competencies(message)
+    elif message.text == "Выбрать компетенцию":
+        change_competencies_name_or_description(message)
+    elif message.text == "Изменить название компетенции":
+        change_competencies_name(message)
+    elif message.text == "Изменить описание компетенции":
+        change_competencies_description(message)
+    elif message.text == "Профили":
+        choosing_actions_profile(message)
+    elif message.text == "Удаление профиля":
+        delete_profile(message)
+    elif message.text == "Выбрать нужный профиль":
+        confirmation_accept(message)
+    elif message.text == "Назад в меню профилей":
+        choosing_actions_profile(message)
+    elif message.text == "Редактировать профили":
+        change_profile(message)
+    elif message.text == "Выбрать профиль":
+        change_profile_name_or_competencies(message)
+    elif message.text == "Изменить название профиля":
+        change_profile_name(message)
+    elif message.text == "Изменить компетенции профиля":
+        change_profile_competencies(message)
+    elif message.text == "Создать профиль":
+        add_profile(message)
+    elif message.text == "Завершить добавление компетенций":
+        choosing_actions_profile(message)
+
