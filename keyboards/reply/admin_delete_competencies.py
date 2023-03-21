@@ -6,5 +6,6 @@ from telebot import types
 
 def admin_delete_competencies():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Выбрать нужную компетенцию'), KeyboardButton('Назад в меню компетенций'))
+    keyboard.add(KeyboardButton('Выбрать нужную компетенцию'),
+                 KeyboardButton('Назад в меню компетенций'))
     return keyboard

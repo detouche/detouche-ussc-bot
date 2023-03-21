@@ -6,5 +6,6 @@ from telebot import types
 
 def admin_change_profile():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Выбрать профиль'), KeyboardButton('Назад в меню профилей'))
+    keyboard.add(KeyboardButton('Выбрать профиль'),
+                 KeyboardButton('Назад в меню профилей'))
     return keyboard
