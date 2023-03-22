@@ -3,7 +3,6 @@ from telebot.types import Message
 
 from handlers.custom_handlers.confirmation import confirmation_accept
 
-from handlers.custom_handlers.user_connection import user_start
 from handlers.custom_handlers.user_start_evaluation import user_start_evaluation_info
 from handlers.custom_handlers.user_assessment import user_assessment_process
 from handlers.custom_handlers.user_last_assessment import assessment_last
@@ -32,17 +31,9 @@ from handlers.custom_handlers.admin_create_profile import add_profile
 
 @bot.message_handler(content_types=['text'])
 def text_recognizer(message: Message) -> None:
-    # role
-
-    if message.text == "Я пользователь":
-        user_start(message)
-
-    elif message.text == "Я админстратор":
-        admin_start(message)
-
     # user session
 
-    elif message.text == "Начать сессию":
+    if message.text == "Начать сессию":
         user_start_evaluation_info(message)
 
     elif message.text == "Начать оценку":
