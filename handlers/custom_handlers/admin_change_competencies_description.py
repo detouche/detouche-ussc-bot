@@ -13,3 +13,4 @@ def change_competencies_description(message: Message) -> None:
     bot.send_message(chat_id=message.from_user.id,
                      text=f'Компетенция, которая была изменена')
     choosing_actions_competencies(message)
+    
