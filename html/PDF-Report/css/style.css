@@ -1,0 +1,325 @@
+html {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    display: table;
+    margin: auto;
+    background-color: #F5F5F5;
+}
+
+html, body {
+    height: 100%;
+}
+
+*,
+::before,
+::after {
+    box-sizing: inherit;
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3 {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+body {
+    background-color: #E6E7E9;
+    margin: 0;
+    padding: 0;
+    min-width: 695px;
+    max-width: 695px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.button-reset {
+    padding: 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: transparent;
+}
+
+.list-reset {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* header */
+
+.general__information_position {
+    justify-content: center;
+}
+
+.general__information {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 17px;
+}
+
+header {
+    padding-top: 17px;
+}
+
+.general__information-block {
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.header__block {
+    background-color: #FFFFFF;
+    padding: 15px 30px 15px 17px;
+    word-break: break-word;
+    color: #181818;
+    font-size: 10px;
+    line-height: 12px;
+    width: 174px;
+}
+
+.flex {
+    display: flex;
+}
+
+.header__block_title {
+    font-weight: 700;
+}
+
+.profile__group {
+    margin-right: auto;
+    max-width: 139px;
+    text-align: left;
+    margin-top: 11px;
+}
+
+.candidate__group {
+    margin-top: 17px;
+    margin-right: auto;
+    max-width: 139px;
+    text-align: left;
+}
+
+.candidate__heading {
+    font-weight: 600;
+}
+
+.candidate__name {
+    margin-top: 4px;
+    font-weight: 400;
+}
+
+.profile__heading {
+    font-weight: 600;
+    margin-bottom: 4px
+}
+
+.profile__name {
+    margin-top: 4px;
+    font-weight: 400;
+}
+
+/* table graph*/
+
+.graph__table_block{
+    width: 360px;
+    background-color: #FFFFFF;
+    margin-left: 12px;
+}
+
+.graph__table_title {
+    margin-top: 15px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    color: #181818;    
+    display: flex;
+    justify-content: center;
+}
+
+.graph__table {
+    margin-top: 16px;
+    border-collapse: collapse;
+    background: linear-gradient(rgba(30, 30, 30, 0.25), rgba(30, 30, 30, 0.25)) no-repeat right/2px 100%;
+}
+
+#graph.graph{   
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#graph .item{
+    margin: 5px 0px;
+}
+
+.graph__line {
+    width: 154px;
+    padding: 0;
+    border-left: 2px solid #303030;
+    background: linear-gradient(rgba(30, 30, 30, 0.25), rgba(30, 30, 30, 0.25)) no-repeat center/2px 100%;
+}
+
+#graph.horizontal .item{
+    height: 23px;
+    max-width: 153px;
+}
+
+.graph__text {
+    width: 102px;
+    margin-right: 12px;
+    text-align: right;
+    font-weight: 500;
+    font-size: 8px;
+    line-height: 10px;
+    color: #303030;
+    word-break: break-word;
+}
+
+.line__signatures-position {
+    justify-content: right;
+    margin-right: 48px;
+}
+
+.line__signatures-text {
+    color: #A6A6A6;
+    font-size: 7px;
+    font-weight: 500;
+    line-height: 10px;
+    margin-left: 60px;
+}
+
+.circle__figure {
+    width: 9px; 
+    height: 9px;
+    border-radius: 50%;
+}
+
+.circle {
+    justify-content: center;
+    margin-bottom: 34px;
+}
+
+.circle__group {
+    margin-right: 12px;
+    margin-top: 14px;
+}
+
+.circle__text {
+    font-size: 7px;
+    font-weight: 500;
+    line-height: 9px;
+    text-align: left;
+    margin-left: 8px;
+}
+
+/* Competency assessments */
+
+main {
+    padding-bottom: 26px;
+}
+
+.evaluating__list{
+    text-align: center;
+}
+
+.competency__assessments {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 17px;
+}
+
+.competency__assessments_position {
+    margin-top: 11px;
+    justify-content: center;
+}
+
+.evaluating__block {
+    width: 174px;
+    background-color: #FFFFFF;
+    padding: 10px 13px 0px 13px;
+}
+
+.evaluating__name {
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 13px;
+    color: #000000;
+    justify-content: center;
+    display: flex;
+    width: 148px;
+    word-break: break-word;
+    align-items: center;
+}
+
+.evaluating__competency {
+    margin-top: 16px;
+}
+
+.evaluating__competency_name {
+    width: 88px;
+    font-size: 7px;
+    font-weight: 500;
+    line-height: 9px;
+    text-align: left;
+    color: #303030;
+    word-break: break-word;
+}
+
+.evaluating__competency_value {
+    margin-left: 8px;
+    color: #FFFFFF;
+    font-size: 7px;
+    font-weight: 500;
+    line-height: 9px;
+    text-align: right;
+    width: 52px;
+    word-break: break-word;
+    text-align: center;
+    padding: 4px 4px;
+}
+
+.evaluating__block_line {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 9px;
+    margin-bottom: 9px;
+}
+
+.evaluating__table { 
+    border-spacing: 0px 13px;
+}
+
+.evaluating__competency_name_position {
+    vertical-align: middle;
+}
+
+.evaluating_card {
+    position: relative;
+    display: inline-block;
+    margin-top: 12px;
+    margin-right: 8px;
+    vertical-align: bottom;
+}
+
+.evaluating_card:last-child {
+    margin-right: 0;
+}
+
+.evaluating_card:nth-child(3n) {
+    margin-right: 0;
+}
