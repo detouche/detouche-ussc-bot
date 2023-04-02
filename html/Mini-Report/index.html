@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mini-report</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="flex header__block">
+            <div class="candidate__group">
+                <p class="candidate__heading">
+                    Кандидат
+                </p>
+                <p class="candidate__name">
+                    Анна Королева Сергеевна
+                </p>
+            </div>
+            <div class="profile__group"> 
+                <p class="profile__heading">
+                    Профиль
+                </p>
+                <p class="profile__name">
+                    HR-руководитель
+                </p>
+            </div>
+        </div>
+    </header>
+    <main>
+        <table id="graph" class="graph horizontal">
+            <tr>
+                <td>
+                    <p class="graph__text">Управленческие навыки</p>
+                </td>
+                <td class="graph__line">
+                    <div class="item" style="width:100%;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="graph__text">Умение планировать и организовывать</p>
+                </td>
+                <td class="graph__line">
+                    <div class="item" style="width:100%;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="graph__text">Креативность</p>
+                </td>
+                <td class="graph__line">
+                    <div class="item" style="width:76%;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="graph__text">Умение анализировать данные</p>
+                </td>
+                <td class="graph__line">
+                    <div class="item" style="width:58%;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="graph__text">Опыт в области HR</p>
+                </td>
+                <td class="graph__line">
+                    <div class="item" style="width:9%;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="graph__text">Навыки коммуникации</p>
+                </td>
+                <td class="graph__line">
+                    <div class="item" style="width:20%;"></div>
+                </td>
+            </tr>    
+                          
+        </table>
+        <div class="flex line__signatures-position">
+            <p class="line__signatures-text">
+                &#60; Частично 
+            </p>
+            <p class="line__signatures-text">
+                &#60; Да
+            </p>
+        </div>  
+    </main>
+    <footer>
+        <div class="circle flex">
+            <div class="flex circle__group">
+                <div class="circle__figure" style="background-color: #E44747;"></div>
+                <p class="circle__text">
+                    Нет
+                </p>
+            </div>
+            <div class="flex circle__group">
+                <div class="circle__figure" style="background-color: #FFB82E;"></div>
+                <p class="circle__text">
+                    Частично
+                </p>
+            </div>
+            <div class="flex circle__group">
+                <div class="circle__figure" style="background-color: #5DB56B;"></div>
+                <p class="circle__text"> 
+                    Да
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        let items = document.querySelectorAll('.item');
+        for (var i=0; i < items.length; i++) {
+            var item = items[i];
+            var width = item.style.getPropertyValue("width").replace('%', '');
+
+            if (width >= 100 && width != ''){
+                item.style.background = '#5DB56B';
+            } else if (width >= 50 && width != '') {
+                item.style.background = '#FFB82E';
+            } else if(width < 50 && width != ''){
+                item.style.background = '#E44747';
+            }
+        }
+    </script>
+</body>
+</html>
