@@ -660,21 +660,21 @@
     </script>
     <!--color estimation-->
     <script>
-        let stimations = document.querySelectorAll('.evaluating__competency_value');
-        for (var i=0; i < stimations.length; i++) {
-            var stimation = stimations[i];
-            var color = stimation.innerText;
+        let grades = document.querySelectorAll('.evaluating__competency_value');
+        for (var i=0; i < grades.length; i++) {
+            var grade = grades[i];
+            var color = grade.innerText;
             if (color === "Нет"){
-                stimation.style.background = '#E44747';
+                grade.style.background = '#E44747';
             }
             else if (color === "Да"){
-                stimation.style.background = '#5DB56B';
+                grade.style.background = '#5DB56B';
             }
             else if (color === "Частично"){
-                stimation.style.background = '#FAB021';
+                grade.style.background = '#FAB021';
             }
             else if (color === "Без оценки"){
-                stimation.style.background = '#3E3E3E';
+                grade.style.background = '#3E3E3E';
             }
         }
     </script>
