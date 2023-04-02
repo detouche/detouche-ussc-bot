@@ -119,8 +119,8 @@ table {
 #graph.graph{   
     margin-left: auto;
     margin-right: auto;
-
 }
+
 #graph .item{
     margin: 14px 0px;
 }
@@ -130,7 +130,6 @@ table {
     padding: 0;
     border-left: 2px solid #303030;
     background: linear-gradient(rgba(30, 30, 30, 0.25), rgba(30, 30, 30, 0.25)) no-repeat center/2px 100%;
-    
 }
 
 #graph.horizontal .item{
