@@ -1,8 +1,10 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def admin_successful_create_profile():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Завершить добавление компетенций'))
-    return keyboard
+admin_successful_create_profile = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Завершить добавление компетенций'),
+        ]
+    ],
+    resize_keyboards=True
+)

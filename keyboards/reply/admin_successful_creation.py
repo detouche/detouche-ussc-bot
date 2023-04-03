@@ -1,8 +1,10 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def admin_successful_creation():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Завершить сессию'))
-    return keyboard
+admin_successful_creation = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Завершить сессию'),
+        ]
+    ],
+    resize_keyboards=True
+)

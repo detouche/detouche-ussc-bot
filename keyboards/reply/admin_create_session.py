@@ -1,10 +1,12 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def admin_create_session():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Профили на выбор'),
-                 KeyboardButton('Назад в главное меню'))
-    return keyboard
+admin_create_session = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Профили на выбор'),
+            KeyboardButton(text='Назад в главное меню')
+        ]
+    ],
+    resize_keyboards=True
+)
 

@@ -29,7 +29,7 @@ from handlers.custom_handlers.admin_change_profile_name import change_profile_na
 from handlers.custom_handlers.admin_create_profile import add_profile
 
 
-@bot.message_handler(content_types=['text'])
+#@bot.message_handler(content_types=['text'])
 def text_recognizer(message: Message) -> None:
     # user session
 

@@ -11,3 +11,13 @@ def assessment_end(message: Message) -> None:
     bot.send_message(chat_id=message.from_user.id,
                      text=f'Данные кандидата + все проставленные оценки',
                      reply_markup=user_end_assessment())
+
+
+@rt.message(Text('Начать оценку'))
+async def user_start_evaluation_info(message: types.Message):
+    await message.answer(text=f'Информация о кандидате:\n'
+                              f'— ФИО\n'
+                              f'— Профиль\n'
+                              f'— Компетенции\n'
+                              f'Методичка по оценкам',
+                         reply_markup=user_start_evaluation)

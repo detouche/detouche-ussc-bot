@@ -1,10 +1,12 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def confirmation():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Да'),
-                 KeyboardButton('Нет'))
-    return keyboard
+confirmation = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Да'),
+            KeyboardButton(text='Нет')
+        ]
+    ],
+    resize_keyboards=True
+)
 

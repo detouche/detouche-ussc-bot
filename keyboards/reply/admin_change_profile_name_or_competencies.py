@@ -1,9 +1,10 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def admin_change_profile_name_or_competencies():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Изменить компетенции профиля'),
-                 KeyboardButton('Изменить название профиля'))
-    return keyboard
+admin_change_profile_name_or_competencies = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Изменить компетенции профиля'),
+            KeyboardButton(text='Изменить название профиля')],
+],
+    resize_keyboards=True
+)

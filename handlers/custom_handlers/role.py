@@ -15,7 +15,7 @@ from handlers.custom_handlers.admin_connection import admin_start
 ADMINS = [642205779, 6290014843, 755950556, 372233735, 476994720]
 
 
-@bot.message_handler(commands=['start'])
+#@bot.message_handler(commands=['start'])
 def role(message: Message) -> None:
     bot.send_message(chat_id=message.from_user.id,
                      text=f'Твой ID: {message.from_user.id}')

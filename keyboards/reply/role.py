@@ -1,10 +1,11 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def get_role():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Я админстратор'),
-                 KeyboardButton('Я пользователь'))
-    return keyboard
-
+role = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Я администратор'),
+            KeyboardButton(text='Я пользователь')
+        ]
+    ],
+    resize_keyboards=True
+)
