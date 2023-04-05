@@ -12,7 +12,6 @@ from handlers.custom_handlers.role import admin_command
 @rt.message(Text('Назад в меню профилей'))
 async def choosing_actions_profile(message: types.Message):
     await message.answer(text=f'Информация про существующие профили:\n'
-                          f'— Названия\n'
-                          f'— Компетенции',
+                              f'— Названия\n'
+                              f'— Компетенции',
                          reply_markup=admin_choosing_actions_profile)
-

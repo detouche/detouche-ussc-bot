@@ -13,3 +13,4 @@ async def successful_creation(message: types.Message):
     await message.answer(text=f'Успешное создание \n'
                               f'Код для присоединения к сессии',
                          reply_markup=admin_successful_creation)
+

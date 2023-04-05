@@ -34,7 +34,6 @@ async def admin_command(func):
                            reply_markup=types.ReplyKeyboardRemove())
             return
         return func(message, *args, **kwargs)
-
     return wrapped
 
 
@@ -46,5 +45,4 @@ def user_command(func):
                            reply_markup=types.ReplyKeyboardRemove())
             return
         return func(message, *args, **kwargs)
-
     return wrapped

@@ -5,6 +5,6 @@ admin_change_competencies_name_or_description = ReplyKeyboardMarkup(
         [
             KeyboardButton(text='Изменить описание компетенции'),
             KeyboardButton(text='Изменить название компетенции')],
-],
+    ],
     resize_keyboard=True
 )
