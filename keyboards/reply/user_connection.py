@@ -1,8 +1,10 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def user_connection():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Начать сессию'))
-    return keyboard
+user_connection = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Начать сессию'),
+        ]
+    ],
+    resize_keyboard=True
+)

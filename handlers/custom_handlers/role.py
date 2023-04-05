@@ -1,6 +1,6 @@
-from loader import bot
-from telebot.types import Message
-from telebot import types
+from loader import rt
+from aiogram import types
+from aiogram.filters import Command
 
 from handlers.custom_handlers.user_connection import user_start
 
@@ -15,25 +15,23 @@ from handlers.custom_handlers.admin_connection import admin_start
 ADMINS = [642205779, 6290014843, 755950556, 372233735, 476994720]
 
 
-@bot.message_handler(commands=['start'])
-def role(message: Message) -> None:
-    bot.send_message(chat_id=message.from_user.id,
-                     text=f'Твой ID: {message.from_user.id}')
+@rt.message(Command("start"))
+async def role(message: types.Message):
+    await message.answer(text=f'Твой ID: {message.from_user.id}')
 
     customer_id = message.from_user.id
     if customer_id in ADMINS:
-        admin_start(message)
+        await admin_start(message)
     else:
-        user_start(message)
+        await user_start(message)
 
 
-def admin_command(func):
+async def admin_command(func):
     def wrapped(message, *args, **kwargs):
         customer_id = message.from_user.id
         if customer_id not in ADMINS:
-            bot.send_message(chat_id=message.from_user.id,
-                             text=f'Нет прав',
-                             reply_markup=types.ReplyKeyboardRemove())
+            message.answer(text=f'Нет прав',
+                           reply_markup=types.ReplyKeyboardRemove())
             return
         return func(message, *args, **kwargs)
     return wrapped
@@ -43,9 +41,8 @@ def user_command(func):
     def wrapped(message, *args, **kwargs):
         customer_id = message.from_user.id
         if customer_id in ADMINS:
-            bot.send_message(chat_id=message.from_user.id,
-                             text=f'Нет прав',
-                             reply_markup=types.ReplyKeyboardRemove())
+            message.answer(text=f'Нет прав',
+                           reply_markup=types.ReplyKeyboardRemove())
             return
         return func(message, *args, **kwargs)
     return wrapped

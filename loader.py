@@ -1,6 +1,8 @@
-from telebot import TeleBot
-from telebot.storage import StateMemoryStorage
+import aiogram
+import asyncio
+from aiogram import Bot, Router
+
 from config_data import config
 
-storage = StateMemoryStorage()
-bot = TeleBot(token=config.BOT_TOKEN, state_storage=storage)
+bot = Bot(token=config.BOT_TOKEN, parse_mode="HTML")
+rt = Router()

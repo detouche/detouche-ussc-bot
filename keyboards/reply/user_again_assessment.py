@@ -1,8 +1,10 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def user_again_assessment():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Заново оценить компетенцию'))
-    return keyboard
+user_assessment_again = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Заново оценить компетенцию'),
+        ]
+    ],
+    resize_keyboard=True
+)

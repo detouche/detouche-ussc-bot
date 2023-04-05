@@ -1,11 +1,11 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-# Временная кнопка
-
-
-def admin_delete_profile():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Выбрать нужный профиль'),
-                 KeyboardButton('Назад в меню профилей'))
-    return keyboard
+admin_delete_profile = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Выбрать нужный профиль'),
+            KeyboardButton(text='Назад в меню профилей')
+        ]
+    ],
+    resize_keyboard=True
+)

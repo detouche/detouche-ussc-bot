@@ -1,9 +1,10 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def admin_create_competencies():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Назад в меню компетенций'))
-    return keyboard
+admin_create_competencies = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Назад в меню компетенций')]
+    ],
+    resize_keyboard=True
+)
 

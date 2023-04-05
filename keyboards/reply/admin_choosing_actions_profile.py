@@ -1,11 +1,12 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-
-def admin_choosing_actions_profile():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Удаление профиля'),
-                 KeyboardButton('Создать профиль'),
-                 KeyboardButton('Редактировать профили'),
-                 KeyboardButton('Назад в главное меню'))
-    return keyboard
+admin_choosing_actions_profile = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Удалить профиль'),
+            KeyboardButton(text='Создать профиль'),
+            KeyboardButton(text='Назад в главное меню'),
+            KeyboardButton(text='Редактировать профиль')],
+    ],
+    resize_keyboard=True
+)

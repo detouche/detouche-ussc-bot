@@ -15,3 +15,4 @@ def finish(message: Message) -> None:
                          reply_markup=types.ReplyKeyboardRemove())
     elif message.text == 'Нет':
         assessment_end(message)
+

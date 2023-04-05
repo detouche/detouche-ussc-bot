@@ -1,11 +1,11 @@
-from telebot.types import KeyboardButton
-from telebot import types
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-# Временная кнопка
-
-
-def admin_delete_competencies():
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    keyboard.add(KeyboardButton('Выбрать нужную компетенцию'),
-                 KeyboardButton('Назад в меню компетенций'))
-    return keyboard
+admin_delete_competencies = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Выбрать нужную компетенцию'),
+            KeyboardButton(text='Назад в меню компетенций')
+        ]
+    ],
+    resize_keyboard=True
+)
