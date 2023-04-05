@@ -6,6 +6,6 @@ admin_create_profile = ReplyKeyboardMarkup(
             KeyboardButton(text='Назад в меню профилей'),
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )
 

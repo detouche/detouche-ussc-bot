@@ -6,5 +6,5 @@ user_connection = ReplyKeyboardMarkup(
             KeyboardButton(text='Начать сессию'),
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

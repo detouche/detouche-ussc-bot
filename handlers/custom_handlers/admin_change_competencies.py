@@ -1,5 +1,6 @@
-from loader import bot
-from telebot.types import Message
+from loader import rt
+from aiogram import types
+from aiogram.filters import Text
 
 from keyboards.reply.admin_change_competencies import admin_change_competencies
 
@@ -7,8 +8,7 @@ from handlers.custom_handlers.role import admin_command
 
 
 @admin_command
-def change_competencies(message: Message) -> None:
-    bot.send_message(chat_id=message.from_user.id,
-                     text=f'Выбор нужной компетенции',
-                     reply_markup=admin_change_competencies())
-
+@rt.message(Text('Изменить компетенцию'))
+async def change_competencies(message: types.Message):
+    await message.answer(text=f'Введите данные о компетенции',
+                         reply_markup=admin_change_competencies)

@@ -6,5 +6,5 @@ user_last_assessment = ReplyKeyboardMarkup(
             KeyboardButton(text='Оценить последнюю компетенцию'),
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

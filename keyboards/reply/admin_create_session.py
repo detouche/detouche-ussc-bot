@@ -7,6 +7,6 @@ admin_create_session = ReplyKeyboardMarkup(
             KeyboardButton(text='Назад в главное меню')
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )
 

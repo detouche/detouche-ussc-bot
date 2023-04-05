@@ -6,5 +6,5 @@ user_start_evaluation = ReplyKeyboardMarkup(
             KeyboardButton(text='Начать оценку')
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

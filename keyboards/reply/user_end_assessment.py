@@ -7,5 +7,5 @@ user_end_assessment = ReplyKeyboardMarkup(
             KeyboardButton(text='Завершить проверку')
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

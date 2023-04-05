@@ -6,5 +6,5 @@ admin_successful_create_profile = ReplyKeyboardMarkup(
             KeyboardButton(text='Завершить добавление компетенций'),
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

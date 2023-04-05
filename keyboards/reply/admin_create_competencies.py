@@ -5,6 +5,6 @@ admin_create_competencies = ReplyKeyboardMarkup(
         [
             KeyboardButton(text='Назад в меню компетенций')]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )
 

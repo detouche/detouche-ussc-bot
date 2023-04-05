@@ -6,5 +6,5 @@ admin_change_competencies = ReplyKeyboardMarkup(
             KeyboardButton(text='Выбрать компетенцию'),
             KeyboardButton(text='Назад в меню компетенций')],
 ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

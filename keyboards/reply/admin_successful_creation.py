@@ -6,5 +6,5 @@ admin_successful_creation = ReplyKeyboardMarkup(
             KeyboardButton(text='Завершить сессию'),
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

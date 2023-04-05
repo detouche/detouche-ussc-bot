@@ -7,6 +7,6 @@ confirmation = ReplyKeyboardMarkup(
             KeyboardButton(text='Нет')
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )
 

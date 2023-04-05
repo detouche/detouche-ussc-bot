@@ -8,5 +8,5 @@ admin_choosing_actions_profile = ReplyKeyboardMarkup(
             KeyboardButton(text='Назад в главное меню'),
             KeyboardButton(text='Редактировать профиль')],
 ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

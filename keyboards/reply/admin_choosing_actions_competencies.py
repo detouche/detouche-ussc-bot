@@ -8,5 +8,5 @@ admin_choosing_actions_competencies = ReplyKeyboardMarkup(
             KeyboardButton(text='Назад в главное меню'),
             KeyboardButton(text='Создать компетенцию')],
 ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

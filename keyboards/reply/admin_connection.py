@@ -5,8 +5,8 @@ admin_connection = ReplyKeyboardMarkup(
         [
             KeyboardButton(text='Компетенции'),
             KeyboardButton(text='Создать сессию'),
-            KeyboardButton(text='Профили')],
-],
-    resize_keyboards=True
+            KeyboardButton(text='Профили')
+        ]
+    ],
+    resize_keyboard=True
 )
-

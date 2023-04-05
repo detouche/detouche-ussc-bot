@@ -7,5 +7,5 @@ role = ReplyKeyboardMarkup(
             KeyboardButton(text='Я пользователь')
         ]
     ],
-    resize_keyboards=True
+    resize_keyboard=True
 )

@@ -1,10 +1,9 @@
-from loader import bot
-from telebot.types import Message
+from loader import rt
+from aiogram import types
 
 from keyboards.reply.user_connection import user_connection
 
 
-def user_start(message: Message) -> None:
-    bot.send_message(chat_id=message.from_user.id,
-                     text=f'Ввод кода сессии',
-                     reply_markup=user_connection())
+async def user_start(message: types.Message):
+    await message.answer(text=f'Ввод кода сессии',
+                         reply_markup=user_connection)
