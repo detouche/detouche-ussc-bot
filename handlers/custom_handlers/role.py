@@ -1,3 +1,5 @@
+from aiogram.fsm.context import FSMContext
+
 from loader import rt
 from aiogram import types
 from aiogram.filters import Command
@@ -5,6 +7,7 @@ from aiogram.filters import Command
 from handlers.custom_handlers.user_connection import user_start
 
 from handlers.custom_handlers.admin_connection import admin_start
+
 
 # Никита - 755950556
 # Миша - 642205779
@@ -16,14 +19,15 @@ ADMINS = [642205779, 6290014843, 755950556, 372233735, 476994720]
 
 
 @rt.message(Command("start"))
-async def role(message: types.Message):
+async def role(message: types.Message, state: FSMContext):
     await message.answer(text=f'Твой ID: {message.from_user.id}')
 
     customer_id = message.from_user.id
     if customer_id in ADMINS:
         await admin_start(message)
     else:
-        await user_start(message)
+        await state.clear()
+        await user_start(message, state)
 
 
 async def admin_command(func):
