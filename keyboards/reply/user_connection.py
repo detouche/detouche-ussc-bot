@@ -4,6 +4,7 @@ user_connection = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text='Начать сессию'),
+            KeyboardButton(text='Изменить имя')
         ]
     ],
     resize_keyboard=True
