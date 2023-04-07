@@ -11,9 +11,14 @@ def db_table_val(competencies_id: int, competencies_name: str, competencies_text
     conn.commit()
 
 
-def auth_validation(current_id):
+def auth_validation(current_id: int):
     exists = cursor.execute("SELECT id FROM login_id WHERE id = ?", [current_id]).fetchone()
     return True if exists else False
+
+
+def user_rename(current_id: int, user_name: str):
+    cursor.execute("UPDATE login_id SET login = ? WHERE id = ?", (user_name, current_id))
+    conn.commit()
 
 
 def user_register(current_id: int, user_name: str):
