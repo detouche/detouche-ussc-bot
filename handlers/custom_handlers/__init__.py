@@ -27,3 +27,6 @@ from . import admin_change_profile_name_or_competencies
 from . import admin_change_profile_name
 from . import admin_change_profile_competencies
 from . import admin_create_profile
+from . import main_admin_delete_or_add_admin
+from . import main_admin_delete_admin
+from . import main_admin_add_admin
