@@ -27,7 +27,7 @@ def user_rename(current_id: int, user_name: str):
 
 
 def get_user_list():
-    cursor.execute('SELECT * FROM login_id')
+    cursor.execute('SELECT * FROM login_id ORDER BY login')
     users_list = list(map(lambda x: x, cursor.fetchall()))
     return users_list
 
@@ -59,4 +59,16 @@ def main_admin_add_admin(current_id: int, admin_name: str):
         admin_id = current_id
         admin_name = admin_name
         cursor.execute("INSERT INTO admin VALUES(?,?)", (admin_id, admin_name))
+        cursor.execute("SELECT * FROM admin ORDER BY admin_name")
         conn.commit()
+
+
+def get_admins_list(element):
+    cursor.execute('SELECT * FROM admin ORDER BY admin_name')
+    admins_list = list(map(lambda x: x[element], cursor.fetchall()))
+    return admins_list
+
+
+def main_admin_delete_admin(admin_id):
+    cursor.execute(f"DELETE FROM admin where id = {admin_id}")
+    conn.commit()

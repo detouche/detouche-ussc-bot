@@ -5,6 +5,8 @@ main_admin_delete_or_add_admin = ReplyKeyboardMarkup(
         [
             KeyboardButton(text='Добавить администратора'),
             KeyboardButton(text='Удалить администратора'),
+        ],
+        [
             KeyboardButton(text='Назад в главное меню')
         ]
     ],

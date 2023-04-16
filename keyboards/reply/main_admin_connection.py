@@ -6,6 +6,8 @@ main_admin_connection = ReplyKeyboardMarkup(
             KeyboardButton(text='Компетенции'),
             KeyboardButton(text='Создать сессию'),
             KeyboardButton(text='Профили'),
+        ],
+        [
             KeyboardButton(text='Администраторы')
         ]
     ],
