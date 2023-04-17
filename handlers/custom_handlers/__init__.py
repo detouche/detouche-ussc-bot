@@ -9,7 +9,6 @@ from . import user_end_assessment
 from . import user_finish
 from . import user_change_assessment
 from . import user_again_assessment
-from . import confirmation
 from . import admin_create_session
 from . import admin_successful_creation_session
 from . import admin_end_session

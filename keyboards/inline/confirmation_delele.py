@@ -8,13 +8,13 @@ def get_keyboard_confirmation():
         [
             InlineKeyboardButton(text=f"Да",
                                  callback_data=Confirmation(
-                                     action="confirmation",
+                                     action="confirmation_delete",
                                      confirmation_choice=True).pack())
         ],
         [
             InlineKeyboardButton(text=f"Нет",
                                  callback_data=Confirmation(
-                                     action="confirmation",
+                                     action="confirmation_delete",
                                      confirmation_choice=False).pack())
         ]
     ]
