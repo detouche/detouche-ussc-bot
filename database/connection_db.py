@@ -64,6 +64,11 @@ def main_admin_add_admin(current_id: int, admin_name: str):
 
 
 def get_admins_list(element):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS login_id(
+                            id INTEGER, 
+                            login TEXT
+                        )""")
+    conn.commit()
     cursor.execute('SELECT * FROM admin ORDER BY admin_name')
     admins_list = list(map(lambda x: x[element], cursor.fetchall()))
     return admins_list
