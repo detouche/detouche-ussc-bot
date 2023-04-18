@@ -5,7 +5,6 @@ from aiogram.filters import Text
 
 from keyboards.reply.user_connection import user_connection
 
-
 from database.connection_db import user_register, auth_validation, user_rename
 
 from states.user_info import User
@@ -31,6 +30,7 @@ async def user_enter_name(message: types.Message, state: FSMContext):
     await state.clear()
     user_register(current_id, user_data['name'])
     await user_start(message, state)
+
 
 @rt.message(Text('Изменить имя'))
 async def user_want_rename(message: types.Message, state: FSMContext):
