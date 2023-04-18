@@ -7,7 +7,6 @@ from handlers.custom_handlers.user_connection import user_start
 
 from handlers.custom_handlers.admin_connection import admin_start
 
-from handlers.custom_handlers.main_admin_connection import main_admin_start
 
 from database.connection_db import get_admins_list
 
@@ -29,40 +28,43 @@ async def role(message: types.Message, state: FSMContext):
     if customer_id in get_admins_list(0):
         await admin_start(message)
     elif customer_id in MAIN_ADMINS:
-        await main_admin_start(message)
+        await admin_start(message)
     else:
         await state.clear()
         await user_start(message, state)
 
 
-async def admin_command(func):
-    def wrapped(message, *args, **kwargs):
+def admin_command(func):
+    async def wrapped(message):
         customer_id = message.from_user.id
         if customer_id not in get_admins_list(0):
-            message.answer(text=f'Нет прав',
-                           reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(text=f'Нет прав',
+                                 reply_markup=types.ReplyKeyboardRemove())
             return
-        return func(message, *args, **kwargs)
+        await func(message)
+
     return wrapped
 
 
 def user_command(func):
-    def wrapped(message, *args, **kwargs):
+    async def wrapped(message):
         customer_id = message.from_user.id
         if customer_id in get_admins_list(0):
-            message.answer(text=f'Нет прав',
-                           reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(text=f'Нет прав',
+                                 reply_markup=types.ReplyKeyboardRemove())
             return
-        return func(message, *args, **kwargs)
+        await func(message)
+
     return wrapped
 
 
-async def main_admin_command(func):
-    def wrapped(message, *args, **kwargs):
+def main_admin_command(func):
+    async def wrapped(message, state):
         customer_id = message.from_user.id
         if customer_id not in MAIN_ADMINS:
-            message.answer(text=f'Нет прав',
-                           reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(text=f'Нет прав',
+                                 reply_markup=types.ReplyKeyboardRemove())
             return
-        return func(message, *args, **kwargs)
+        await func(message, state)
+
     return wrapped
