@@ -43,6 +43,7 @@ async def delete_admin_confirmation(callback: CallbackQuery, callback_data: Conf
         main_admin_delete_admin(admin_id)
         await delete_admin_keyboard(callback.message, state)
     else:
+        await callback.message.delete()
         await delete_admin_keyboard(callback.message, state)
 
 

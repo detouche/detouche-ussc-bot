@@ -47,6 +47,7 @@ async def add_admin_confirmation(callback: CallbackQuery, callback_data: Confirm
             main_admin_add_admin(user_id, user_name)
         await add_admin_keyboard(callback.message, state)
     else:
+        await callback.message.delete()
         await add_admin_keyboard(callback.message, state)
 
 

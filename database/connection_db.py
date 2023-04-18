@@ -81,11 +81,9 @@ def main_admin_delete_admin(admin_id):
 
 def get_admins_name_for_id(current_id):
     admin_name = cursor.execute(f'SELECT admin_name FROM admin WHERE id = {current_id}').fetchone()
-    admin_name = ''.join(e for e in admin_name if e.isalnum())
-    return admin_name
+    return admin_name[0]
 
 
 def get_user_name_for_id(current_id):
     user_name = cursor.execute(f'SELECT login FROM login_id WHERE id = {current_id}').fetchone()
-    user_name = ''.join(e for e in user_name if e.isalnum())
-    return user_name
+    return user_name[0]
