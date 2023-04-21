@@ -1,8 +1,29 @@
 import sqlite3
 
-
 conn = sqlite3.connect('database/database.db', check_same_thread=False)
 cursor = conn.cursor()
+
+
+def sqlite_lower(value_):
+    return value_.lower()
+
+
+def sqlite_upper(value_):
+    return value_.upper()
+
+
+def ignore_case_collation(value1_, value2_):
+    if value1_.lower() == value2_.lower():
+        return 0
+    elif value1_.lower() < value2_.lower():
+        return -1
+    else:
+        return 1
+
+
+conn.create_collation("NOCASE", ignore_case_collation)
+conn.create_function("LOWER", 1, sqlite_lower)
+conn.create_function("UPPER", 1, sqlite_upper)
 
 
 def db_table_val(competencies_id: int, competencies_name: str, competencies_text: str):
@@ -64,6 +85,11 @@ def main_admin_add_admin(current_id: int, admin_name: str):
 
 
 def get_admins_list(element):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS admin(
+                          id INTEGER, 
+                          admin_name TEXT
+                      )""")
+    conn.commit()
     cursor.execute('SELECT * FROM admin ORDER BY admin_name')
     admins_list = list(map(lambda x: x[element], cursor.fetchall()))
     return admins_list
@@ -72,3 +98,58 @@ def get_admins_list(element):
 def main_admin_delete_admin(admin_id):
     cursor.execute(f"DELETE FROM admin where id = {admin_id}")
     conn.commit()
+
+
+def add_competence(title, description):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS competencies(
+                            id INTEGER PRIMARY KEY,
+                            title TEXT, 
+                            description TEXT
+                        )""")
+    conn.commit()
+    cursor.execute("INSERT INTO competencies(title, description) VALUES(?,?)", (title, description))
+    conn.commit()
+
+
+def check_competence(title):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS competencies(
+                                id INTEGER PRIMARY KEY,
+                                title TEXT, 
+                                description TEXT
+                            )""")
+    conn.commit()
+    status = cursor.execute(f"SELECT title FROM competencies WHERE title = '{title.casefold()}'").fetchone()
+    if status is None:
+        return True
+    else:
+        return False
+
+
+def delete_competence(id):
+    status = cursor.execute(f"SELECT id FROM competencies WHERE id = '{id}'").fetchone()
+    if status is None:
+        return False
+    else:
+        cursor.execute(f"DELETE FROM competencies WHERE id='{id}'")
+        conn.commit()
+        return True
+
+
+def get_competencies_list():
+    cursor.execute("""CREATE TABLE IF NOT EXISTS competencies(
+                                    id INTEGER PRIMARY KEY,
+                                    title TEXT, 
+                                    description TEXT
+                                )""")
+    conn.commit()
+    cursor.execute('SELECT id, title FROM competencies')
+    competencies_list = cursor.fetchall()
+    return competencies_list
+
+
+def get_competence_description(id):
+    description = cursor.execute(f"SELECT description FROM competencies WHERE id = '{id}'").fetchone()
+    if description is None:
+        return False
+    else:
+        return description

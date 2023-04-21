@@ -1,15 +1,36 @@
 from loader import rt
-from aiogram import types
+from aiogram import types, F
 from aiogram.filters import Text
+from aiogram.fsm.context import FSMContext
+from aiogram.types import CallbackQuery
 
-from handlers.custom_handlers.admin_choosing_actions_competencies import choosing_actions_competencies
 from keyboards.reply.admin_delete_competencies import admin_delete_competencies
+from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
 
 from handlers.custom_handlers.role import admin_command
 
+from states.competencies import Competence
 
-@admin_command
+from database.connection_db import delete_competence, get_competencies_list
+
+
 @rt.message(Text('Удалить компетенцию'))
-async def delete_competencies(message: types.Message):
-    await message.answer(text=f'Компетенция удалена',
+async def delete_competencies(message: types.Message, state: FSMContext):
+    await state.set_state(Competence.delete)
+    data_list = get_competencies_list()
+    comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_list)))
+    await message.answer(text=f'Введите ID компетенции, которую необходимо удалить. \n'
+                              f'Список всех имеющихся компетенций: \n{comp_list}',
                          reply_markup=admin_delete_competencies)
+
+
+@rt.message(Competence.delete)
+async def delete_competence_handler(message: types.Message, state: FSMContext):
+    if delete_competence(message.text):
+        await message.answer(text="Компетенция успешно удалена",
+                             reply_markup=admin_choosing_actions_competencies)
+    else:
+
+        await message.answer(text='Такого ID компетенции не существует!',
+                             reply_markup=admin_choosing_actions_competencies)
+    await state.clear()

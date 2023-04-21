@@ -18,7 +18,7 @@ from database.connection_db import get_admins_list
 # Игорь - 372233735
 
 
-MAIN_ADMINS = [642205779]
+MAIN_ADMINS = [476994720]
 
 
 @rt.message(Command("start"))
@@ -35,34 +35,37 @@ async def role(message: types.Message, state: FSMContext):
         await user_start(message, state)
 
 
-async def admin_command(func):
-    def wrapped(message, *args, **kwargs):
+def admin_command(func):
+    async def wrapped(message):
         customer_id = message.from_user.id
         if customer_id not in get_admins_list(0):
-            message.answer(text=f'Нет прав',
-                           reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(text=f'Нет прав',
+                                 reply_markup=types.ReplyKeyboardRemove())
             return
-        return func(message, *args, **kwargs)
+        await func(message)
+
     return wrapped
 
 
 def user_command(func):
-    def wrapped(message, *args, **kwargs):
+    async def wrapped(message):
         customer_id = message.from_user.id
         if customer_id in get_admins_list(0):
-            message.answer(text=f'Нет прав',
-                           reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(text=f'Нет прав',
+                                 reply_markup=types.ReplyKeyboardRemove())
             return
-        return func(message, *args, **kwargs)
+        await func(message)
+
     return wrapped
 
 
 async def main_admin_command(func):
-    def wrapped(message, *args, **kwargs):
+    async def wrapped(message):
         customer_id = message.from_user.id
         if customer_id not in MAIN_ADMINS:
-            message.answer(text=f'Нет прав',
-                           reply_markup=types.ReplyKeyboardRemove())
+            await message.answer(text=f'Нет прав',
+                                 reply_markup=types.ReplyKeyboardRemove())
             return
-        return func(message, *args, **kwargs)
+        await func(message)
+
     return wrapped
