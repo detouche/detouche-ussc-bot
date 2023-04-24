@@ -37,7 +37,7 @@ async def role(message: types.Message, state: FSMContext):
 def admin_command(func):
     async def wrapped(message):
         customer_id = message.from_user.id
-        if customer_id not in get_admins_list(0):
+        if customer_id not in get_admins_list(0) and customer_id not in MAIN_ADMINS:
             await message.answer(text=f'Нет прав',
                                  reply_markup=types.ReplyKeyboardRemove())
             return
