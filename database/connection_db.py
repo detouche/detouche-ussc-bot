@@ -153,3 +153,84 @@ def get_competence_description(id):
         return False
     else:
         return description
+
+
+def create_profile(title):
+    status = cursor.execute(f"SELECT title FROM profiles WHERE title = '{title}'").fetchone()
+    if status is None:
+        cursor.execute("""CREATE TABLE IF NOT EXISTS profiles(
+                                            id INTEGER PRIMARY KEY,
+                                            title TEXT
+                                        )""")
+        conn.commit()
+        cursor.execute("INSERT INTO profiles(title) VALUES(?)", (title,))
+        conn.commit()
+        return True
+    else:
+        return False
+
+
+def get_profile_id(title):
+    id_profile = cursor.execute(f"SELECT id FROM profiles WHERE title = '{title.casefold()}'").fetchone()
+    return id_profile[0]
+
+
+def add_competence_in_profile(id_competence, id_profile):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS CompetencyProfile(
+                                    id_competence INTEGER, 
+                                    id_profile INTEGER
+                                )""")
+    conn.commit()
+    status_exists = cursor.execute(f"SELECT id FROM competencies WHERE id = {id_competence}").fetchone()
+    status_add = cursor.execute(f"SELECT id_competence, id_profile FROM CompetencyProfile "
+                                f"WHERE id_competence = '{id_competence}' AND id_profile = '{id_profile}'").fetchone()
+    if status_exists is None or status_add:
+        return False
+    else:
+        cursor.execute("INSERT INTO CompetencyProfile(id_competence, id_profile) VALUES(?,?)",
+                       (id_competence, id_profile,))
+        conn.commit()
+        return True
+
+
+def remove_competence_from_profile(id_competence, id_profile):
+    cursor.execute(
+        f"DELETE FROM CompetencyProfile WHERE id_competence='{id_competence}' AND id_profile ='{id_profile}'")
+    conn.commit()
+
+
+def delete_profile(id):
+    status = cursor.execute(f"SELECT id FROM profiles WHERE id = '{id}'").fetchone()
+    if status is None:
+        return False
+    else:
+        cursor.execute(f"DELETE FROM profiles WHERE id='{id}'")
+        cursor.execute(f"DELETE FROM CompetencyProfile WHERE id_profile ='{id}'")
+        conn.commit()
+        return True
+
+
+def get_profile_list():
+    cursor.execute("""CREATE TABLE IF NOT EXISTS profiles(
+                                    id INTEGER PRIMARY KEY,
+                                    title TEXT
+                                    )""")
+    conn.commit()
+    cursor.execute('SELECT id, title FROM profiles')
+    profile_list = cursor.fetchall()
+    return profile_list
+
+
+def get_profile_competencies(profile_id):
+    comp_list = cursor.execute(
+        f"SELECT id_competence FROM CompetencyProfile WHERE id_profile = '{profile_id}'").fetchall()
+    if comp_list is None:
+        return False
+    else:
+        comp_list = list(map(lambda x: x[0], comp_list))
+        return comp_list
+
+
+def get_competence_title(id):
+    title = cursor.execute(f"SELECT title FROM competencies WHERE id = '{id}'").fetchone()
+    return title
