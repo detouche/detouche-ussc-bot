@@ -156,13 +156,13 @@ def get_competence_description(id):
 
 
 def create_profile(title):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS profiles(
+                                                id INTEGER PRIMARY KEY,
+                                                title TEXT
+                                            )""")
+    conn.commit()
     status = cursor.execute(f"SELECT title FROM profiles WHERE title = '{title}'").fetchone()
     if status is None:
-        cursor.execute("""CREATE TABLE IF NOT EXISTS profiles(
-                                            id INTEGER PRIMARY KEY,
-                                            title TEXT
-                                        )""")
-        conn.commit()
         cursor.execute("INSERT INTO profiles(title) VALUES(?)", (title,))
         conn.commit()
         return True
