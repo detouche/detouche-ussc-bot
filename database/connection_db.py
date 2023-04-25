@@ -156,13 +156,13 @@ def get_competence_description(id):
 
 
 def create_profile(title):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS profiles(
+                                                id INTEGER PRIMARY KEY,
+                                                title TEXT
+                                            )""")
+    conn.commit()
     status = cursor.execute(f"SELECT title FROM profiles WHERE title = '{title}'").fetchone()
     if status is None:
-        cursor.execute("""CREATE TABLE IF NOT EXISTS profiles(
-                                            id INTEGER PRIMARY KEY,
-                                            title TEXT
-                                        )""")
-        conn.commit()
         cursor.execute("INSERT INTO profiles(title) VALUES(?)", (title,))
         conn.commit()
         return True
@@ -199,15 +199,18 @@ def remove_competence_from_profile(id_competence, id_profile):
     conn.commit()
 
 
-def delete_profile(id):
+def check_profile(id):
     status = cursor.execute(f"SELECT id FROM profiles WHERE id = '{id}'").fetchone()
     if status is None:
         return False
     else:
-        cursor.execute(f"DELETE FROM profiles WHERE id='{id}'")
-        cursor.execute(f"DELETE FROM CompetencyProfile WHERE id_profile ='{id}'")
-        conn.commit()
         return True
+
+
+def delete_profile(id):
+    cursor.execute(f"DELETE FROM profiles WHERE id='{id}'")
+    cursor.execute(f"DELETE FROM CompetencyProfile WHERE id_profile ='{id}'")
+    conn.commit()
 
 
 def get_profile_list():
