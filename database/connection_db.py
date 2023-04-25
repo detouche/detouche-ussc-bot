@@ -199,15 +199,18 @@ def remove_competence_from_profile(id_competence, id_profile):
     conn.commit()
 
 
-def delete_profile(id):
+def check_profile(id):
     status = cursor.execute(f"SELECT id FROM profiles WHERE id = '{id}'").fetchone()
     if status is None:
         return False
     else:
-        cursor.execute(f"DELETE FROM profiles WHERE id='{id}'")
-        cursor.execute(f"DELETE FROM CompetencyProfile WHERE id_profile ='{id}'")
-        conn.commit()
         return True
+
+
+def delete_profile(id):
+    cursor.execute(f"DELETE FROM profiles WHERE id='{id}'")
+    cursor.execute(f"DELETE FROM CompetencyProfile WHERE id_profile ='{id}'")
+    conn.commit()
 
 
 def get_profile_list():
