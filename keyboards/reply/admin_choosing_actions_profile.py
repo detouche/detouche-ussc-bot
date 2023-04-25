@@ -5,6 +5,7 @@ admin_choosing_actions_profile = ReplyKeyboardMarkup(
         [
             KeyboardButton(text='Создать профиль'),
             KeyboardButton(text='Редактировать профиль'),
+            KeyboardButton(text='Список профилей'),
             KeyboardButton(text='Удалить профиль')],
         [
             KeyboardButton(text='Назад в главное меню')],
