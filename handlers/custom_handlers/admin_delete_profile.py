@@ -48,5 +48,5 @@ async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
 
 
 @rt.callback_query(Text('cancel_delete_profile'))
-async def cancel_delete(callback: CallbackQuery, state: FSMContext):
-    await delete_profile_start(callback.message, state)
+async def cancel_delete(callback: CallbackQuery, state: FSMContext, bot: Bot):
+    await delete_profile_start(callback.message, state, bot)
