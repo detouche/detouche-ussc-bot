@@ -7,8 +7,8 @@ from keyboards.reply.user_start_evaluation import user_start_evaluation
 from handlers.custom_handlers.role import user_command
 
 
-@user_command
 @rt.message(Text('Начать сессию'))
+@user_command
 async def user_start_evaluation_info(message: types.Message):
     await message.answer(text=f'Информация о кандидате:\n'
                               f'— ФИО\n'

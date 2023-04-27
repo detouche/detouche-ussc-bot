@@ -7,8 +7,8 @@ from keyboards.reply.admin_change_competencies_name_or_description import admin_
 from handlers.custom_handlers.role import admin_command
 
 
-@admin_command
 @rt.message(Text('Выбрать компетенцию'))
+@admin_command
 async def change_competencies_name_or_description(message: types.Message):
     await message.answer(text=f'Данные о компетенции',
                          reply_markup=admin_change_competencies_name_or_description)
