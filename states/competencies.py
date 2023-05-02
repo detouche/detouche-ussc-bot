@@ -6,3 +6,6 @@ class Competence(StatesGroup):
     description = State()
     delete = State()
     check_description = State()
+    changeable_id = State()
+    change_title = State()
+    change_description = State()

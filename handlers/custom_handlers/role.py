@@ -18,7 +18,7 @@ from database.connection_db import get_admins_list
 # Игорь - 372233735
 
 
-MAIN_ADMINS = [642205779]
+MAIN_ADMINS = [642205779, 980964741]
 
 
 @rt.message(Command("start"))

@@ -125,6 +125,14 @@ def check_competence(title):
         return False
 
 
+def check_competence_id(id):
+    status = cursor.execute(f"SELECT id FROM competencies WHERE id = '{id}'").fetchone()
+    if status is None:
+        return False
+    else:
+        return True
+
+
 def delete_competence(id):
     status = cursor.execute(f"SELECT id FROM competencies WHERE id = '{id}'").fetchone()
     if status is None:
@@ -237,3 +245,24 @@ def get_profile_competencies(profile_id):
 def get_competence_title(id):
     title = cursor.execute(f"SELECT title FROM competencies WHERE id = '{id}'").fetchone()
     return title
+
+
+def change_competence_title(id, new_title):
+    status_title = cursor.execute(f"SELECT title FROM competencies WHERE title = '{new_title}'").fetchone()
+    status_id = cursor.execute(f"SELECT id FROM competencies WHERE id ='{id}'").fetchone()
+    if status_title is None and status_id is not None:
+        cursor.execute(f"UPDATE competencies SET title = '{new_title.casefold()}' WHERE id = '{id}'")
+        conn.commit()
+        return True
+    else:
+        return False
+
+
+def change_competence_description(id, new_desc):
+    status_id = cursor.execute(f"SELECT id FROM competencies WHERE id ='{id}'").fetchone()
+    if status_id is not None:
+        cursor.execute(f"UPDATE competencies SET description = '{new_desc}' WHERE id = '{id}'")
+        conn.commit()
+        return True
+    else:
+        return False
