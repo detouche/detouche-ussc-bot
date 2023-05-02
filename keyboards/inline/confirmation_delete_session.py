@@ -14,19 +14,5 @@ def get_keyboard_confirmation_del():
                                  callback_data='cancel_del_session')
         ],
     ]
-    # buttons = [
-    #     [
-    #         InlineKeyboardButton(text=f"Да",
-    #                              callback_data=ConfirmationDeleteSession(
-    #                                  action="confirmat_del_session",
-    #                                  confirmation_del=True).pack())
-    #     ],
-    #     [
-    #         InlineKeyboardButton(text=f"Нет",
-    #                              callback_data=ConfirmationDeleteSession(
-    #                                  action="confirmat_del_session",
-    #                                  confirmation_del=False).pack())
-    #     ]
-    # ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     return keyboard

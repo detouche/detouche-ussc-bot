@@ -21,13 +21,14 @@ async def end_session(message: Message):
 
 
 @rt.callback_query(Text('confirmat_del_session'))
-async def confirmat_del_session(callback: CallbackQuery, state: FSMContext, message):
+async def confirmat_del_session(callback: CallbackQuery, state: FSMContext):
+    await callback.message.delete()
     delete_session(callback.from_user.id)
     await callback.message.answer(text=f'Сессия закончена.')
     print(callback.message)
-    await role(message, state)
+    await role(callback.message, state)
 
 
 @rt.callback_query(Text('cancel_del_session'))
-async def cancel_del_session(callback: CallbackQuery, state: FSMContext, message):
-    await role(message, state)
+async def cancel_del_session(callback: CallbackQuery, state: FSMContext):
+    await role(callback.message, state)
