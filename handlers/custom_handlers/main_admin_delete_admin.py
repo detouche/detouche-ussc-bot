@@ -13,7 +13,7 @@ from states.confirmation import Confirmation, AdminInfo
 from states.page_switcher import MenuDeleteAdmin
 
 from keyboards.inline.main_admin_delete_admin import delete_admin_get_keyboard
-from keyboards.inline.confirmation_delete import get_keyboard_confirmation
+from keyboards.inline.confirmation_delele import get_keyboard_confirmation
 
 
 @rt.message(Text('Удалить администратора'))

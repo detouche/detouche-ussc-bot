@@ -8,12 +8,3 @@ admin_create_session = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
-
-admin_choice_profile = ReplyKeyboardMarkup(
-    keyboard=[
-        [
-            KeyboardButton(text='Профили на выбор')
-        ]
-    ],
-    resize_keyboard=True
-)

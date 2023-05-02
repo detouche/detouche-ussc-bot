@@ -47,9 +47,9 @@ def user_rename(current_id: int, user_name: str):
     conn.commit()
 
 
-def get_user_list():
+def get_user_list(element):
     cursor.execute('SELECT * FROM login_id ORDER BY login')
-    users_list = list(map(lambda x: x, cursor.fetchall()))
+    users_list = list(map(lambda x: x[element], cursor.fetchall()))
     return users_list
 
 
@@ -247,3 +247,36 @@ def get_admins_name_for_id(current_id):
 def get_user_name_for_id(current_id):
     user_name = cursor.execute(f'SELECT login FROM login_id WHERE id = {current_id}').fetchone()
     return user_name[0]
+
+
+def create_session(candidate_name, profile, connection_code, user_id):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS session(
+                            id INTEGER PRIMARY KEY,
+                            candidate_name TEXT, 
+                            profile INTEGER,
+                            connection_code INTEGER,
+                            user_id INTEGER
+                        )""")
+    conn.commit()
+    cursor.execute("INSERT INTO session(candidate_name, profile, connection_code, user_id) VALUES(?,?,?,?)",
+                   (candidate_name, profile, connection_code, user_id))
+    conn.commit()
+
+
+def get_session_info(element):
+    cursor.execute("""CREATE TABLE IF NOT EXISTS session(
+                                id INTEGER PRIMARY KEY,
+                                candidate_name TEXT, 
+                                profile INTEGER,
+                                connection_code INTEGER,
+                                user_id INTEGER
+                            )""")
+    conn.commit()
+    cursor.execute('SELECT * FROM session')
+    session_info_list = list(map(lambda x: x[element], cursor.fetchall()))
+    return session_info_list
+
+
+def delete_session(user_id):
+    cursor.execute(f"DELETE FROM session where user_id = {user_id}")
+    conn.commit()
