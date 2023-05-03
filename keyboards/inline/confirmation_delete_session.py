@@ -1,7 +1,5 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-from states.admin_delete_session import ConfirmationDeleteSession
-
 
 def get_keyboard_confirmation_del():
     buttons = [

@@ -22,7 +22,7 @@ from handlers.custom_handlers.admin_choosing_actions_profile import creating_pdf
 async def create_session(message: types.Message, state: FSMContext):
     users_id = get_session_info(4)
     await state.clear()
-    if message.from_user.id not in users_id:
+    if message.chat.id not in users_id:
         await message.answer(text=f'Введите ФИО кандидата',
                              reply_markup=admin_create_session)
         await state.set_state(AdminSession.name)
@@ -54,6 +54,7 @@ async def get_confirmation(callback: CallbackQuery, callback_data: ConfirmationC
         await profile_list_session(callback.message, bot)
         await state.set_state(AdminSession.profile_number)
     else:
+        await callback.message.delete()
         await create_session(callback.message, state)
 
 

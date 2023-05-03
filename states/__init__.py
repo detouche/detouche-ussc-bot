@@ -7,4 +7,3 @@ from . import admin_session
 from . import admin_confirmation_candidate_name
 from . import competencies
 from . import profiles
-from . import admin_delete_session

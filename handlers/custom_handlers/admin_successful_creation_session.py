@@ -46,6 +46,5 @@ async def successful_creation(message: Message, state: FSMContext, bot: Bot):
                              reply_markup=admin_successful_creation)
         await bot.send_photo(message.chat.id, photo=pdf_file)
         await state.clear()
-        # message.text.split()[1]
     else:
         await message.answer(text='Такого профиля не существует.\n Выберите, пожалуйста, другой')
