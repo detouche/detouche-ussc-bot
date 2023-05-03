@@ -24,13 +24,13 @@ async def user_start_evaluation_info(message: types.Message, state):
         start_session = (await state.get_data())['start_session']
     await state.clear()
     connection_codes = get_session_info(3)
-    candidate_name = get_candidate_name(start_session)
-    profile_number = get_profile_number(start_session)
-    profile_name = get_profile_name(profile_number)
-    comp_list = get_profile_competencies(profile_number)
-    comp_list = list(map(get_competence_title, comp_list))
-    title_comp = '\n'.join(list(map(lambda x: f'— {x[0]}', comp_list)))
     if int(start_session) in connection_codes:
+        candidate_name = get_candidate_name(start_session)
+        profile_number = get_profile_number(start_session)
+        profile_name = get_profile_name(profile_number)
+        comp_list = get_profile_competencies(profile_number)
+        comp_list = list(map(get_competence_title, comp_list))
+        title_comp = '\n'.join(list(map(lambda x: f'— {x[0]}', comp_list)))
         await message.answer(text=f'Информация о кандидате:\n'
                                   f'— Имя кандидата: {candidate_name}\n'
                                   f'— Профиль: {profile_name}\n'
