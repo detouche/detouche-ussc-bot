@@ -1,9 +1,10 @@
 from aiogram import Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, BufferedInputFile
+from aiogram.utils.deep_linking import create_start_link
+
 from loader import rt
 from random import randint
-from urllib.parse import quote
 import base64
 import qrcode
 import io
@@ -31,8 +32,7 @@ async def successful_creation(message: Message, state: FSMContext, bot: Bot):
         else:
             connection_code = randint(100000, 999999)
             create_session(candidate_name, profile_number, connection_code, message.from_user.id)
-        bot_username = await bot.get_me()
-        session_link = f"t.me/{bot_username.username}?start={quote(str(connection_code))}"
+        session_link = await create_start_link(bot=bot, payload=str(connection_code))
         qr = qrcode.make(session_link)
         img_byte_arr = io.BytesIO()
         qr.save(img_byte_arr, 'PNG')

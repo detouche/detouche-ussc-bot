@@ -22,6 +22,8 @@ async def user_start(message: types.Message, state: FSMContext, url_code=None):
         else:
             await state.set_state(User.start_session)
             await state.update_data(start_session=url_code)
+            from handlers.custom_handlers.user_start_evaluation import user_start_evaluation_info
+            await user_start_evaluation_info(message, state)
     else:
         await message.answer("Вижу Вас в первый раз. Введите своё ФИО")
         await state.set_state(User.name)

@@ -280,3 +280,23 @@ def get_session_info(element):
 def delete_session(user_id):
     cursor.execute(f"DELETE FROM session where user_id = {user_id}")
     conn.commit()
+
+
+def get_candidate_name(connection_code):
+    name = cursor.execute(f'SELECT candidate_name FROM session WHERE connection_code = {connection_code}').fetchone()
+    return name[0]
+
+
+def get_profile_number(connection_code):
+    number = cursor.execute(f'SELECT profile FROM session WHERE connection_code = {connection_code}').fetchone()
+    return number[0]
+
+
+def get_profile_name(profile_number):
+    name = cursor.execute(f'SELECT title FROM profiles WHERE id = {profile_number}').fetchone()
+    return name[0]
+
+
+def get_competencies_id(id_profile):
+    name = cursor.execute(f'SELECT id_competence FROM CompetencyProfile WHERE id_profile = {id_profile}').fetchone()
+    return name
