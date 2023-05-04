@@ -1,4 +1,5 @@
 from aiogram.fsm.context import FSMContext
+
 from loader import rt
 from aiogram import types
 from aiogram.filters import Command
@@ -17,27 +18,30 @@ from database.connection_db import get_admins_list
 # Игорь - 372233735
 
 
-MAIN_ADMINS = [642205779]
+MAIN_ADMINS = [642205779, 980964741]
 
 
 @rt.message(Command("start"))
 async def role(message: types.Message, state: FSMContext):
-    await message.answer(text=f'Ваш ID: {message.from_user.id}')
-
-    customer_id = message.from_user.id
-    if customer_id in get_admins_list(0):
+    await message.answer(text=f'Ваш ID: {message.chat.id}')
+    customer_id = message.chat.id
+    if customer_id in MAIN_ADMINS:
         await admin_start(message)
-    elif customer_id in MAIN_ADMINS:
+    elif customer_id in get_admins_list(0):
         await admin_start(message)
     else:
         await state.clear()
-        await user_start(message, state)
+
+        if len(message.text.split()) == 1:
+            await user_start(message, state)
+        else:
+            await user_start(message, state, message.text.split()[1])
 
 
 def admin_command(func):
     async def wrapped(message):
-        customer_id = message.from_user.id
-        if customer_id not in get_admins_list(0):
+        customer_id = message.chat.id
+        if customer_id not in get_admins_list(0) and customer_id not in MAIN_ADMINS:
             await message.answer(text=f'Нет прав',
                                  reply_markup=types.ReplyKeyboardRemove())
             return
@@ -48,7 +52,7 @@ def admin_command(func):
 
 def user_command(func):
     async def wrapped(message):
-        customer_id = message.from_user.id
+        customer_id = message.chat.id
         if customer_id in get_admins_list(0):
             await message.answer(text=f'Нет прав',
                                  reply_markup=types.ReplyKeyboardRemove())
@@ -60,7 +64,7 @@ def user_command(func):
 
 def main_admin_command(func):
     async def wrapped(message, state):
-        customer_id = message.from_user.id
+        customer_id = message.chat.id
         if customer_id not in MAIN_ADMINS:
             await message.answer(text=f'Нет прав',
                                  reply_markup=types.ReplyKeyboardRemove())

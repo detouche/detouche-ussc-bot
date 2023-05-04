@@ -10,7 +10,7 @@ from database.connection_db import get_admins_list
 
 
 @rt.message(Text('Администраторы'))
-@main_admin_command
+# @main_admin_command
 async def delete_or_add_admin(message: types.Message, state):
     admins_name = ('\n'.join(get_admins_list(1)))
     await message.answer(text=f'Сейчас администраторами являются: \n{admins_name}.',

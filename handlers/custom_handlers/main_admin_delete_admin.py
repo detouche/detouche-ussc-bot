@@ -13,11 +13,11 @@ from states.confirmation import Confirmation, AdminInfo
 from states.page_switcher import MenuDeleteAdmin
 
 from keyboards.inline.main_admin_delete_admin import delete_admin_get_keyboard
-from keyboards.inline.confirmation_delete import get_keyboard_confirmation
+from keyboards.inline.confirmation_delele import get_keyboard_confirmation
 
 
 @rt.message(Text('Удалить администратора'))
-@main_admin_command
+# @main_admin_command
 async def delete_admin(message: Message, state: FSMContext):
     await delete_admin_keyboard(message, state)
 
@@ -54,19 +54,19 @@ async def delete_admin_keyboard(message: Message, state: FSMContext):
 
 
 @rt.callback_query(Text(startswith="next_step_delete_admin"), MenuDeleteAdmin.step_delete_admin)
-@main_admin_command
+# @main_admin_command
 async def delete_admin_next_menu(callback: CallbackQuery, state: FSMContext):
     await delete_admin_get_keyboard(callback.message, state, 1)
 
 
 @rt.callback_query(Text(startswith='back_step_delete_admin'), MenuDeleteAdmin.step_delete_admin)
-@main_admin_command
+# @main_admin_command
 async def delete_admin_back_menu(callback: CallbackQuery, state: FSMContext):
     await delete_admin_get_keyboard(callback.message, state, -1)
 
 
 @rt.callback_query(Text(startswith='stop_delete_admin'), MenuDeleteAdmin.step_delete_admin)
-@main_admin_command
+# @main_admin_command
 async def delete_admin_finish(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer('Удаление администраторов закончено')

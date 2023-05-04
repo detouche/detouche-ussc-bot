@@ -3,7 +3,6 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 user_connection = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text='Начать сессию'),
             KeyboardButton(text='Изменить имя')
         ]
     ],
