@@ -1,4 +1,4 @@
-from loader import rt
+from loader import rt, bot
 from aiogram import types
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
@@ -29,6 +29,9 @@ async def change_competencies(message: types.Message, state: FSMContext):
 @rt.message(Competence.changeable_id)
 async def get_changeable_competence_id(message: types.Message, state: FSMContext):
     if check_competence_id(message.text):
+        if await state.get_data():
+            await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id - 1)
+            await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id - 2)
         await state.update_data(changeable_id=message.text)
         await message.answer(text=f'Что хотите изменить в компетенции с ID: {message.text}',
                              reply_markup=change_competence())

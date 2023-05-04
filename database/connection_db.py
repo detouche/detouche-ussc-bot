@@ -4,28 +4,6 @@ conn = sqlite3.connect('database/database.db', check_same_thread=False)
 cursor = conn.cursor()
 
 
-def sqlite_lower(value_):
-    return value_.lower()
-
-
-def sqlite_upper(value_):
-    return value_.upper()
-
-
-def ignore_case_collation(value1_, value2_):
-    if value1_.lower() == value2_.lower():
-        return 0
-    elif value1_.lower() < value2_.lower():
-        return -1
-    else:
-        return 1
-
-
-conn.create_collation("NOCASE", ignore_case_collation)
-conn.create_function("LOWER", 1, sqlite_lower)
-conn.create_function("UPPER", 1, sqlite_upper)
-
-
 def db_table_val(competencies_id: int, competencies_name: str, competencies_text: str):
     cursor.execute('INSERT INTO competencies (competencies_id, competencies_name, competencies_text) VALUES (?, ?, ?)',
                    (competencies_id, competencies_name, competencies_text))
@@ -134,13 +112,9 @@ def check_competence_id(id):
 
 
 def delete_competence(id):
-    status = cursor.execute(f"SELECT id FROM competencies WHERE id = '{id}'").fetchone()
-    if status is None:
-        return False
-    else:
-        cursor.execute(f"DELETE FROM competencies WHERE id='{id}'")
-        conn.commit()
-        return True
+    cursor.execute(f"DELETE FROM competencies WHERE id='{id}'")
+    cursor.execute(f"DELETE FROM CompetencyProfile WHERE id_competence ='{id}'")
+    conn.commit()
 
 
 def get_competencies_list():
@@ -266,3 +240,37 @@ def change_competence_description(id, new_desc):
         return True
     else:
         return False
+
+
+def change_profile_title(id, new_title):
+    status_title = cursor.execute(f"SELECT title FROM profiles WHERE title = '{new_title}'").fetchone()
+    status_id = cursor.execute(f"SELECT id FROM profiles WHERE id ='{id}'").fetchone()
+    if status_title is None and status_id is not None:
+        cursor.execute(f"UPDATE profiles SET title = '{new_title.casefold()}' WHERE id = '{id}'")
+        conn.commit()
+        return True
+    else:
+        return False
+
+
+def competencies_in_profile(id_profile):
+    status = cursor.execute(f"SELECT id FROM profiles WHERE id ='{id_profile}'").fetchone()
+    if status is None:
+        return False
+    else:
+        comp_list = cursor.execute(
+            f"SELECT id_competence FROM CompetencyProfile WHERE id_profile ='{id_profile}'").fetchall()
+        comp_list = list(map(lambda x: x[0], comp_list))
+        return comp_list
+
+
+def delete_competence_from_profile(competence_id, profile_id):
+    status = cursor.execute(
+        f"SELECT id_competence FROM CompetencyProfile WHERE id_competence ='{competence_id}' AND id_profile='{profile_id}'").fetchone()
+    if status is None:
+        return False
+    else:
+        cursor.execute(
+            f"DELETE FROM CompetencyProfile WHERE id_competence='{competence_id}' AND id_profile ='{profile_id}'")
+        conn.commit()
+        return True

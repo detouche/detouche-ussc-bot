@@ -14,6 +14,8 @@ from database.connection_db import delete_profile, get_profile_list, check_profi
 
 from states.profiles import Profile
 
+from handlers.custom_handlers.admin_choosing_actions_profile import choosing_actions_profile
+
 
 @rt.message(Text('Удалить профиль'))
 async def delete_profile_start(message: types.Message, state: FSMContext):
@@ -41,6 +43,7 @@ async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     delete_profile(data['delete'])
     await callback.message.answer(text='Профиль успешно удален.')
+    await choosing_actions_profile(callback.message, state)
     await state.clear()
 
 
