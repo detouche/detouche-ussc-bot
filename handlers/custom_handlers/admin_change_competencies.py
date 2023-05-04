@@ -22,7 +22,7 @@ async def change_competencies(message: types.Message, state: FSMContext):
     competencies_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', competencies_list)))
     await message.answer(text=f'ВВедите ID компетенции, которую хотите изменить\n'
                               f'Список доступных компетенций:\n{competencies_list}',
-                         reply_markup=admin_change_competencies)
+                              reply_markup=admin_change_competencies)
     await state.set_state(Competence.changeable_id)
 
 
