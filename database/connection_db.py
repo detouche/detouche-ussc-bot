@@ -4,28 +4,6 @@ conn = sqlite3.connect('database/database.db', check_same_thread=False)
 cursor = conn.cursor()
 
 
-def sqlite_lower(value_):
-    return value_.lower()
-
-
-def sqlite_upper(value_):
-    return value_.upper()
-
-
-def ignore_case_collation(value1_, value2_):
-    if value1_.lower() == value2_.lower():
-        return 0
-    elif value1_.lower() < value2_.lower():
-        return -1
-    else:
-        return 1
-
-
-conn.create_collation("NOCASE", ignore_case_collation)
-conn.create_function("LOWER", 1, sqlite_lower)
-conn.create_function("UPPER", 1, sqlite_upper)
-
-
 def db_table_val(competencies_id: int, competencies_name: str, competencies_text: str):
     cursor.execute('INSERT INTO competencies (competencies_id, competencies_name, competencies_text) VALUES (?, ?, ?)',
                    (competencies_id, competencies_name, competencies_text))

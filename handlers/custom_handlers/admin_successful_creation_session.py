@@ -27,11 +27,14 @@ async def successful_creation(message: Message, state: FSMContext, bot: Bot):
         candidate_name = data['candidate_name']
         await state.clear()
         connections_code = get_session_info(3)
-        if connection_code not in connections_code:
-            create_session(candidate_name, profile_number, connection_code, message.from_user.id)
-        else:
+        while connection_code in connections_code:
             connection_code = randint(100000, 999999)
-            create_session(candidate_name, profile_number, connection_code, message.from_user.id)
+        create_session(candidate_name, profile_number, connection_code, message.from_user.id)
+        # if connection_code not in connections_code:
+        #     create_session(candidate_name, profile_number, connection_code, message.from_user.id)
+        # else:
+        #     connection_code = randint(100000, 999999)
+        #     create_session(candidate_name, profile_number, connection_code, message.from_user.id)
         session_link = await create_start_link(bot=bot, payload=str(connection_code))
         qr = qrcode.make(session_link)
         img_byte_arr = io.BytesIO()
