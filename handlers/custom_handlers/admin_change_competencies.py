@@ -8,6 +8,7 @@ from keyboards.reply.admin_change_competencies import admin_change_competencies
 from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
 from keyboards.inline.change_competence import change_competence
 from keyboards.inline.confirmation_change_competence import confirmation_change_competence
+from keyboards.inline.confirmation_change_competence_desc import confirmation_change_competence_desc
 
 from states.competencies import Competence
 
@@ -53,7 +54,7 @@ async def change_competence_title_confirmation(message: types.Message, state: FS
                          reply_markup=confirmation_change_competence())
 
 
-@rt.callback_query(Text('change_competence_true'))
+@rt.callback_query(Text('change_competence_title_true'))
 async def change_competence_title_true(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     competence_id = data['changeable_id']
@@ -69,7 +70,7 @@ async def change_competence_title_true(callback: CallbackQuery, state: FSMContex
         await change_competencies(callback.message, state)
 
 
-@rt.callback_query(Text('change_competence_false'))
+@rt.callback_query(Text('change_competence_title_false'))
 async def change_competence_title_false(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.delete()
@@ -83,13 +84,33 @@ async def change_competence_description_start(callback: CallbackQuery, state: FS
 
 
 @rt.message(Competence.change_description)
-async def change_competence_description_end(message: types.Message, state: FSMContext):
+async def change_competence_title_confirmation(message: types.Message, state: FSMContext):
+    data = await state.get_data()
+    await state.update_data(change_description=message.text.lower())
+    competence_id = data['changeable_id']
+    await message.answer(text=f'Вы уверены что хотите изменить описание компетенции с ID:{competence_id} на '
+                              f'{message.text}',
+                         reply_markup=confirmation_change_competence_desc())
+
+
+@rt.callback_query(Text('change_competence_desc_true'))
+async def change_competence_title_true(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     competence_id = data['changeable_id']
-    if change_competence_description(competence_id, message.text.lower()):
-        await message.answer(text='Описание компетенции успешно изменено',
-                             reply_markup=admin_choosing_actions_competencies)
+    competence_desc = data['change_description']
+    if change_competence_description(competence_id, competence_desc):
+        await callback.message.edit_text(text='Описание компетенции успешно изменено')
+        await state.clear()
+        await change_competencies(callback.message, state)
     else:
-        await message.answer(text='Введен неверный ID',
-                             reply_markup=admin_choosing_actions_competencies)
+        await callback.message.edit_text(
+            text='Был введен неверный ID, повторите ввод>')
+        await state.clear()
+        await change_competencies(callback.message, state)
+
+
+@rt.callback_query(Text('change_competence_desc_false'))
+async def change_competence_title_false(callback: CallbackQuery, state: FSMContext):
     await state.clear()
+    await callback.message.delete()
+    await change_competencies(callback.message, state)
