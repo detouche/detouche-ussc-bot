@@ -15,7 +15,6 @@ from database.connection_db import get_profile_competencies, get_competence_titl
 
 from states.admin_session import AdminSession
 
-
 @rt.message(AdminSession.profile_number)
 async def successful_creation(message: Message, state: FSMContext, bot: Bot):
     profile_list = get_profile_competencies(message.text.lower())

@@ -8,8 +8,6 @@ from keyboards.reply.admin_choosing_actions_profile import admin_choosing_action
 from keyboards.reply.admin_delete_profile import admin_delete_profile
 from keyboards.inline.confirmation_delete_profile import confirmation_delete_profile
 
-from keyboards.inline.confirmation_delete_profile import confirmation_delete_profile
-
 from database.connection_db import delete_profile, get_profile_list, check_profile
 
 from states.profiles import Profile
@@ -26,6 +24,7 @@ async def delete_profile_start(message: types.Message, state: FSMContext, bot: B
                               f'Список существующих профилей:\n{data_profile_list}',
                          reply_markup=admin_delete_profile)
     await creating_pdf(bot, message)
+
 
 
 @rt.message(Profile.delete)

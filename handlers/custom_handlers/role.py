@@ -1,5 +1,4 @@
 from aiogram.fsm.context import FSMContext
-
 from loader import rt
 from aiogram import types
 from aiogram.filters import Command
@@ -8,6 +7,9 @@ from handlers.custom_handlers.user_connection import user_start
 
 from handlers.custom_handlers.admin_connection import admin_start
 
+from handlers.custom_handlers.main_admin_connection import main_admin_start
+
+from database.connection_db import get_admins_list
 
 from database.connection_db import get_admins_list
 
@@ -29,6 +31,8 @@ async def role(message: types.Message, state: FSMContext):
         await admin_start(message)
     elif customer_id in get_admins_list(0):
         await admin_start(message)
+    elif customer_id in MAIN_ADMINS:
+        await main_admin_start(message)
     else:
         await state.clear()
 

@@ -3,6 +3,7 @@ from loader import rt
 from aiogram import types, Bot
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
+
 from jinja2 import Environment, FileSystemLoader
 import pdfkit
 import io
@@ -35,6 +36,7 @@ async def profile_list(message: types.Message, state: FSMContext, bot):
                               f'Список всех имеющихся профилей:\n{data_profile_list}',
                          reply_markup=admin_delete_profile)
     await creating_pdf(bot, message)
+
 
 
 @rt.message(Profile.check_competencies)
