@@ -10,12 +10,20 @@ from database.connection_db import user_register, auth_validation, user_rename
 from states.user_info import User
 
 
-async def user_start(message: types.Message, state: FSMContext):
+async def user_start(message: types.Message, state: FSMContext, url_code=None):
+    await state.clear()
     current_id = message.from_user.id
     authorized = auth_validation(current_id)
     if authorized:
-        await message.answer(text=f'Ввод кода сессии',
-                             reply_markup=user_connection)
+        if url_code is None:
+            await message.answer(text=f'Пожалуйста, введите код сессии',
+                                 reply_markup=user_connection)
+            await state.set_state(User.start_session)
+        else:
+            await state.set_state(User.start_session)
+            await state.update_data(start_session=url_code)
+            from handlers.custom_handlers.user_start_evaluation import user_start_evaluation_info
+            await user_start_evaluation_info(message, state)
     else:
         await message.answer("Вижу Вас в первый раз. Введите своё ФИО")
         await state.set_state(User.name)

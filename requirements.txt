@@ -6,3 +6,5 @@ aiofiles==23.1.0
 aiogram==3.0.0b7
 aiohttp==3.8.4
 magic-filter==1.0.9
+telebot~=0.0.5
+qrcode~=7.4.2

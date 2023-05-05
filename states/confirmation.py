@@ -2,7 +2,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.context import FSMContext
 
 
-class Confirmation(CallbackData, prefix="admin"):
+class Confirmation(CallbackData, prefix="confirmation_choice"):
     action: str
     confirmation_choice: bool
 
