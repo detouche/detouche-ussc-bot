@@ -15,6 +15,7 @@ from database.connection_db import get_profile_competencies, get_competence_titl
 
 from states.admin_session import AdminSession
 
+
 @rt.message(AdminSession.profile_number)
 async def successful_creation(message: Message, state: FSMContext, bot: Bot):
     profile_list = get_profile_competencies(message.text.lower())
@@ -29,11 +30,6 @@ async def successful_creation(message: Message, state: FSMContext, bot: Bot):
         while connection_code in connections_code:
             connection_code = randint(100000, 999999)
         create_session(candidate_name, profile_number, connection_code, message.from_user.id)
-        # if connection_code not in connections_code:
-        #     create_session(candidate_name, profile_number, connection_code, message.from_user.id)
-        # else:
-        #     connection_code = randint(100000, 999999)
-        #     create_session(candidate_name, profile_number, connection_code, message.from_user.id)
         session_link = await create_start_link(bot=bot, payload=str(connection_code))
         qr = qrcode.make(session_link)
         img_byte_arr = io.BytesIO()

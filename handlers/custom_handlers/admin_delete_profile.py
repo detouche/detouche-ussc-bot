@@ -4,15 +4,15 @@ from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from keyboards.reply.admin_choosing_actions_profile import admin_choosing_actions_profile
 from keyboards.reply.admin_delete_profile import admin_delete_profile
 from keyboards.inline.confirmation_delete_profile import confirmation_delete_profile
 
 from database.connection_db import delete_profile, get_profile_list, check_profile
 
+from handlers.custom_handlers.admin_choosing_actions_profile import creating_pdf
 from states.profiles import Profile
 
-from handlers.custom_handlers.admin_choosing_actions_profile import creating_pdf
+from handlers.custom_handlers.admin_choosing_actions_profile import choosing_actions_profile
 
 
 @rt.message(Text('Удалить профиль'))
@@ -24,7 +24,6 @@ async def delete_profile_start(message: types.Message, state: FSMContext, bot: B
                               f'Список существующих профилей:\n{data_profile_list}',
                          reply_markup=admin_delete_profile)
     await creating_pdf(bot, message)
-
 
 
 @rt.message(Profile.delete)
@@ -43,9 +42,10 @@ async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     delete_profile(data['delete'])
     await callback.message.answer(text='Профиль успешно удален.')
+    await choosing_actions_profile(callback.message, state)
     await state.clear()
 
 
 @rt.callback_query(Text('cancel_delete_profile'))
-async def cancel_delete(callback: CallbackQuery, state: FSMContext, bot: Bot):
-    await delete_profile_start(callback.message, state, bot)
+async def cancel_delete(callback: CallbackQuery, state: FSMContext):
+    await delete_profile_start(callback.message, state)

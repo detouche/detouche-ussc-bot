@@ -1,4 +1,4 @@
-from loader import rt
+from loader import rt, bot
 from aiogram import types
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
