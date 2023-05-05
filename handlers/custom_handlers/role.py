@@ -1,6 +1,6 @@
 from aiogram.fsm.context import FSMContext
 from loader import rt
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.filters import Command
 
 from handlers.custom_handlers.user_connection import user_start
@@ -21,8 +21,13 @@ from database.connection_db import get_admins_list
 MAIN_ADMINS = [642205779, 980964741]
 
 
+from aiogram.utils.deep_linking import create_start_link, decode_payload
+
 @rt.message(Command("start"))
-async def role(message: types.Message, state: FSMContext):
+async def role(message: types.Message, state: FSMContext, bot: Bot):
+
+    await message.answer(await create_start_link(bot=bot, payload='123132'))
+
     await message.answer(text=f'Ваш ID: {message.from_user.id}')
 
     customer_id = message.from_user.id
