@@ -1,16 +1,18 @@
 from loader import rt
 from aiogram import types
-from aiogram.filters import Text
 
 from keyboards.reply.user_start_evaluation import user_start_evaluation
 
 # from handlers.custom_handlers.role import user_command
 from handlers.custom_handlers.user_connection import user_start
 
-from database.connection_db import get_session_info, get_candidate_name, get_profile_number, get_profile_name, \
-    get_competencies_id, get_profile_competencies, get_competence_title
+from database.connection_db import get_session_info, get_candidate_name, get_profile_name_session, \
+    user_session_info, get_user_session_info, user_has_active_session, get_comp_name_session, get_comp_desc_session
 
 from states.user_info import User
+
+
+DEFAULT_GRADE = -1
 
 
 @rt.message(User.start_session)
@@ -25,15 +27,19 @@ async def user_start_evaluation_info(message: types.Message, state):
     await state.clear()
     connection_codes = get_session_info(3)
     if int(start_session) in connection_codes:
+        user_id = message.chat.id
         candidate_name = get_candidate_name(start_session)
-        profile_number = get_profile_number(start_session)
-        profile_name = get_profile_name(profile_number)
-        comp_list = get_profile_competencies(profile_number)
-        comp_list = list(map(get_competence_title, comp_list))
-        title_comp = '\n'.join(list(map(lambda x: f'— {x[0]}', comp_list)))
+        profile_name = get_profile_name_session(start_session)
+        comp_list_name = get_comp_name_session(start_session)
+        comp_list_desc = get_comp_desc_session(start_session)
+        if not user_has_active_session(user_id):
+            for i in range(len(comp_list_name)):
+                user_session_info(candidate_name, profile_name, comp_list_name[i][0], comp_list_desc[i][0],
+                                  start_session, user_id, DEFAULT_GRADE)
+        title_comp = '\n'.join(list(map(lambda x: f'— {x[0]}', comp_list_name)))
         await message.answer(text=f'Информация о кандидате:\n'
-                                  f'— Имя кандидата: {candidate_name}\n'
-                                  f'— Профиль: {profile_name}\n'
+                                  f'— Имя кандидата: {get_user_session_info(1, start_session)[0]}\n'
+                                  f'— Профиль: {get_user_session_info(2, start_session)[0]}\n'
                                   f'— Компетенции входящие в профиль:\n'
                                   f'{title_comp}\n'
                                   f'Методичка по оценкам',

@@ -4,11 +4,7 @@ from . import user_connection
 from . import admin_connection
 from . import user_start_evaluation
 from . import user_assessment
-from . import user_last_assessment
-from . import user_end_assessment
 from . import user_finish
-from . import user_change_assessment
-from . import user_again_assessment
 from . import admin_create_session
 from . import admin_successful_creation_session
 from . import admin_end_session

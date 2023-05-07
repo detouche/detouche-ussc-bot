@@ -7,3 +7,5 @@ from . import confirmation_delele
 from . import confirmation_candidate_name
 from . import confirmation_delete_profile
 from . import confirmation_delete_session
+from . import user_assessment_competencies
+from . import user_assessment_grade
