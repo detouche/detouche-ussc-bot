@@ -292,6 +292,11 @@ def get_session_info(element):
     return session_info_list
 
 
+def get_session_code_admin(admin_id):
+    connection_code = cursor.execute(f'SELECT connection_code FROM session WHERE admin_id = {admin_id}').fetchone()
+    return connection_code[0]
+
+
 def delete_session(admin_id):
     connection_code = cursor.execute(f'SELECT connection_code FROM session WHERE admin_id = {admin_id}').fetchone()
     cursor.execute(f"DELETE FROM session WHERE admin_id = {admin_id}")
@@ -390,3 +395,21 @@ def get_current_comp_grade_session(comp_id):
 def transform_grade_current_comp(comp_id, new_grade):
     cursor.execute(f"UPDATE user_session SET assessments_competencies = '{new_grade}' WHERE id = '{comp_id}'")
     conn.commit()
+
+
+def get_id_evaluating(connection_code):
+    id_evaluating = cursor.execute(f"SELECT id_evaluating FROM user_session WHERE connection_codes = {connection_code} "
+                                   f"GROUP BY id_evaluating").fetchall()
+    return id_evaluating
+
+
+def get_comp_names(connection_code):
+    comp_names = cursor.execute(f"SELECT comp_names FROM user_session WHERE connection_codes = {connection_code} "
+                                f"GROUP BY comp_names").fetchall()
+    return comp_names
+
+
+def get_assessments_competencies(comp_name, connection_code):
+    assessments_competencies = cursor.execute(f"SELECT assessments_competencies FROM user_session WHERE comp_names = "
+                                              f"'{comp_name}' AND connection_codes = {connection_code}").fetchall()
+    return assessments_competencies

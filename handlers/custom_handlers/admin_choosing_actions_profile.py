@@ -38,7 +38,6 @@ async def profile_list(message: types.Message, state: FSMContext, bot):
     await creating_pdf(bot, message)
 
 
-
 @rt.message(Profile.check_competencies)
 async def get_competencies_in_profile(message: types.Message, state: FSMContext):
     comp_list = get_profile_competencies(message.text.lower())
