@@ -76,7 +76,7 @@ async def creating_pdf(bot: Bot, message: types.Message):
             'profile_name': profile_name,
         })
     options = {'enable-local-file-access': '',
-               'margin-top': '0in',
+               'margin-top': '0.3in',
                'margin-right': '0in',
                'margin-bottom': '0in',
                'margin-left': '0in',

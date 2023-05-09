@@ -5,29 +5,218 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>mini-report</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+        html {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            display: table;
+            margin: auto;
+        }
+
+        html, body {
+            height: 100%;
+            zoom: 110%;
+        }
+
+        *,
+        ::before,
+        ::after {
+            box-sizing: inherit;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 600px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .button-reset {
+            padding: 0;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .list-reset {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        /* header */
+
+        header {
+            padding-top: 26px;
+        }
+
+        .header__block {
+            background-color: #F29212;
+            margin: 0px 31px 20px 30px;
+            word-break: break-word;
+            color:#FFFFFF;
+            font-size: 16px;
+            line-height: 20px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .profile__group {
+            max-width: 160px;
+        }
+
+        .candidate__group {
+            max-width: 230px;
+        }
+
+        .candidate__heading {
+            font-weight: 600;
+        }
+
+        .candidate__name {
+            font-weight: 400;
+        }
+
+        .profile__heading {
+            font-weight: 600;
+        }
+
+        .profile__name {
+            font-weight: 400;
+        }
+
+        table.graph {
+            width: 540px;
+            border-collapse: collapse;
+        }
+
+        table.header__block {
+            width: 540px;
+            border-collapse: collapse;
+        }
+
+        #graph.graph{
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #graph .item{
+            margin: 14px 0px;
+        }
+
+        .graph__line {
+            width: 327px;
+            padding: 0;
+            border-left: 2px solid #303030;
+            border-right: 2px solid rgba(30, 30, 30, 0.25);
+        }
+
+        #graph.horizontal .item{
+            height: 47px;
+            max-width: 326px;
+        }
+
+        .graph__text {
+            width: 197px;
+            margin: 14px 12px 14px 0;
+            text-align: right;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 17px;
+            color: #303030;
+            word-break: break-word;
+        }
+
+        .line__signatures-position {
+            justify-content: right;
+            margin-left: auto;
+            margin-right: 35px;
+        }
+
+        .line__signatures-text {
+            color: #A6A6A6;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 17px;
+            padding-left: 130px;
+        }
+
+        .circle__figure {
+            width: 24px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        table.circle {
+            justify-content: center;
+            margin: 0px 50px 20px 100px;
+        }
+
+        .circle__group {
+            padding: 0px 30px;
+        }
+
+        .circle__text {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 17px;
+            padding-bottom: 5px;
+        }
+
+        .header__group td{
+            padding: 15px 21px 21px 21px;
+            vertical-align: top;
+        }
+    </style>
 </head>
-<body>
+<body onload="loader()">
     <header>
-        <div class="flex header__block">
-            <div class="candidate__group">
-                <p class="candidate__heading">
-                    Кандидат
-                </p>
-                <p class="candidate__name">
-                    Анна Королева Сергеевна
-                </p>
-            </div>
-            <div class="profile__group"> 
-                <p class="profile__heading">
-                    Профиль
-                </p>
-                <p class="profile__name">
-                    HR-руководитель
-                </p>
-            </div>
-        </div>
+        <table class="flex header__block">
+            <tr class="header__group">
+                <td class="candidate__group">
+                    <p class="candidate__heading">
+                        Кандидат
+                    </p>
+                    <p class="candidate__name">
+                        Анна Королева Сергеевна
+                    </p>
+                </td>
+                <td class="profile__group">
+                    <p class="profile__heading">
+                        Профиль
+                    </p>
+                    <p class="profile__name">
+                        HR-руководитель
+                    </p>
+                </td>
+            </tr>
+        </table>
     </header>
     <main>
         <table id="graph" class="graph horizontal">
@@ -52,7 +241,7 @@
                     <p class="graph__text">Креативность</p>
                 </td>
                 <td class="graph__line">
-                    <div class="item" style="width:76%;"></div>
+                    <div class="item" style="width:99%;"></div>
                 </td>
             </tr>
             <tr>
@@ -80,49 +269,74 @@
                 </td>
             </tr>
         </table>
-        <div class="flex line__signatures-position">
-            <p class="line__signatures-text">
-                &#60; Частично 
-            </p>
-            <p class="line__signatures-text">
-                &#60; Да
-            </p>
-        </div>  
+        <table class="line__signatures-position">
+            <tr class="flex">
+                <td class="line__signatures-text">
+                    &#60; Частично
+                </td>
+                <td class="line__signatures-text">
+                    &#60; Да
+                </td>
+            </tr>
+        </table>
     </main>
     <footer>
-        <div class="circle flex">
-            <div class="flex circle__group">
-                <div class="circle__figure" style="background-color: #E44747;"></div>
-                <p class="circle__text">
-                    Нет
-                </p>
-            </div>
-            <div class="flex circle__group">
-                <div class="circle__figure" style="background-color: #FFB82E;"></div>
-                <p class="circle__text">
-                    Частично
-                </p>
-            </div>
-            <div class="flex circle__group">
-                <div class="circle__figure" style="background-color: #5DB56B;"></div>
-                <p class="circle__text"> 
-                    Да
-                </p>
-            </div>
-        </div>
+        <table class="circle flex">
+            <tr>
+                <td class="flex circle__group">
+                    <table>
+                        <tr class="flex circle__group">
+                            <td class="circle__figure" style="background-color: #E44747;"></td>
+                            <td class="circle__text">
+                                Нет
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="flex circle__group">
+                    <table>
+                        <tr class="flex circle__group">
+                            <td class="circle__figure" style="background-color: #FFB82E;"></td>
+                            <td class="circle__text">
+                                Частично
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="flex circle__group">
+                    <table>
+                        <tr class="flex circle__group">
+                            <td class="circle__figure" style="background-color: #5DB56B;"></td>
+                            <td class="circle__text">
+                                Да
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </footer>
     <script>
-        let items = document.querySelectorAll('.item');
-        for (var i=0; i < items.length; i++) {
-            var item = items[i];
-            var width = item.style.getPropertyValue("width").replace('%', '');
+        function loader() {
+            var color_line = document.getElementsByClassName('item');
+            for (var j = 0; j < color_line.length; ++j) {
+                var width = color_line[j].style.getPropertyValue("width").replace('%', '');
+                if (width >= 100 && width != ''){
+                    color_line[j].style.background = '#5DB56B';
+                } else if (width >= 50 && width != '') {
+                    color_line[j].style.background = '#FFB82E';
+                } else if(width < 50 && width != ''){
+                    color_line[j].style.background = '#E44747';
+                }
+            }
 
-            if (width >= 100 && width != ''){
-                item.style.background = '#5DB56B';
-            } else if (width >= 50 && width != '') {
-                item.style.background = '#FFB82E';
-            } else if(width < 50 && width != ''){
-                item.style.background = '#E44747';
+            var middle_line = document.getElementsByClassName('graph__line');
+            for (var j = 0; j < middle_line.length; ++j) {
+                middle_line[j].style.backgroundImage = '-webkit-gradient(linear, left top, left bottom, from(#ccc), to(#ccc))';
+                middle_line[j].style.backgroundRepeat = 'no-repeat';
+                middle_line[j].style.backgroundPositionX = 'center';
+                middle_line[j].style.backgroundPositionY = 'center';
+                middle_line[j].style.backgroundSize = '1.5px 100%';
             }
         }
     </script>
