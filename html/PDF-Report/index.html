@@ -387,7 +387,7 @@
                             Кандидат
                         </p>
                         <p class="candidate__name">
-                            Анна Королева Сергеевна Анна Королева Сергеевна Анна Королева Сергеевна Анна Королева СергеевнаHR-руководитель
+                            {{ candidate_name }}
                         </p>
                     </div>
                     <div class="profile__group">
@@ -395,7 +395,7 @@
                             Профиль
                         </p>
                         <p class="profile__name">
-                            HR-руководитель HR-руководитель HR-руководитель HR-руководительHR-руководительHR-руководительHR-руководитель
+                            {{ profile_name }}
                         </p>
                     </div>
                 </td>
@@ -404,54 +404,16 @@
                         Средние оценки компетенций
                     </p>
                     <table id="graph" class="graph horizontal graph__table">
+                        {% for key, value in dicts.items() %}
                         <tr>
                             <td>
-                                <p class="graph__text">Управленческие навыки</p>
+                                <p class="graph__text">{{ key }}</p>
                             </td>
                             <td class="graph__line">
-                                <div class="item" style="width:100%;"></div>
+                                <div class="item" style="width:{{ value }}%;"></div>
                             </td>
                         </tr>
-                        <tr>
-                            <td>
-                                <p class="graph__text">Умение планировать и организовывать</p>
-                            </td>
-                            <td class="graph__line">
-                                <div class="item" style="width:99%;"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="graph__text">Креативность</p>
-                            </td>
-                            <td class="graph__line">
-                                <div class="item" style="width:76%;"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="graph__text">Умение анализировать данные</p>
-                            </td>
-                            <td class="graph__line">
-                                <div class="item" style="width:58%;"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="graph__text">Опыт в области HR</p>
-                            </td>
-                            <td class="graph__line">
-                                <div class="item" style="width:9%;"></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="graph__text">Навыки коммуникации</p>
-                            </td>
-                            <td class="graph__line">
-                                <div class="item" style="width:20%;"></div>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </table>
                     <table class="line__signatures-position">
                         <tr class="flex">

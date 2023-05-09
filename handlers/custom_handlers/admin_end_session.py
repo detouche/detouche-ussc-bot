@@ -14,7 +14,7 @@ import imgkit
 from handlers.custom_handlers.role import admin_command, role
 
 from database.connection_db import delete_session, get_session_code_admin, get_id_evaluating, get_comp_names, \
-    get_assessments_competencies
+    get_assessments_competencies, get_candidate_name, get_profile_name_session
 
 from keyboards.inline.confirmation_delete_session import get_keyboard_confirmation_del
 
@@ -41,32 +41,34 @@ async def confirmat_del_session(callback: CallbackQuery, state: FSMContext, bot:
 async def cancel_del_session(callback: CallbackQuery, state: FSMContext, bot):
     admin_id = callback.message.chat.id
     session_code = get_session_code_admin(admin_id)
-    id_evaluating = get_id_evaluating(session_code)
-    print(id_evaluating)
-    comp_names = get_comp_names(session_code)
-    print(comp_names)
-    dicts = []
+    comp_names = list(map(lambda x: x[0], get_comp_names(session_code)))
+    grade_dicts = {}
     for i in comp_names:
-        print(i)
-        print(i[0])
-        assessments_competencies = get_assessments_competencies(i[0], session_code)
-        print(assessments_competencies)
-        # dicts.append(i[0], assessments_competencies[0])
-    await creating_pdf(bot, callback.message)
-    await creating_photo(bot, callback.message)
+        assessments_competencies = list(map(lambda x: x[0], get_assessments_competencies(i, session_code)))
+        if assessments_competencies.count(-1) == len(assessments_competencies):
+            grade = 0
+        else:
+            grade = float((sum(assessments_competencies) + assessments_competencies.count(-1))
+                          / (len(assessments_competencies) - assessments_competencies.count(-1)))
+        grade_dicts[i] = int(grade * 100)
+    candidate_name = get_candidate_name(session_code)
+    profile_name = get_profile_name_session(session_code)
+    id_evaluating = list(map(lambda x: x[0], get_id_evaluating(session_code)))
+    await creating_pdf(bot, callback.message, grade_dicts, candidate_name, profile_name)
+    await creating_photo(bot, callback.message, grade_dicts, candidate_name, profile_name)
     await callback.message.delete()
     await create_session(callback.message, state)
 
 
-async def creating_pdf(bot: Bot, message: types.Message):
+async def creating_pdf(bot: Bot, message: types.Message, grade_dicts: dict, candidate_name: str, profile_name: str):
     config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
     env = Environment(loader=FileSystemLoader('./'))
     template = env.get_template(r"html/PDF-Report/index.html")
     pdf_template = template.render(
         {
-            # 'number_repetitions': number_repetitions,
-            # 'competencies_id': competencies_id,
-            # 'competencies_name': competencies_name,
+            'dicts': grade_dicts,
+            'candidate_name': candidate_name,
+            'profile_name': profile_name,
         })
     options = {'enable-local-file-access': '',
                'margin-top': '0.3in',
@@ -81,15 +83,16 @@ async def creating_pdf(bot: Bot, message: types.Message):
     await bot.send_document(message.chat.id, pdf_file)
 
 
-async def creating_photo(bot: Bot, message: types.Message):
+async def creating_photo(bot: Bot, message: types.Message, grade_dicts: dict, candidate_name: str, profile_name: str):
     config = imgkit.config(wkhtmltoimage=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltoimage.exe')
     env = Environment(loader=FileSystemLoader('./'))
     template = env.get_template(r"html/Mini-Report/index.html")
     pdf_template = template.render(
         {
-            # 'number_repetitions': number_repetitions,
-            # 'competencies_id': competencies_id,
-            # 'competencies_name': competencies_name,
+            'dicts': grade_dicts,
+            'candidate_name': candidate_name,
+            'profile_name': profile_name,
+
         })
     options = {'enable-local-file-access': '',
                }
