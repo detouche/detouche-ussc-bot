@@ -11,7 +11,7 @@ import pdfkit
 import io
 import imgkit
 
-from handlers.custom_handlers.role import admin_command, role
+from handlers.custom_handlers.role import admin_command, role, MAIN_ADMINS
 
 from database.connection_db import delete_session, get_session_code_admin, get_id_evaluating, get_comp_names, \
     get_assessments_competencies, get_candidate_name, get_profile_name_session, get_user_name_for_id, get_user_grades, \
@@ -25,7 +25,7 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 # @admin_command
 @rt.message(Text('Завершить сессию'))
 async def end_session(message: Message, state: FSMContext):
-    if message.chat.id in get_admins_list(0):
+    if message.chat.id in get_admins_list(0) or message.chat.id in MAIN_ADMINS:
         await message.answer(text=f'Вы уверены?',
                              reply_markup=get_keyboard_confirmation_del())
     else:
