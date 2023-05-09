@@ -98,6 +98,7 @@ def get_admins_list(element):
 
 def main_admin_delete_admin(admin_id):
     cursor.execute(f"DELETE FROM admin where id = {admin_id}")
+    delete_session(admin_id)
     conn.commit()
 
 
@@ -413,3 +414,9 @@ def get_assessments_competencies(comp_name, connection_code):
     assessments_competencies = cursor.execute(f"SELECT assessments_competencies FROM user_session WHERE comp_names = "
                                               f"'{comp_name}' AND connection_codes = {connection_code}").fetchall()
     return assessments_competencies
+
+
+def get_user_grades(id_evaluating, connection_code):
+    grades = cursor.execute(f"SELECT comp_names, assessments_competencies FROM user_session "
+                            f"WHERE id_evaluating = {id_evaluating} AND connection_codes = {connection_code}").fetchall()
+    return grades

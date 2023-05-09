@@ -404,13 +404,13 @@
                         Средние оценки компетенций
                     </p>
                     <table id="graph" class="graph horizontal graph__table">
-                        {% for key, value in dicts.items() %}
+                        {% for comp_name, comp_value in grade_dicts.items() %}
                         <tr>
                             <td>
-                                <p class="graph__text">{{ key }}</p>
+                                <p class="graph__text">{{ comp_name }}</p>
                             </td>
                             <td class="graph__line">
-                                <div class="item" style="width:{{ value }}%;"></div>
+                                <div class="item" style="width:{{ comp_value }}%;"></div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -470,426 +470,37 @@
             </p>
         </div>
         <ul class="list-reset evaluating__list list">
+            {% for user_name, user_grades in user_grade_info.items() %}
+
+
             <li class="evaluating_card">
                 <div class="evaluating__block">
                     <p class="evaluating__name">
-                        Иванов Иван Иванович
+                        {{ user_name }}
                     </p>
                     <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="evaluating__block_line">
                         <line y1="0.5" x2="50" y2="0.5" stroke="#F29212"/>
                     </svg>
                     <table class="evaluating__table flex">
+                        {% for comp_name, comp_grade in user_grades.items() %}
+
                         <tr class="evaluating__competency">
                             <td class="evaluating__competency_name_position">
                                 <p class="evaluating__competency_name">
-                                    Умение анализировать данные 
+                                    {{ comp_name }}
                                 </p>
                             </td>
                             <td>
                                 <p class="evaluating__competency_value">
-                                    Частично
+                                    {{ value_converter_text(comp_grade) }}
                                 </p>
                             </td>
                         </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Навыки коммуникации 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Креативность 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Без оценки
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение планировать и организовывать
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Управленческие навыки
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Опыт в области HR
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
+                        {% endfor %}
                     </table>
                 </div>
             </li>
-            <li class="evaluating_card">
-                <div class="evaluating__block">
-                    <p class="evaluating__name">
-                        Смирнова Елена Петровна
-                    </p>
-                    <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="evaluating__block_line">
-                        <line y1="0.5" x2="50" y2="0.5" stroke="#F29212"/>
-                    </svg>
-                    <table class="evaluating__table flex">
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение анализировать данные
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Навыки коммуникации 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Креативность 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Нет
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение планировать и организовывать
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Управленческие навыки
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Опыт в области HR
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </li>
-            <li class="evaluating_card">
-                <div class="evaluating__block">
-                    <p class="evaluating__name">
-                        Чернов Дмитрий Андреевич
-                    </p>
-                    <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="evaluating__block_line">
-                        <line y1="0.5" x2="50" y2="0.5" stroke="#F29212"/>
-                    </svg>
-                    <table class="evaluating__table flex">
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение анализировать данные 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Навыки коммуникации 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Креативность 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение планировать и организовывать
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Управленческие навыки
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Опыт в области HR
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Без оценки
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </li>
-            <li class="evaluating_card">
-                <div class="evaluating__block">
-                    <p class="evaluating__name">
-                        Попов Алексей Сергеевичa
-                    </p>
-                    <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="evaluating__block_line">
-                        <line y1="0.5" x2="50" y2="0.5" stroke="#F29212"/>
-                    </svg>
-                    <table class="evaluating__table flex">
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение анализировать данные 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Навыки коммуникации 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Нет
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Креативность 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Нет
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение планировать и организовывать
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Управленческие навыки
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Нет
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Опыт в области HR
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </li>
-            <li class="evaluating_card">
-                <div class="evaluating__block">
-                    <p class="evaluating__name">
-                        Аттиа Мохамед Магди Абдельхамид Аттиа Мохамед Магди Абдельхамид Аттиа Мохамед Магди Абдельхамид Аттиа Мохамед Магди Абдельхамид
-                    </p>
-                    <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="evaluating__block_line">
-                        <line y1="0.5" x2="50" y2="0.5" stroke="#F29212"/>
-                    </svg>
-                    <table class="evaluating__table flex">
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение анализировать данные 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Навыки коммуникации 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Креативность 
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Без оценки
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Умение планировать и организовывать
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Без оценки
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Управленческие навыки
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Частично
-                                </p>
-                            </td>
-                        </tr>
-                        <tr class="evaluating__competency">
-                            <td class="evaluating__competency_name_position">
-                                <p class="evaluating__competency_name">
-                                    Опыт в области HR
-                                </p>
-                            </td>
-                            <td>
-                                <p class="evaluating__competency_value">
-                                    Да
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </li>
+            {% endfor %}
         </ul>
     </main>
     <script>

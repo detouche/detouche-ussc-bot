@@ -7,10 +7,6 @@ from handlers.custom_handlers.user_connection import user_start
 
 from handlers.custom_handlers.admin_connection import admin_start
 
-from handlers.custom_handlers.main_admin_connection import main_admin_start
-
-from database.connection_db import get_admins_list
-
 from database.connection_db import get_admins_list
 
 # Никита - 755950556
@@ -20,7 +16,7 @@ from database.connection_db import get_admins_list
 # Игорь - 372233735
 
 
-MAIN_ADMINS = [642205779, 980964741]
+MAIN_ADMINS = [642205779]
 
 
 @rt.message(Command("start"))
@@ -31,15 +27,12 @@ async def role(message: types.Message, state: FSMContext):
         await admin_start(message)
     elif customer_id in get_admins_list(0):
         await admin_start(message)
-    elif customer_id in MAIN_ADMINS:
-        await main_admin_start(message)
     else:
         await state.clear()
-
-        if len(message.text.split()) == 1:
-            await user_start(message, state)
-        else:
+        if len(message.text.split()) == 2 and "start" in message.text:
             await user_start(message, state, message.text.split()[1])
+        else:
+            await user_start(message, state)
 
 
 def admin_command(func):
