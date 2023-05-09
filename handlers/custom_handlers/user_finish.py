@@ -1,18 +1,23 @@
-from telebot import types
-from loader import bot
-from telebot.types import Message
+from aiogram import Bot
+from loader import rt
+from aiogram.filters import Text
+from aiogram.types import Message
 
-from handlers.custom_handlers.user_end_assessment import assessment_end
+from states.user_info import User
 
-from handlers.custom_handlers.role import user_command
+from database.connection_db import get_session_code
+# from handlers.custom_handlers.role import user_command
 
 
-@user_command
-def finish(message: Message) -> None:
-    if message.text == 'Да':
-        bot.send_message(chat_id=message.from_user.id,
-                         text=f'Спасибо, до свидания',
-                         reply_markup=types.ReplyKeyboardRemove())
-    elif message.text == 'Нет':
-        assessment_end(message)
-
+@rt.message(Text("Завершить проверку"))
+# @user_command
+async def user_assessment_process(message: Message, bot: Bot, state):
+    await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id - 1)
+    await message.answer(text=f'Проверка кандидата завершена.\n'
+                              f'Вы можете изменить поставленные оценки, нажав "Начать оценку"')
+    user_id = message.chat.id
+    start_session = get_session_code(user_id)
+    await state.set_state(User.start_session)
+    await state.update_data(start_session=start_session)
+    from handlers.custom_handlers.user_start_evaluation import user_start_evaluation_info
+    await user_start_evaluation_info(message, state)

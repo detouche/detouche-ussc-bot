@@ -5,7 +5,8 @@ from aiogram.filters import Text
 
 from keyboards.reply.user_connection import user_connection
 
-from database.connection_db import user_register, auth_validation, user_rename
+from database.connection_db import user_register, auth_validation, user_rename, user_has_active_session, \
+    get_session_code
 
 from states.user_info import User
 
@@ -15,15 +16,22 @@ async def user_start(message: types.Message, state: FSMContext, url_code=None):
     current_id = message.from_user.id
     authorized = auth_validation(current_id)
     if authorized:
-        if url_code is None:
-            await message.answer(text=f'Пожалуйста, введите код сессии',
-                                 reply_markup=user_connection)
+        if user_has_active_session(current_id):
+            await message.answer(text=f'Вы не закончили оценивание прошлой сессии')
             await state.set_state(User.start_session)
-        else:
-            await state.set_state(User.start_session)
-            await state.update_data(start_session=url_code)
+            await state.update_data(start_session=get_session_code(current_id))
             from handlers.custom_handlers.user_start_evaluation import user_start_evaluation_info
             await user_start_evaluation_info(message, state)
+        else:
+            if url_code is None:
+                await message.answer(text=f'Пожалуйста, введите код сессии',
+                                     reply_markup=user_connection)
+                await state.set_state(User.start_session)
+            else:
+                await state.set_state(User.start_session)
+                await state.update_data(start_session=url_code)
+                from handlers.custom_handlers.user_start_evaluation import user_start_evaluation_info
+                await user_start_evaluation_info(message, state)
     else:
         await message.answer("Вижу Вас в первый раз. Введите своё ФИО")
         await state.set_state(User.name)

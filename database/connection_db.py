@@ -4,6 +4,29 @@ import sqlite3
 conn = sqlite3.connect('database/database.db', check_same_thread=False)
 cursor = conn.cursor()
 
+cursor.execute("""CREATE TABLE IF NOT EXISTS user_session(
+                                        id INTEGER PRIMARY KEY,
+                                        candidate_names TEXT, 
+                                        profile_names TEXT,
+                                        comp_names TEXT,
+                                        comp_desc TEXT,
+                                        connection_codes INTEGER,
+                                        id_evaluating INTEGER,
+                                        assessments_competencies INTEGER
+                                    )""")
+conn.commit()
+
+cursor.execute("""CREATE TABLE IF NOT EXISTS session(
+                        id INTEGER PRIMARY KEY,
+                        candidate_name TEXT, 
+                        profile_name TEXT,
+                        connection_code INTEGER,
+                        admin_id INTEGER,
+                        comp_name TEXT,
+                        comp_desc TEXT
+                    )""")
+conn.commit()
+
 
 def db_table_val(competencies_id: int, competencies_name: str, competencies_text: str):
     cursor.execute('INSERT INTO competencies (competencies_id, competencies_name, competencies_text) VALUES (?, ?, ?)',
@@ -76,6 +99,7 @@ def get_admins_list(element):
 
 def main_admin_delete_admin(admin_id):
     cursor.execute(f"DELETE FROM admin where id = {admin_id}")
+    delete_session(admin_id)
     conn.commit()
 
 
@@ -287,36 +311,28 @@ def get_user_name_for_id(current_id):
     return user_name[0]
 
 
-def create_session(candidate_name, profile, connection_code, user_id):
-    cursor.execute("""CREATE TABLE IF NOT EXISTS session(
-                            id INTEGER PRIMARY KEY,
-                            candidate_name TEXT, 
-                            profile INTEGER,
-                            connection_code INTEGER,
-                            user_id INTEGER
-                        )""")
-    conn.commit()
-    cursor.execute("INSERT INTO session(candidate_name, profile, connection_code, user_id) VALUES(?,?,?,?)",
-                   (candidate_name, profile, connection_code, user_id))
+def create_session(candidate_name, profile_name, connection_code, user_id, comp_name, comp_desc):
+    cursor.execute("INSERT INTO session(candidate_name, profile_name, connection_code, admin_id, comp_name, comp_desc) "
+                   "VALUES(?,?,?,?,?,?)",
+                   (candidate_name, profile_name, connection_code, user_id, comp_name, comp_desc))
     conn.commit()
 
 
 def get_session_info(element):
-    cursor.execute("""CREATE TABLE IF NOT EXISTS session(
-                                id INTEGER PRIMARY KEY,
-                                candidate_name TEXT, 
-                                profile INTEGER,
-                                connection_code INTEGER,
-                                user_id INTEGER
-                            )""")
-    conn.commit()
     cursor.execute('SELECT * FROM session')
     session_info_list = list(map(lambda x: x[element], cursor.fetchall()))
     return session_info_list
 
 
-def delete_session(user_id):
-    cursor.execute(f"DELETE FROM session where user_id = {user_id}")
+def get_session_code_admin(admin_id):
+    connection_code = cursor.execute(f'SELECT connection_code FROM session WHERE admin_id = {admin_id}').fetchone()
+    return connection_code[0]
+
+
+def delete_session(admin_id):
+    connection_code = cursor.execute(f'SELECT connection_code FROM session WHERE admin_id = {admin_id}').fetchone()
+    cursor.execute(f"DELETE FROM session WHERE admin_id = {admin_id}")
+    cursor.execute(f"DELETE FROM user_session WHERE connection_codes = {connection_code[0]}")
     conn.commit()
 
 
@@ -325,9 +341,25 @@ def get_candidate_name(connection_code):
     return name[0]
 
 
-def get_profile_number(connection_code):
-    number = cursor.execute(f'SELECT profile FROM session WHERE connection_code = {connection_code}').fetchone()
-    return number[0]
+def get_profile_name_session(connection_code):
+    name = cursor.execute(f'SELECT profile_name FROM session WHERE connection_code = {connection_code}').fetchone()
+    return name[0]
+
+
+def get_comp_name_session(connection_code):
+    name = cursor.execute(f'SELECT comp_name FROM session WHERE connection_code = {connection_code}').fetchall()
+    return name
+
+
+def get_comp_desc_session(connection_code):
+    name = cursor.execute(f'SELECT comp_desc FROM session WHERE connection_code = {connection_code}').fetchall()
+    return name
+
+
+def get_connection_code_session(user_id):
+    connection_code = cursor.execute(f'SELECT connection_codes FROM user_session WHERE id_evaluating = {user_id}')\
+        .fetchall()
+    return connection_code[0]
 
 
 def get_profile_name(profile_number):
@@ -338,3 +370,84 @@ def get_profile_name(profile_number):
 def get_competencies_id(id_profile):
     name = cursor.execute(f'SELECT id_competence FROM CompetencyProfile WHERE id_profile = {id_profile}').fetchone()
     return name
+
+
+def user_session_info(candidate_name, profile_name, comp_name, comp_desc, connection_code, user_id,
+                      assessment_competence):
+    cursor.execute("INSERT INTO user_session(candidate_names, profile_names, comp_names, comp_desc, connection_codes, "
+                   "id_evaluating, assessments_competencies) VALUES(?,?,?,?,?,?,?)",
+                   (candidate_name, profile_name, comp_name, comp_desc, connection_code, user_id, assessment_competence))
+    conn.commit()
+
+
+def get_user_session_info(element, start_session):
+    cursor.execute(f'SELECT * FROM user_session WHERE connection_codes = {start_session}')
+    session_info_list = list(map(lambda x: x[element], cursor.fetchall()))
+    return session_info_list
+
+
+def get_session_code(current_id):
+    session_code = cursor.execute(f'SELECT connection_codes FROM user_session WHERE id_evaluating = {current_id}').\
+        fetchone()
+    return session_code[0]
+
+
+def user_has_active_session(current_id):
+    exists = cursor.execute(f"SELECT id_evaluating FROM user_session WHERE id_evaluating = {current_id}").fetchone()
+    return False if exists is None else True
+
+
+def get_assessment_comp_session(comp_name, current_id):
+    assessment = cursor.execute(f'SELECT assessments_competencies FROM user_session WHERE id_evaluating = {current_id} '
+                                f'AND comp_names = "{comp_name}"').fetchone()
+    return assessment[0]
+
+
+def get_id_comp_session(comp_name, current_id):
+    id_comp = cursor.execute(f'SELECT id FROM user_session WHERE id_evaluating = {current_id} '
+                             f'AND comp_names = "{comp_name}"').fetchone()
+    return id_comp[0]
+
+
+def get_current_comp_desc_session(comp_id):
+    comp_desc = cursor.execute(f"SELECT comp_desc FROM user_session WHERE id = {comp_id}").fetchone()
+    return comp_desc[0]
+
+
+def get_current_comp_name_session(comp_id):
+    comp_name = cursor.execute(f"SELECT comp_names FROM user_session WHERE id = {comp_id}").fetchone()
+    return comp_name[0]
+
+
+def get_current_comp_grade_session(comp_id):
+    comp_grade = cursor.execute(f"SELECT assessments_competencies FROM user_session WHERE id = {comp_id}").fetchone()
+    return comp_grade[0]
+
+
+def transform_grade_current_comp(comp_id, new_grade):
+    cursor.execute(f"UPDATE user_session SET assessments_competencies = '{new_grade}' WHERE id = '{comp_id}'")
+    conn.commit()
+
+
+def get_id_evaluating(connection_code):
+    id_evaluating = cursor.execute(f"SELECT id_evaluating FROM user_session WHERE connection_codes = {connection_code} "
+                                   f"GROUP BY id_evaluating").fetchall()
+    return id_evaluating
+
+
+def get_comp_names(connection_code):
+    comp_names = cursor.execute(f"SELECT comp_names FROM user_session WHERE connection_codes = {connection_code} "
+                                f"GROUP BY comp_names").fetchall()
+    return comp_names
+
+
+def get_assessments_competencies(comp_name, connection_code):
+    assessments_competencies = cursor.execute(f"SELECT assessments_competencies FROM user_session WHERE comp_names = "
+                                              f"'{comp_name}' AND connection_codes = {connection_code}").fetchall()
+    return assessments_competencies
+
+
+def get_user_grades(id_evaluating, connection_code):
+    grades = cursor.execute(f"SELECT comp_names, assessments_competencies FROM user_session "
+                            f"WHERE id_evaluating = {id_evaluating} AND connection_codes = {connection_code}").fetchall()
+    return grades

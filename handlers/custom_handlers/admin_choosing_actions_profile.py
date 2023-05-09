@@ -38,7 +38,6 @@ async def profile_list(message: types.Message, state: FSMContext, bot):
     await creating_pdf(bot, message)
 
 
-
 @rt.message(Profile.check_competencies)
 async def get_competencies_in_profile(message: types.Message, state: FSMContext):
     comp_list = get_profile_competencies(message.text.lower())
@@ -76,7 +75,7 @@ async def creating_pdf(bot: Bot, message: types.Message):
             'profile_name': profile_name,
         })
     options = {'enable-local-file-access': '',
-               'margin-top': '0in',
+               'margin-top': '0.3in',
                'margin-right': '0in',
                'margin-bottom': '0in',
                'margin-left': '0in',
