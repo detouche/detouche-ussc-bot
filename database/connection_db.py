@@ -1,5 +1,6 @@
 import sqlite3
 
+
 conn = sqlite3.connect('database/database.db', check_same_thread=False)
 cursor = conn.cursor()
 
@@ -136,13 +137,9 @@ def check_competence_id(id):
 
 
 def delete_competence(id):
-    status = cursor.execute(f"SELECT id FROM competencies WHERE id = '{id}'").fetchone()
-    if status is None:
-        return False
-    else:
-        cursor.execute(f"DELETE FROM competencies WHERE id='{id}'")
-        conn.commit()
-        return True
+    cursor.execute(f"DELETE FROM competencies WHERE id='{id}'")
+    cursor.execute(f"DELETE FROM CompetencyProfile WHERE id_competence ='{id}'")
+    conn.commit()
 
 
 def get_competencies_list():
@@ -268,6 +265,40 @@ def change_competence_description(id, new_desc):
         return True
     else:
         return False
+
+
+def change_profile_title(id, new_title):
+    status_title = cursor.execute(f"SELECT title FROM profiles WHERE title = '{new_title}'").fetchone()
+    status_id = cursor.execute(f"SELECT id FROM profiles WHERE id ='{id}'").fetchone()
+    if status_title is None and status_id is not None:
+        cursor.execute(f"UPDATE profiles SET title = '{new_title.casefold()}' WHERE id = '{id}'")
+        conn.commit()
+        return True
+    else:
+        return False
+
+
+def competencies_in_profile(id_profile):
+    status = cursor.execute(f"SELECT id FROM profiles WHERE id ='{id_profile}'").fetchone()
+    if status is None:
+        return False
+    else:
+        comp_list = cursor.execute(
+            f"SELECT id_competence FROM CompetencyProfile WHERE id_profile ='{id_profile}'").fetchall()
+        comp_list = list(map(lambda x: x[0], comp_list))
+        return comp_list
+
+
+def delete_competence_from_profile(competence_id, profile_id):
+    status = cursor.execute(
+        f"SELECT id_competence FROM CompetencyProfile WHERE id_competence ='{competence_id}' AND id_profile='{profile_id}'").fetchone()
+    if status is None:
+        return False
+    else:
+        cursor.execute(
+            f"DELETE FROM CompetencyProfile WHERE id_competence='{competence_id}' AND id_profile ='{profile_id}'")
+        conn.commit()
+        return True
 
 
 def get_admins_name_for_id(current_id):
