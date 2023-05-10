@@ -52,11 +52,11 @@ async def get_confirmation(callback: CallbackQuery, callback_data: ConfirmationC
     if confirmation:
         await callback.message.delete()
         await callback.message.answer(f"Выберите профили для {candidate_name}")
-        await profile_list_session(callback.message, bot)
+        await profile_list_session(message=callback.message, bot=bot)
         await state.set_state(AdminSession.profile_number)
     else:
         await callback.message.delete()
-        await create_session(callback.message, state)
+        await create_session(message=callback.message, state=state)
 
 
 async def profile_list_session(message: types.Message, bot: Bot):

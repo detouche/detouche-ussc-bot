@@ -19,26 +19,26 @@ from states.admin_session import AdminSession
 
 @rt.message(AdminSession.profile_number)
 async def session_successful_creation(message: Message, state: FSMContext, bot: Bot):
-    profile_list = get_profile_competencies(message.text.lower())
-    profile_list = list(map(get_competence_title, profile_list))
+    profile_list = list(map(get_competence_title, get_profile_competencies(message.text.lower())))
     if profile_list:
         profile_number = message.text.lower()
         connection_code = randint(100000, 999999)
         data = await state.get_data()
         candidate_name = data['candidate_name']
         await state.clear()
-        connections_code = get_session_info(3)
-        while connection_code in connections_code:
+        connection_codes = get_session_info(3)
+        while connection_code in connection_codes:
             connection_code = randint(100000, 999999)
         profile_name = get_profile_name(profile_number)
-        comp_list_name = get_profile_competencies(profile_number)
-        comp_list_name = list(map(get_competence_title, comp_list_name))
-        comp_list_desc = get_profile_competencies(profile_number)
-        comp_list_desc = list(map(get_competence_description, comp_list_desc))
-        current_id = message.chat.id
-        for i in range(len(comp_list_name)):
-            create_session(candidate_name, profile_name, connection_code, current_id, comp_list_name[i][0],
-                           comp_list_desc[i][0])
+        competence_list_name = list(map(get_competence_title, get_profile_competencies(profile_number)))
+        competence_list_desc = list(map(get_competence_description, get_profile_competencies(profile_number)))
+        for i in range(len(competence_list_name)):
+            create_session(candidate_name=candidate_name,
+                           profile_name=profile_name,
+                           connection_code=connection_code,
+                           user_id=message.chat.id,
+                           competence_name=competence_list_name[i][0],
+                           competence_description=competence_list_desc[i][0])
         session_link = await create_start_link(bot=bot, payload=str(connection_code))
         qr = qrcode.make(session_link)
         img_byte_arr = io.BytesIO()

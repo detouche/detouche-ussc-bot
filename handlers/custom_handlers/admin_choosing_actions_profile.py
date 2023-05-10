@@ -33,19 +33,17 @@ async def choosing_actions_profile(message: types.Message, state: FSMContext, *a
 @rt.message(Text('Список профилей'))
 @admin_command
 async def profile_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
-    data_profile_list = get_profile_list()
-    data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_profile_list)))
+    data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', get_profile_list())))
     await state.set_state(Profile.check_competencies)
     await message.answer(text=f'Введите ID профиля для просмотра входящих компетенций. \n'
                               f'Список всех имеющихся профилей:\n{data_profile_list}',
                          reply_markup=admin_delete_profile)
-    await creating_pdf(bot, message)
+    await creating_pdf(bot=bot, message=message)
 
 
 @rt.message(Profile.check_competencies)
 async def get_competencies_in_profile(message: types.Message, state: FSMContext):
-    comp_list = get_profile_competencies(message.text.lower())
-    comp_list = list(map(get_competence_title, comp_list))
+    comp_list = list(map(get_competence_title, get_profile_competencies(message.text.lower())))
     if comp_list:
         title = '\n'.join(list(map(lambda x: f'Компетенция: {x[0]}', comp_list)))
         await message.answer(text=f'Компетенции входящие в профиль\n'
@@ -88,4 +86,4 @@ async def creating_pdf(bot: Bot, message: types.Message):
                }
     flike = io.BytesIO(pdfkit.from_string(pdf_template, False, configuration=config, options=options)).getvalue()
     pdf_file = BufferedInputFile(flike, filename="Список профилей.pdf")
-    await bot.send_document(message.chat.id, pdf_file)
+    await bot.send_document(chat_id=message.chat.id, document=pdf_file)

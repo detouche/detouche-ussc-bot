@@ -31,13 +31,12 @@ async def choosing_actions_competencies(message: types.Message, state: FSMContex
 @rt.message(Text('Список компетенций'))
 @admin_command
 async def competencies_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
-    data_list = get_competencies_list()
-    comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_list)))
+    competence_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', get_competencies_list())))
     await state.set_state(Competence.check_description)
     await message.answer(text=f'Введите ID компетенции для просмотра ее описания. \n'
-                              f'Список всех имеющихся компетенций:\n{comp_list}',
+                              f'Список всех имеющихся компетенций:\n{competence_list}',
                          reply_markup=admin_create_competence)
-    await creating_pdf(bot, message)
+    await creating_pdf(bot=bot, message=message)
 
 
 @rt.message(Competence.check_description)
@@ -75,4 +74,4 @@ async def creating_pdf(bot: Bot, message: types.Message):
                }
     flike = io.BytesIO(pdfkit.from_string(pdf_template, False, configuration=config, options=options)).getvalue()
     pdf_file = BufferedInputFile(flike, filename="Список компетенций.pdf")
-    await bot.send_document(message.chat.id, pdf_file)
+    await bot.send_document(chat_id=message.chat.id, document=pdf_file)

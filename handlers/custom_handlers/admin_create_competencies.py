@@ -4,7 +4,9 @@ from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 
 from keyboards.reply.admin_create_competence import admin_create_competence
+from keyboards.reply.admin_change_competence import admin_change_competence
 from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
+
 
 from handlers.custom_handlers.role import admin_command
 
@@ -23,13 +25,15 @@ async def create_competence(message: types.Message, state: FSMContext, *args, **
 
 @rt.message(Competence.title)
 async def create_competence_title(message: types.Message, state: FSMContext):
-    if check_competence(message.text):
+    if check_competence(competence_name=message.text):
         await state.update_data(title=message.text.lower())
         await message.answer(text=f'Введите описание компетенции')
         await state.set_state(Competence.description)
     else:
         await message.answer(text="Такая компетения уже существует.",
-                             reply_markup=admin_choosing_actions_competencies)
+                             reply_markup=admin_change_competence)
+        await state.clear()
+        await create_competence(message=message, state=state)
 
 
 @rt.message(Competence.description)
@@ -37,7 +41,7 @@ async def create_competence_description(message: types.Message, state: FSMContex
     await state.update_data(description=message.text)
     competence_data = await state.get_data()
     await state.clear()
-    add_competence(competence_data['title'], competence_data['description'])
+    add_competence(cometence_name=competence_data['title'], competence_description=competence_data['description'])
     await message.answer(text=f'Компетенция {competence_data["title"]} успешно создана.\n'
                               f'Ее описание: {competence_data["description"]}',
                          reply_markup=admin_choosing_actions_competencies)

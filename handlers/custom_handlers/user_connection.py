@@ -13,25 +13,27 @@ from states.user_info import User
 from handlers.custom_handlers.role import user_command
 
 
-async def user_start(message: types.Message, state: FSMContext, url_code=None):
+async def user_start(message: types.Message, state: FSMContext, url_code: str = None):
     await state.clear()
-    current_id = message.from_user.id
-    authorized = auth_validation(current_id)
+    user_id = message.from_user.id
+    authorized = auth_validation(user_id)
     if authorized:
-        if user_has_active_session(current_id):
+        if user_has_active_session(user_id):
             await message.answer(text=f'Вы не закончили оценивание прошлой сессии')
-            await state.set_state(User.start_session)
-            await state.update_data(start_session=get_session_code(current_id))
+            await state.set_state(User.connection_code)
+            await state.update_data(connection_code=get_session_code(user_id))
+
             from handlers.custom_handlers.user_start_grading import user_start_grading_info
             await user_start_grading_info(message, state)
         else:
             if url_code is None:
                 await message.answer(text=f'Пожалуйста, введите код сессии',
                                      reply_markup=user_connection)
-                await state.set_state(User.start_session)
+                await state.set_state(User.connection_code)
             else:
-                await state.set_state(User.start_session)
-                await state.update_data(start_session=url_code)
+                await state.set_state(User.connection_code)
+                await state.update_data(connection_code=url_code)
+
                 from handlers.custom_handlers.user_start_grading import user_start_grading_info
                 await user_start_grading_info(message, state)
     else:
@@ -43,10 +45,10 @@ async def user_start(message: types.Message, state: FSMContext, url_code=None):
 async def user_enter_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
     user_data = await state.get_data()
-    current_id = message.from_user.id
+    user_id = message.from_user.id
     await message.answer(f"Я Вас запомнил, {user_data['name']}")
     await state.clear()
-    user_register(current_id, user_data['name'])
+    user_register(user_id, user_data['name'])
     await user_start(message, state)
 
 

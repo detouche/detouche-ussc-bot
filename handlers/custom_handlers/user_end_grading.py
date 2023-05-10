@@ -18,8 +18,9 @@ async def user_grading_process(message: Message, bot: Bot, state: FSMContext, *a
     await message.answer(text=f'Проверка кандидата завершена.\n'
                               f'Вы можете изменить поставленные оценки, нажав "Начать оценку"')
     user_id = message.chat.id
-    start_session = get_session_code(user_id)
-    await state.set_state(User.start_session)
-    await state.update_data(start_session=start_session)
+    connection_code = get_session_code(user_id)
+    await state.set_state(User.connection_code)
+    await state.update_data(connection_code=connection_code)
+
     from handlers.custom_handlers.user_start_grading import user_start_grading_info
     await user_start_grading_info(message, state)

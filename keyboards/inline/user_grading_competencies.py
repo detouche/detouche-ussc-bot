@@ -16,9 +16,10 @@ async def user_grading_get_keyboard(message: Message):
                                    comp_list_name)))
     await message.answer(text=f'Информация о компетенциях:\n \n{comp_info}')
     for i in range(len(comp_list_name)):
-        comp_id = get_id_comp_session(comp_list_name[i][0], current_id)
+        competence_id = get_id_comp_session(comp_list_name[i][0], current_id)
         button = [InlineKeyboardButton(text=f"{comp_list_name[i][0]}",
-                                       callback_data=UserGrading(action="assessment", comp_id=comp_id).pack())]
+                                       callback_data=UserGrading(action="assessment",
+                                                                 competence_id=competence_id).pack())]
         buttons.append(button)
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     await message.answer(text='Вы можете оценить следующие компетенции:', reply_markup=keyboard)

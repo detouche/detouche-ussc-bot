@@ -26,16 +26,16 @@ async def user_grading_process(message: Message, *args, **kwargs):
 
 @rt.callback_query(UserGrading.filter(F.action == 'assessment'))
 async def add_admin_confirmation(callback: CallbackQuery, callback_data: UserGrading, state: FSMContext):
-    comp_id = callback_data.competence_id
-    comp_name = get_current_comp_name_session(comp_id)
-    comp_desc = get_current_comp_desc_session(comp_id)
-    comp_grade = get_current_comp_grade_session(comp_id)
-    comp_grade = grade_text_converter(int(comp_grade))
-    await callback.message.edit_text(text=f"Название компетенции: {comp_name}\n\n"
-                                          f"Описание компетенции: {comp_desc}\n\n"
-                                          f"Текущая оценка: {comp_grade}",
+    competence_id = callback_data.competence_id
+    competence_name = get_current_comp_name_session(competence_id)
+    competence_desc = get_current_comp_desc_session(competence_id)
+    competence_grade = get_current_comp_grade_session(competence_id)
+    competence_grade = grade_text_converter(int(competence_grade))
+    await callback.message.edit_text(text=f"Название компетенции: {competence_name}\n\n"
+                                          f"Описание компетенции: {competence_desc}\n\n"
+                                          f"Текущая оценка: {competence_grade}",
                                      reply_markup=user_grade_get_keyboard())
-    await CompetenceSessionInfo.set_data(state, data={'competence_id': comp_id})
+    await CompetenceSessionInfo.set_data(state, data={'competence_id': competence_id})
 
 
 @rt.callback_query(UserGrade.filter(F.action == 'assessment_grade'))
@@ -43,9 +43,9 @@ async def add_admin_confirmation(callback: CallbackQuery, callback_data: UserGra
                                  bot: Bot):
     data = await state.get_data()
     await state.clear()
-    comp_id = data['competence_id']
+    competence_id = data['competence_id']
     grade = callback_data.grade
-    transform_grade_current_comp(comp_id, grade)
+    transform_grade_current_comp(competence_id, grade)
     await bot.delete_message(chat_id=callback.message.chat.id, message_id=callback.message.message_id)
     await bot.delete_message(chat_id=callback.message.chat.id, message_id=callback.message.message_id - 1)
     await user_grading_get_keyboard(callback.message)

@@ -20,12 +20,11 @@ from handlers.custom_handlers.role import admin_command
 @admin_command
 async def delete_profile_start(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     await state.set_state(Profile.delete)
-    data_profile_list = get_profile_list()
-    data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_profile_list)))
+    data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', get_profile_list())))
     await message.answer(text=f'Введите ID профиля, который необходимо удалить.\n'
                               f'Список существующих профилей:\n{data_profile_list}',
                          reply_markup=admin_delete_profile)
-    await creating_pdf(bot, message)
+    await creating_pdf(bot=bot, message=message)
 
 
 @rt.message(Profile.delete)
@@ -42,12 +41,12 @@ async def delete_profile_end(message: types.Message, state: FSMContext):
 @rt.callback_query(Text('confirm_delete_profile'))
 async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    delete_profile(data['delete'])
+    delete_profile(profile_id=data['delete'])
     await callback.message.answer(text='Профиль успешно удален.')
-    await choosing_actions_profile(callback.message, state)
+    await choosing_actions_profile(message=callback.message, state=state)
     await state.clear()
 
 
 @rt.callback_query(Text('cancel_delete_profile'))
-async def cancel_delete(callback: CallbackQuery, state: FSMContext):
-    await delete_profile_start(callback.message, state)
+async def cancel_delete(callback: CallbackQuery, state: FSMContext, bot: Bot):
+    await delete_profile_start(message=callback.message, state=state, bot=bot)

@@ -4,7 +4,7 @@ from aiogram.filters import Text
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 
-from database.connection_db import main_admin_add_admin, get_admins_list, get_user_name_for_id
+from database.connection_db import main_admin_add_admin, get_admins_list_by_column, get_user_name_for_id
 
 from handlers.custom_handlers.role import main_admin_command
 
@@ -37,7 +37,7 @@ async def add_admin_confirmation(callback: CallbackQuery, callback_data: Confirm
     await state.clear()
     user_name = data['user_name']
     user_id = data['user_id']
-    admins_id = get_admins_list(0)
+    admins_id = get_admins_list_by_column(0)
     confirmation = callback_data.confirmation_choice
     if confirmation:
         if user_id in admins_id:
