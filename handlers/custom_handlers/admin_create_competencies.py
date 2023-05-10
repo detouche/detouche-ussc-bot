@@ -14,7 +14,8 @@ from database.connection_db import add_competence, check_competence
 
 
 @rt.message(Text('Создать компетенцию'))
-async def create_competence(message: types.Message, state: FSMContext):
+@admin_command
+async def create_competence(message: types.Message, state: FSMContext, *args, **kwargs):
     await message.answer(text=f'Введите название компетенции',
                          reply_markup=admin_create_competencies)
     await state.set_state(Competence.title)
@@ -40,4 +41,3 @@ async def create_competence_description(message: types.Message, state: FSMContex
     await message.answer(text=f'Компетенция {competence_data["title"]} успешно создана.\n'
                               f'Ее описание: {competence_data["description"]}',
                          reply_markup=admin_choosing_actions_competencies)
-

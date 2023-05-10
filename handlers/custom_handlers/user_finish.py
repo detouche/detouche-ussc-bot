@@ -1,17 +1,19 @@
-from aiogram import Bot
 from loader import rt
-from aiogram.filters import Text
+from aiogram import Bot
 from aiogram.types import Message
+from aiogram.filters import Text
+from aiogram.fsm.context import FSMContext
 
 from states.user_info import User
 
 from database.connection_db import get_session_code
-# from handlers.custom_handlers.role import user_command
+
+from handlers.custom_handlers.role import user_command
 
 
 @rt.message(Text("Завершить проверку"))
-# @user_command
-async def user_assessment_process(message: Message, bot: Bot, state):
+@user_command
+async def user_assessment_process(message: Message, bot: Bot, state: FSMContext, *args, **kwargs):
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id - 1)
     await message.answer(text=f'Проверка кандидата завершена.\n'
                               f'Вы можете изменить поставленные оценки, нажав "Начать оценку"')

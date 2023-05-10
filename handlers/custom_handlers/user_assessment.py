@@ -1,15 +1,15 @@
-from aiogram.fsm.context import FSMContext
 from loader import rt
 from aiogram import F, Bot
 from aiogram.filters import Text
+from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
-
 
 from keyboards.inline.user_assessment_competencies import user_assessment_get_keyboard, value_converter_text
 from keyboards.inline.user_assessment_grade import user_assessment_grade_get_keyboard
 from keyboards.reply.user_end_assessment import user_end_assessment
 
-# from handlers.custom_handlers.role import user_command
+from handlers.custom_handlers.role import user_command
+
 from states.user_assessment_comp import UserAssessment, UserAssessmentGrade, CompSessionInfo
 
 from database.connection_db import get_current_comp_desc_session, get_current_comp_name_session, \
@@ -17,8 +17,8 @@ from database.connection_db import get_current_comp_desc_session, get_current_co
 
 
 @rt.message(Text("Начать оценку"))
-# @user_command
-async def user_assessment_process(message: Message):
+@user_command
+async def user_assessment_process(message: Message, *args, **kwargs):
     await message.answer(text=f'Вы начали оценку сессии',
                          reply_markup=user_end_assessment)
     await user_assessment_get_keyboard(message)

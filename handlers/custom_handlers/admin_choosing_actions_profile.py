@@ -1,6 +1,6 @@
-from aiogram.types import BufferedInputFile
 from loader import rt
 from aiogram import types, Bot
+from aiogram.types import BufferedInputFile
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 
@@ -16,19 +16,23 @@ from keyboards.reply.admin_delete_profile import admin_delete_profile
 
 from states.profiles import Profile
 
+from handlers.custom_handlers.role import admin_command
+
 WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 
 
 @rt.message(Text('Профили'))
 @rt.message(Text('Назад в меню профилей'))
-async def choosing_actions_profile(message: types.Message, state: FSMContext):
+@admin_command
+async def choosing_actions_profile(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.clear()
     await message.answer(text=f'Вы вошли в меню "Профили"',
                          reply_markup=admin_choosing_actions_profile)
 
 
 @rt.message(Text('Список профилей'))
-async def profile_list(message: types.Message, state: FSMContext, bot):
+@admin_command
+async def profile_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     data_profile_list = get_profile_list()
     data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_profile_list)))
     await state.set_state(Profile.check_competencies)

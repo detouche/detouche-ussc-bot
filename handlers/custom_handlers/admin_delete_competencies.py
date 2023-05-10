@@ -1,25 +1,26 @@
 from loader import rt
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-
 from keyboards.reply.admin_delete_competencies import admin_delete_competencies
 from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
+
 from keyboards.inline.confirmation_delete_competence import confirmation_delete_competence
 
 from states.competencies import Competence
 
-from handlers.custom_handlers.admin_choosing_actions_competencies import choosing_actions_competencies
-
 from database.connection_db import delete_competence, get_competencies_list, check_competence_id
 
+from handlers.custom_handlers.admin_choosing_actions_competencies import choosing_actions_competencies
 from handlers.custom_handlers.admin_choosing_actions_competencies import creating_pdf
+from handlers.custom_handlers.role import admin_command
 
 
 @rt.message(Text('Удалить компетенцию'))
-async def delete_competencies(message: types.Message, state: FSMContext, bot):
+@admin_command
+async def delete_competencies(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     await state.set_state(Competence.delete)
     data_list = get_competencies_list()
     comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_list)))
@@ -41,7 +42,8 @@ async def delete_competence_handler(message: types.Message, state: FSMContext):
 
 
 @rt.callback_query(Text('delete_competence_true'))
-async def delete_competence_true(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def delete_competence_true(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     data = await state.get_data()
     delete_comp = data['delete']
     await callback.message.edit_text(text='Компетенция успешно удалена.')
@@ -51,6 +53,6 @@ async def delete_competence_true(callback: CallbackQuery, state: FSMContext):
 
 
 @rt.callback_query(Text('delete_competence_false'))
-async def delete_competence_false(callback: CallbackQuery, state: FSMContext, bot):
+@admin_command
+async def delete_competence_false(callback: CallbackQuery, state: FSMContext, bot: Bot, *args, **kwargs):
     await delete_competencies(callback.message, state, bot)
-

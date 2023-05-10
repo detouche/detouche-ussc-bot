@@ -14,19 +14,23 @@ from database.connection_db import get_competencies_list, get_competence_descrip
 
 from states.competencies import Competence
 
+from handlers.custom_handlers.role import admin_command
+
 WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 
 
 @rt.message(Text('Компетенции'))
 @rt.message(Text('Назад в меню компетенций'))
-async def choosing_actions_competencies(message: types.Message, state: FSMContext):
+@admin_command
+async def choosing_actions_competencies(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.clear()
     await message.answer(text="Вы вошли в меню 'Компетенции'",
                          reply_markup=admin_choosing_actions_competencies)
 
 
 @rt.message(Text('Список компетенций'))
-async def competencies_list(message: types.Message, state: FSMContext, bot: Bot):
+@admin_command
+async def competencies_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     data_list = get_competencies_list()
     comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_list)))
     await state.set_state(Competence.check_description)

@@ -1,4 +1,3 @@
-from . import role
 from . import user_connection
 from . import admin_connection
 from . import user_start_evaluation

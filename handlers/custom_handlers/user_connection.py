@@ -1,7 +1,7 @@
-from aiogram.fsm.context import FSMContext
 from loader import rt
 from aiogram import types
 from aiogram.filters import Text
+from aiogram.fsm.context import FSMContext
 
 from keyboards.reply.user_connection import user_connection
 
@@ -9,6 +9,8 @@ from database.connection_db import user_register, auth_validation, user_rename, 
     get_session_code
 
 from states.user_info import User
+
+from handlers.custom_handlers.role import user_command
 
 
 async def user_start(message: types.Message, state: FSMContext, url_code=None):
@@ -49,7 +51,8 @@ async def user_enter_name(message: types.Message, state: FSMContext):
 
 
 @rt.message(Text('Изменить имя'))
-async def user_want_rename(message: types.Message, state: FSMContext):
+@user_command
+async def user_want_rename(message: types.Message, state: FSMContext, *args, **kwargs):
     await message.answer("Как Вас перезаписать?")
     await state.set_state(User.rename)
 

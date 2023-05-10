@@ -1,16 +1,15 @@
-from aiogram.types import Message, CallbackQuery
-from aiogram.types import BufferedInputFile
-from aiogram import types, Bot
-from handlers.custom_handlers.admin_create_session import create_session
 from loader import rt
+from aiogram import types, Bot
+from aiogram.types import Message, CallbackQuery, BufferedInputFile
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 
-from jinja2 import Environment, FileSystemLoader
-import pdfkit
 import io
+import pdfkit
 import imgkit
+from jinja2 import Environment, FileSystemLoader
 
+from handlers.custom_handlers.admin_create_session import create_session
 from handlers.custom_handlers.role import admin_command, role, MAIN_ADMINS
 
 from database.connection_db import delete_session, get_session_code_admin, get_id_evaluating, get_comp_names, \
@@ -24,7 +23,8 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 
 # @admin_command
 @rt.message(Text('Завершить сессию'))
-async def end_session(message: Message, state: FSMContext):
+@admin_command
+async def end_session(message: Message, state: FSMContext, *args, **kwargs):
     if message.chat.id in get_admins_list(0) or message.chat.id in MAIN_ADMINS:
         await message.answer(text=f'Вы уверены?',
                              reply_markup=get_keyboard_confirmation_del())
@@ -34,7 +34,8 @@ async def end_session(message: Message, state: FSMContext):
 
 
 @rt.callback_query(Text('confirmat_del_session'))
-async def confirmat_del_session(callback: CallbackQuery, state: FSMContext, bot: Bot):
+@admin_command
+async def confirmat_del_session(callback: CallbackQuery, state: FSMContext, bot: Bot, *args, **kwargs):
     await callback.message.delete()
     await callback.message.answer(text=f'Сессия закончена.\n Пожалуйста, дождитесь генерации результатов')
     admin_id = callback.message.chat.id
@@ -66,7 +67,8 @@ async def confirmat_del_session(callback: CallbackQuery, state: FSMContext, bot:
 
 
 @rt.callback_query(Text('cancel_del_session'))
-async def cancel_del_session(callback: CallbackQuery, state: FSMContext, bot):
+@admin_command
+async def cancel_del_session(callback: CallbackQuery, state: FSMContext, bot: Bot, *args, **kwargs):
     await callback.message.delete()
     await create_session(callback.message, state)
 

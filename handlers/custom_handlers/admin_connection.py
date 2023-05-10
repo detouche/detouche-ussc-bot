@@ -1,18 +1,21 @@
 from aiogram import types
 from aiogram.filters import Text
+from aiogram.fsm.context import FSMContext
 
-from database.connection_db import get_admins_list
 from loader import rt
 
 from keyboards.reply.admin_connection import admin_connection
-
 from keyboards.reply.main_admin_connection import main_admin_connection
+
+from handlers.custom_handlers.role import admin_command
 
 from database.connection_db import get_admins_list
 
 
 @rt.message(Text('Назад в главное меню'))
-async def admin_start(message: types.Message):
+@admin_command
+async def admin_start(message: types.Message, state: FSMContext, *args, **kwargs):
+    await state.clear()
     current_id = message.from_user.id
     if current_id in get_admins_list(0):
         await message.answer(text=f'Что выберете?',

@@ -3,20 +3,18 @@ from aiogram import types
 
 from keyboards.reply.user_start_evaluation import user_start_evaluation
 
-# from handlers.custom_handlers.role import user_command
 from handlers.custom_handlers.user_connection import user_start
 
 from database.connection_db import get_session_info, get_candidate_name, get_profile_name_session, \
-    user_session_info, get_user_session_info, user_has_active_session, get_comp_name_session, get_comp_desc_session
+    user_session_info, get_user_session_info, user_has_active_session, get_comp_name_session, get_comp_desc_session, \
+    get_admins_list
 
 from states.user_info import User
-
 
 DEFAULT_GRADE = -1
 
 
 @rt.message(User.start_session)
-# @user_command
 async def user_start_evaluation_info(message: types.Message, state):
     data = await state.get_data()
     if data:
@@ -26,7 +24,17 @@ async def user_start_evaluation_info(message: types.Message, state):
         start_session = (await state.get_data())['start_session']
     await state.clear()
     connection_codes = get_session_info(3)
-    if int(start_session) in connection_codes:
+
+    try:
+        start_session_code = int(start_session)
+    except ValueError:
+        if message.chat.id in get_admins_list(0):
+            await message.answer(text=f'Хуй')
+        else:
+            await user_start(message=message, state=state)
+        return
+
+    if start_session_code in connection_codes:
         user_id = message.chat.id
         candidate_name = get_candidate_name(start_session)
         profile_name = get_profile_name_session(start_session)

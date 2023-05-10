@@ -9,14 +9,16 @@ from keyboards.inline.confirmation_delete_profile import confirmation_delete_pro
 
 from database.connection_db import delete_profile, get_profile_list, check_profile
 
-from handlers.custom_handlers.admin_choosing_actions_profile import creating_pdf
 from states.profiles import Profile
 
+from handlers.custom_handlers.admin_choosing_actions_profile import creating_pdf
 from handlers.custom_handlers.admin_choosing_actions_profile import choosing_actions_profile
+from handlers.custom_handlers.role import admin_command
 
 
 @rt.message(Text('Удалить профиль'))
-async def delete_profile_start(message: types.Message, state: FSMContext, bot: Bot):
+@admin_command
+async def delete_profile_start(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     await state.set_state(Profile.delete)
     data_profile_list = get_profile_list()
     data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_profile_list)))
@@ -38,7 +40,8 @@ async def delete_profile_end(message: types.Message, state: FSMContext):
 
 
 @rt.callback_query(Text('confirm_delete_profile'))
-async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def confirmation_delete(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     data = await state.get_data()
     delete_profile(data['delete'])
     await callback.message.answer(text='Профиль успешно удален.')
@@ -47,5 +50,6 @@ async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
 
 
 @rt.callback_query(Text('cancel_delete_profile'))
-async def cancel_delete(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def cancel_delete(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     await delete_profile_start(callback.message, state)

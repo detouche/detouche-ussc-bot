@@ -332,7 +332,8 @@ def get_session_code_admin(admin_id):
 def delete_session(admin_id):
     connection_code = cursor.execute(f'SELECT connection_code FROM session WHERE admin_id = {admin_id}').fetchone()
     cursor.execute(f"DELETE FROM session WHERE admin_id = {admin_id}")
-    cursor.execute(f"DELETE FROM user_session WHERE connection_codes = {connection_code[0]}")
+    if connection_code is not None:
+        cursor.execute(f"DELETE FROM user_session WHERE connection_codes = {connection_code[0]}")
     conn.commit()
 
 

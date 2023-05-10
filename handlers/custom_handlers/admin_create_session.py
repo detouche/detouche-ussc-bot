@@ -8,18 +8,19 @@ from loader import rt
 from keyboards.reply.admin_create_session import admin_create_session
 from keyboards.inline.confirmation_candidate_name import get_keyboard_confirmation
 from keyboards.reply.admin_successful_creation import admin_delete_session
-# from handlers.custom_handlers.role import admin_command
+
 from states.admin_confirmation_candidate_name import ConfirmationCandidateName, CandidateName
 from states.admin_session import AdminSession
 
 from database.connection_db import get_profile_list, get_session_info
 
+from handlers.custom_handlers.role import admin_command
 from handlers.custom_handlers.admin_choosing_actions_profile import creating_pdf
 
 
 @rt.message(Text('Создать сессию'))
-# @admin_command
-async def create_session(message: types.Message, state: FSMContext):
+@admin_command
+async def create_session(message: types.Message, state: FSMContext, *args, **kwargs):
     users_id = get_session_info(4)
     await state.clear()
     if message.chat.id not in users_id:
@@ -58,7 +59,7 @@ async def get_confirmation(callback: CallbackQuery, callback_data: ConfirmationC
         await create_session(callback.message, state)
 
 
-async def profile_list_session(message: types.Message, bot):
+async def profile_list_session(message: types.Message, bot: Bot):
     data_profile_list = get_profile_list()
     data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_profile_list)))
     await message.answer(text=f'Список всех имеющихся профилей:\n{data_profile_list}')

@@ -4,8 +4,10 @@ from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
+from handlers.custom_handlers.role import admin_command
+
 from keyboards.reply.admin_change_competencies import admin_change_competencies
-from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
+
 from keyboards.inline.change_competence import change_competence
 from keyboards.inline.confirmation_change_competence import confirmation_change_competence
 from keyboards.inline.confirmation_change_competence_desc import confirmation_change_competence_desc
@@ -17,7 +19,8 @@ from database.connection_db import change_competence_title, get_competencies_lis
 
 
 @rt.message(Text('Изменить компетенцию'))
-async def change_competencies(message: types.Message, state: FSMContext):
+@admin_command
+async def change_competencies(message: types.Message, state: FSMContext, *args, **kwargs):
     competencies_list = get_competencies_list()
     competencies_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', competencies_list)))
     await message.answer(text=f'ВВедите ID компетенции, которую хотите изменить\n'
@@ -39,7 +42,8 @@ async def get_changeable_competence_id(message: types.Message, state: FSMContext
 
 
 @rt.callback_query(Text('change_competence_title'))
-async def change_competence_title_start(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def change_competence_title_start(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     await state.set_state(Competence.change_title)
     await callback.message.answer(text='Введите новое название для компетенции')
 
@@ -55,7 +59,8 @@ async def change_competence_title_confirmation(message: types.Message, state: FS
 
 
 @rt.callback_query(Text('change_competence_title_true'))
-async def change_competence_title_true(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def change_competence_title_true(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     data = await state.get_data()
     competence_id = data['changeable_id']
     competence_title = data['change_title']
@@ -71,14 +76,16 @@ async def change_competence_title_true(callback: CallbackQuery, state: FSMContex
 
 
 @rt.callback_query(Text('change_competence_title_false'))
-async def change_competence_title_false(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def change_competence_title_false(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     await state.clear()
     await callback.message.delete()
     await change_competencies(callback.message, state)
 
 
 @rt.callback_query(Text('change_competence_description'))
-async def change_competence_description_start(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def change_competence_description_start(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     await state.set_state(Competence.change_description)
     await callback.message.answer(text='Введите новое описание для компетенции')
 
@@ -94,7 +101,8 @@ async def change_competence_title_confirmation(message: types.Message, state: FS
 
 
 @rt.callback_query(Text('change_competence_desc_true'))
-async def change_competence_title_true(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def change_competence_title_true(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     data = await state.get_data()
     competence_id = data['changeable_id']
     competence_desc = data['change_description']
@@ -110,7 +118,8 @@ async def change_competence_title_true(callback: CallbackQuery, state: FSMContex
 
 
 @rt.callback_query(Text('change_competence_desc_false'))
-async def change_competence_title_false(callback: CallbackQuery, state: FSMContext):
+@admin_command
+async def change_competence_title_false(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
     await state.clear()
     await callback.message.delete()
     await change_competencies(callback.message, state)
