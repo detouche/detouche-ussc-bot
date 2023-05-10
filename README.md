@@ -1,7 +1,7 @@
 ![detouche-logo](https://github.com/detouche/detouche-ussc-bot/assets/91479557/607fb8a7-22d3-4166-88ac-a0c477282f6a)
 
 ---
-# Interview Bot by detouche#
+# Interview Bot by detouche #
 ### Чат-бот для экспресс-оценки управленческих компетенций на собеседовании в компании ООО “УЦСБ”. ###
 
 ![image](https://github.com/detouche/detouche-ussc-bot/assets/91479557/ff6bac98-a751-4d53-8871-e6335a7329fa)
