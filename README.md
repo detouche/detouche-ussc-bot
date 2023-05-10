@@ -1,4 +1,4 @@
-![image](https://github.com/detouche/detouche-ussc-bot/assets/91479557/dfee5cb3-fdd0-4f0c-b1a0-0bdbcd41bc59)
+![detouche-logo](https://github.com/detouche/detouche-ussc-bot/assets/91479557/607fb8a7-22d3-4166-88ac-a0c477282f6a)
 
 ---
 # Interview Bot #
