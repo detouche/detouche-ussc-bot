@@ -10,5 +10,5 @@ def confirmation_change_competence_desc():
                                  callback_data='change_competence_desc_false')
         ],
     ]
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

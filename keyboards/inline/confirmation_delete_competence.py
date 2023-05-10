@@ -10,5 +10,5 @@ def confirmation_delete_competence():
                                  callback_data='delete_competence_false')
         ],
     ]
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

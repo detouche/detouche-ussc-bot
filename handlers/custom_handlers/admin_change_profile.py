@@ -7,8 +7,8 @@ from aiogram.types import CallbackQuery
 from keyboards.reply.admin_change_profile import admin_change_profile
 from keyboards.inline.change_profile import change_profile
 from keyboards.inline.confirmation_change_desc_title import confirmation_change_desc_title
-from keyboards.inline.end_add_competencies import end_add_competencies
-from keyboards.inline.confirmation_end_add_competence import confirmation_end_add_competence
+from keyboards.inline.end_adding_competencies import end_adding_competencies
+from keyboards.inline.confirmation_end_adding_competence import confirmation_end_adding_competence
 
 from database.connection_db import get_profile_list, check_profile, change_profile_title, add_competence_in_profile, \
     get_competencies_list, remove_competence_from_profile, competencies_in_profile, get_competence_title, \
@@ -44,8 +44,7 @@ async def get_changeable_description_id(message: types.Message, state: FSMContex
 
 
 @rt.callback_query(Text('change_desc_title'))
-@admin_command
-async def change_desc_title_start(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def change_desc_title_start(callback: CallbackQuery, state: FSMContext):
     await state.set_state(Profile.change_title)
     await callback.message.answer(text='Введите новое название для профиля')
 
@@ -61,8 +60,7 @@ async def change_desc_title_confirmation(message: types.Message, state: FSMConte
 
 
 @rt.callback_query(Text('change_desc_title_true'))
-@admin_command
-async def change_desc_title_true(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def change_desc_title_true(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     profile_id = data['changeable_id']
     profile_title = data['change_title']
@@ -78,16 +76,14 @@ async def change_desc_title_true(callback: CallbackQuery, state: FSMContext, *ar
 
 
 @rt.callback_query(Text('change_desc_title_false'))
-@admin_command
-async def change_desc_title_false(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def change_desc_title_false(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.delete()
     await change_profiles(callback.message, state)
 
 
 @rt.callback_query(Text('add_comp_from_desc'))
-@admin_command
-async def add_competence_from_profile(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def add_competence_from_profile(callback: CallbackQuery, state: FSMContext):
     data_list = get_competencies_list()
     comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_list)))
     await callback.message.answer(text=f'Список доступных компетенций: \n'
@@ -104,15 +100,14 @@ async def add_competence_from_profile_start(message: types.Message, state: FSMCo
         await state.update_data(add_competence=message.text)
         await message.answer(text=f"Компетенция c ID: {message.text} успешно добавлена. \n "
                                   f"Введите ID Следующей компетенции, которую хотите добавить",
-                             reply_markup=end_add_competencies())
+                             reply_markup=end_adding_competencies())
     else:
         await message.answer(text="Такого ID компетенции не существует или он уже добавлен. \n"
                                   "Повторите ввод.")
 
 
-@rt.callback_query(Text('end_add_competencies'))
-@admin_command
-async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+@rt.callback_query(Text('end_adding_competencies'))
+async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.delete()
     await change_profiles(callback.message, state)
@@ -120,8 +115,7 @@ async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContex
 
 
 @rt.callback_query(Text('delete_competencies'))
-@admin_command
-async def delete_competence_profile(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def delete_competence_profile(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     profile_id = data['changeable_id']
     competence_id = data['add_competence']
@@ -131,8 +125,7 @@ async def delete_competence_profile(callback: CallbackQuery, state: FSMContext, 
 
 
 @rt.callback_query(Text('delete_comp_from_desc'))
-@admin_command
-async def delete_competence_from_profile_start(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def delete_competence_from_profile_start(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     profile_id = data['changeable_id']
     data_list = competencies_in_profile(profile_id)
@@ -150,14 +143,13 @@ async def delete_competence_from_profile_end(message: types.Message, state: FSMC
     profile_id = data['changeable_id']
     if delete_competence_from_profile(message.text, profile_id):
         await message.answer(text='Компетенция успешно удалена из профиля. Продолжайте ввод.',
-                             reply_markup=confirmation_end_add_competence())
+                             reply_markup=confirmation_end_adding_competence())
     else:
         await message.answer(text='Такой компетенции нет в профиле, либо был введен неверный ID. Повторите ввод.')
 
 
 @rt.callback_query(Text('end_add_competence_in_profile'))
-@admin_command
-async def end_add_comp_in_profile(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def end_add_comp_in_profile(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await choosing_actions_profile(callback.message, state)
     await change_profiles(callback.message, state)

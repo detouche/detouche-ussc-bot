@@ -8,7 +8,7 @@ import pdfkit
 import io
 
 from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
-from keyboards.reply.admin_create_competencies import admin_create_competencies
+from keyboards.reply.admin_create_competence import admin_create_competence
 
 from database.connection_db import get_competencies_list, get_competence_description
 
@@ -36,7 +36,7 @@ async def competencies_list(message: types.Message, state: FSMContext, bot: Bot,
     await state.set_state(Competence.check_description)
     await message.answer(text=f'Введите ID компетенции для просмотра ее описания. \n'
                               f'Список всех имеющихся компетенций:\n{comp_list}',
-                         reply_markup=admin_create_competencies)
+                         reply_markup=admin_create_competence)
     await creating_pdf(bot, message)
 
 
@@ -46,7 +46,7 @@ async def check_competence_description(message: types.Message):
     if description:
         desc = ('\n'.join(map(str, description)))
         await message.answer(text=f'{desc}',
-                             reply_markup=admin_create_competencies)
+                             reply_markup=admin_create_competence)
     else:
         await message.answer(text='Введите существующий ID')
 

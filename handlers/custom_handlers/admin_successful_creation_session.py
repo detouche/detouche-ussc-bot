@@ -18,7 +18,7 @@ from states.admin_session import AdminSession
 
 
 @rt.message(AdminSession.profile_number)
-async def successful_creation(message: Message, state: FSMContext, bot: Bot):
+async def session_successful_creation(message: Message, state: FSMContext, bot: Bot):
     profile_list = get_profile_competencies(message.text.lower())
     profile_list = list(map(get_competence_title, profile_list))
     if profile_list:

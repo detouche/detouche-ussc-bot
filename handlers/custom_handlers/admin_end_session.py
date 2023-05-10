@@ -16,7 +16,7 @@ from database.connection_db import delete_session, get_session_code_admin, get_i
     get_assessments_competencies, get_candidate_name, get_profile_name_session, get_user_name_for_id, get_user_grades, \
     get_admins_list
 
-from keyboards.inline.confirmation_delete_session import get_keyboard_confirmation_del
+from keyboards.inline.confirmation_delete_session import get_keyboard_confirmation_delete
 
 WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 
@@ -27,15 +27,14 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 async def end_session(message: Message, state: FSMContext, *args, **kwargs):
     if message.chat.id in get_admins_list(0) or message.chat.id in MAIN_ADMINS:
         await message.answer(text=f'Вы уверены?',
-                             reply_markup=get_keyboard_confirmation_del())
+                             reply_markup=get_keyboard_confirmation_delete())
     else:
         await message.answer(text=f'Вы не являетесь администратором')
         await role(message, state)
 
 
-@rt.callback_query(Text('confirmat_del_session'))
-@admin_command
-async def confirmat_del_session(callback: CallbackQuery, state: FSMContext, bot: Bot, *args, **kwargs):
+@rt.callback_query(Text('confirmation_delete_session'))
+async def confirmation_delete_session(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await callback.message.delete()
     await callback.message.answer(text=f'Сессия закончена.\n Пожалуйста, дождитесь генерации результатов')
     admin_id = callback.message.chat.id
@@ -66,21 +65,20 @@ async def confirmat_del_session(callback: CallbackQuery, state: FSMContext, bot:
     await role(callback.message, state)
 
 
-@rt.callback_query(Text('cancel_del_session'))
-@admin_command
-async def cancel_del_session(callback: CallbackQuery, state: FSMContext, bot: Bot, *args, **kwargs):
+@rt.callback_query(Text('cancel_delete_session'))
+async def cancel_delete_session(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await create_session(callback.message, state)
 
 
-def value_converter_text(value):
-    if value == -1:
+def grade_text_converter(grade):
+    if grade == -1:
         return "Без оценки"
-    elif value == 0:
+    elif grade == 0:
         return "Нет"
-    elif value == 0.5:
+    elif grade == 0.5:
         return "Частично"
-    elif value == 1:
+    elif grade == 1:
         return "Да"
 
 
@@ -95,7 +93,7 @@ async def creating_pdf(bot: Bot, message: types.Message, grade_dicts: dict, cand
             'candidate_name': candidate_name,
             'profile_name': profile_name,
             'user_grade_info': user_grade_info,
-            'value_converter_text': value_converter_text
+            'grade_text_converter': grade_text_converter
         })
     options = {'enable-local-file-access': '',
                'margin-top': '0.3in',

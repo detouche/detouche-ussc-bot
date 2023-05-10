@@ -3,7 +3,7 @@ from aiogram import types
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 
-from keyboards.reply.admin_create_competencies import admin_create_competencies
+from keyboards.reply.admin_create_competence import admin_create_competence
 from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
 
 from handlers.custom_handlers.role import admin_command
@@ -17,7 +17,7 @@ from database.connection_db import add_competence, check_competence
 @admin_command
 async def create_competence(message: types.Message, state: FSMContext, *args, **kwargs):
     await message.answer(text=f'Введите название компетенции',
-                         reply_markup=admin_create_competencies)
+                         reply_markup=admin_create_competence)
     await state.set_state(Competence.title)
 
 

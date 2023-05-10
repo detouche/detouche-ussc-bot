@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 from keyboards.reply.admin_create_profile import admin_create_profile
 from keyboards.reply.admin_choosing_actions_profile import admin_choosing_actions_profile
 
-from keyboards.inline.end_add_competencies import end_add_competencies
+from keyboards.inline.end_adding_competencies import end_adding_competencies
 
 from handlers.custom_handlers.role import admin_command
 
@@ -19,14 +19,14 @@ from database.connection_db import create_profile, get_competencies_list, add_co
 
 @rt.message(Text('Создать профиль'))
 @admin_command
-async def add_profile(message: types.Message, state: FSMContext, *args, **kwargs):
+async def create_profile(message: types.Message, state: FSMContext, *args, **kwargs):
     await message.answer(text=f"Введите название профиля, который хотите создать.",
                          reply_markup=admin_create_profile)
     await state.set_state(Profile.title)
 
 
 @rt.message(Profile.title)
-async def create_profile_name(message: types.Message, state: FSMContext):
+async def create_profile_title(message: types.Message, state: FSMContext):
     data_list = get_competencies_list()
     comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_list)))
     if create_profile(message.text.lower()):
@@ -47,16 +47,15 @@ async def add_competencies_in_profile(message: types.Message, state: FSMContext)
     await state.update_data(competencies=message.text)
     if add_competence_in_profile(message.text, profile_id):
         await message.answer(text=f"Компетенция c ID: {message.text} успешно добавлена. \n "
-                                f"Введите ID Следующей компетенции, которую хотите добавить",
-                                reply_markup=end_add_competencies())
+                                  f"Введите ID Следующей компетенции, которую хотите добавить",
+                             reply_markup=end_adding_competencies())
     else:
         await message.answer(text="Такого ID компетенции не существует или он уже добавлен. \n"
                                   "Повторите ввод.")
 
 
-@rt.callback_query(Text('end_add_competencies'))
-@admin_command
-async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+@rt.callback_query(Text('end_adding_competencies'))
+async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContext):
     await state.clear()
     await callback.message.delete()
     await callback.message.answer(text='Компетенции успешно добавлены в профиль!',
@@ -64,11 +63,10 @@ async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContex
 
 
 @rt.callback_query(Text('delete_competencies'))
-@admin_command
-async def delete_competence_profile(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def delete_competence_in_profile(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     profile_id = get_profile_id(data['title'])
     competence_id = data['competencies']
     remove_competence_from_profile(competence_id, profile_id)
     await callback.message.delete()
-    await callback.message.answer(text='Компетенция удалена из профиля.  Продолжайте ввод.')
+    await callback.message.answer(text='Компетенция удалена из профиля. Продолжайте ввод.')

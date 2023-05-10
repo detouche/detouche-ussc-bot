@@ -40,8 +40,7 @@ async def delete_profile_end(message: types.Message, state: FSMContext):
 
 
 @rt.callback_query(Text('confirm_delete_profile'))
-@admin_command
-async def confirmation_delete(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     delete_profile(data['delete'])
     await callback.message.answer(text='Профиль успешно удален.')
@@ -50,6 +49,5 @@ async def confirmation_delete(callback: CallbackQuery, state: FSMContext, *args,
 
 
 @rt.callback_query(Text('cancel_delete_profile'))
-@admin_command
-async def cancel_delete(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def cancel_delete(callback: CallbackQuery, state: FSMContext):
     await delete_profile_start(callback.message, state)

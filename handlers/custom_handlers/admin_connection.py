@@ -16,7 +16,7 @@ from database.connection_db import get_admins_list
 @admin_command
 async def admin_start(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.clear()
-    current_id = message.from_user.id
+    current_id = message.chat.id
     if current_id in get_admins_list(0):
         await message.answer(text=f'Что выберете?',
                              reply_markup=admin_connection)

@@ -14,5 +14,5 @@ def change_profile():
                                  callback_data='delete_comp_from_desc')
         ],
     ]
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

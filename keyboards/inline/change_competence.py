@@ -10,5 +10,5 @@ def change_competence():
                                  callback_data='change_competence_description')
         ],
     ]
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

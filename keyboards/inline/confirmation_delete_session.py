@@ -1,16 +1,16 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-def get_keyboard_confirmation_del():
+def get_keyboard_confirmation_delete():
     buttons = [
         [
             InlineKeyboardButton(text=f"Да",
-                                 callback_data='confirmat_del_session')
+                                 callback_data='confirmation_delete_session')
         ],
         [
             InlineKeyboardButton(text=f"Нет",
-                                 callback_data='cancel_del_session')
+                                 callback_data='cancel_delete_session')
         ],
     ]
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

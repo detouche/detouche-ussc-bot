@@ -1,7 +1,7 @@
 from loader import rt
 from aiogram import types
 
-from keyboards.reply.user_start_evaluation import user_start_evaluation
+from keyboards.reply.user_start_grading import user_start_grading
 
 from handlers.custom_handlers.user_connection import user_start
 
@@ -15,7 +15,7 @@ DEFAULT_GRADE = -1
 
 
 @rt.message(User.start_session)
-async def user_start_evaluation_info(message: types.Message, state):
+async def user_start_grading_info(message: types.Message, state):
     data = await state.get_data()
     if data:
         start_session = data['start_session']
@@ -28,9 +28,8 @@ async def user_start_evaluation_info(message: types.Message, state):
     try:
         start_session_code = int(start_session)
     except ValueError:
-        if message.chat.id in get_admins_list(0):
-            await message.answer(text=f'Хуй')
-        else:
+        if message.chat.id not in get_admins_list(0):
+            await message.answer(text=f'Вы ввели неправильный код сессии.')
             await user_start(message=message, state=state)
         return
 
@@ -51,7 +50,7 @@ async def user_start_evaluation_info(message: types.Message, state):
                                   f'— Компетенции входящие в профиль:\n'
                                   f'{title_comp}\n'
                                   f'Методичка по оценкам',
-                             reply_markup=user_start_evaluation)
+                             reply_markup=user_start_grading)
     else:
         await message.answer(text=f'Код указан неверно')
         await user_start(message, state)

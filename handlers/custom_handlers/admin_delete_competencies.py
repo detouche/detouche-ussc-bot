@@ -4,7 +4,7 @@ from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from keyboards.reply.admin_delete_competencies import admin_delete_competencies
+from keyboards.reply.admin_delete_competence import admin_delete_competence
 from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
 
 from keyboards.inline.confirmation_delete_competence import confirmation_delete_competence
@@ -26,7 +26,7 @@ async def delete_competencies(message: types.Message, state: FSMContext, bot: Bo
     comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_list)))
     await message.answer(text=f'Введите ID компетенции, которую необходимо удалить. \n'
                               f'Список всех имеющихся компетенций: \n{comp_list}',
-                         reply_markup=admin_delete_competencies)
+                         reply_markup=admin_delete_competence)
     await creating_pdf(bot, message)
 
 
@@ -42,8 +42,7 @@ async def delete_competence_handler(message: types.Message, state: FSMContext):
 
 
 @rt.callback_query(Text('delete_competence_true'))
-@admin_command
-async def delete_competence_true(callback: CallbackQuery, state: FSMContext, *args, **kwargs):
+async def delete_competence_true(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     delete_comp = data['delete']
     await callback.message.edit_text(text='Компетенция успешно удалена.')
@@ -53,6 +52,5 @@ async def delete_competence_true(callback: CallbackQuery, state: FSMContext, *ar
 
 
 @rt.callback_query(Text('delete_competence_false'))
-@admin_command
-async def delete_competence_false(callback: CallbackQuery, state: FSMContext, bot: Bot, *args, **kwargs):
+async def delete_competence_false(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await delete_competencies(callback.message, state, bot)

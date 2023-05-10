@@ -13,7 +13,7 @@ from handlers.custom_handlers.role import user_command
 
 @rt.message(Text("Завершить проверку"))
 @user_command
-async def user_assessment_process(message: Message, bot: Bot, state: FSMContext, *args, **kwargs):
+async def user_grading_process(message: Message, bot: Bot, state: FSMContext, *args, **kwargs):
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id - 1)
     await message.answer(text=f'Проверка кандидата завершена.\n'
                               f'Вы можете изменить поставленные оценки, нажав "Начать оценку"')
@@ -21,5 +21,5 @@ async def user_assessment_process(message: Message, bot: Bot, state: FSMContext,
     start_session = get_session_code(user_id)
     await state.set_state(User.start_session)
     await state.update_data(start_session=start_session)
-    from handlers.custom_handlers.user_start_evaluation import user_start_evaluation_info
-    await user_start_evaluation_info(message, state)
+    from handlers.custom_handlers.user_start_grading import user_start_grading_info
+    await user_start_grading_info(message, state)

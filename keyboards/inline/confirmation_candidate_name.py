@@ -18,5 +18,5 @@ def get_keyboard_confirmation():
                                      confirmation=False).pack())
         ]
     ]
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)
