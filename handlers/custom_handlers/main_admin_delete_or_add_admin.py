@@ -6,12 +6,13 @@ from keyboards.reply.main_admin_delete_or_add_admin import main_admin_delete_or_
 
 from handlers.custom_handlers.role import main_admin_command
 
-from database.connection_db import get_admins_list
+from database.connection_db import get_admins_list_by_column
 
 
 @rt.message(Text('Администраторы'))
-# @main_admin_command
-async def delete_or_add_admin(message: types.Message, state):
-    admins_name = ('\n'.join(get_admins_list(1)))
-    await message.answer(text=f'Сейчас администраторами являются: \n{admins_name}.',
+@main_admin_command
+async def delete_or_add_admin(message: types.Message, *args, **kwargs):
+    admins_name = ('\n'.join(map(lambda x: f'{x[0]}. <b>{x[1]}</b>', enumerate(get_admins_list_by_column(1), 1))))
+    await message.answer(text=f'Все администраторы чат-бота:\n'
+                              f'{admins_name}',
                          reply_markup=main_admin_delete_or_add_admin)

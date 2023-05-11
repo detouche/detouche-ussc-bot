@@ -10,5 +10,5 @@ def confirmation_change_desc_title():
                                  callback_data='change_desc_title_false')
         ],
     ]
-    keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
-    return keyboard
+
+    return InlineKeyboardMarkup(inline_keyboard=buttons)

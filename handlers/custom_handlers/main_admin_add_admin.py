@@ -4,7 +4,7 @@ from aiogram.filters import Text
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
 
-from database.connection_db import main_admin_add_admin, get_admins_list, get_user_name_for_id
+from database.connection_db import main_admin_add_admin, get_admins_list_by_column, get_user_name_for_id
 
 from handlers.custom_handlers.role import main_admin_command
 
@@ -17,8 +17,8 @@ from keyboards.inline.confirmation_add import get_keyboard_confirmation
 
 
 @rt.message(Text('Добавить администратора'))
-# @main_admin_command
-async def add_admin(message: Message, state: FSMContext):
+@main_admin_command
+async def add_admin(message: Message, state: FSMContext, *args, **kwargs):
     await add_admin_keyboard(message, state)
 
 
@@ -37,13 +37,13 @@ async def add_admin_confirmation(callback: CallbackQuery, callback_data: Confirm
     await state.clear()
     user_name = data['user_name']
     user_id = data['user_id']
-    admins_id = get_admins_list(0)
+    admins_id = get_admins_list_by_column(0)
     confirmation = callback_data.confirmation_choice
     if confirmation:
         if user_id in admins_id:
-            await callback.message.edit_text(text=f"{user_name} уже является администратором")
+            await callback.message.edit_text(text=f"<b>{user_name.capitalize()}</b> уже является администратором")
         else:
-            await callback.message.edit_text(text=f"Успешно! {user_name} теперь администратор c id {user_id}")
+            await callback.message.edit_text(text=f"Успешно! <b>[ID: {user_id}] {user_name.capitalize()}</b> теперь администратор")
             main_admin_add_admin(user_id, user_name)
         await add_admin_keyboard(callback.message, state)
     else:
@@ -58,20 +58,17 @@ async def add_admin_keyboard(message: Message, state: FSMContext):
 
 
 @rt.callback_query(Text(startswith="next_step_add_admin"), MenuAddAdmin.step_add_admin)
-# @main_admin_command
 async def add_admin_next_menu(callback: CallbackQuery, state: FSMContext):
     await add_admin_get_keyboard(callback.message, state, 1)
 
 
 @rt.callback_query(Text(startswith='back_step_add_admin'), MenuAddAdmin.step_add_admin)
-# @main_admin_command
 async def add_admin_back_menu(callback: CallbackQuery, state: FSMContext):
     await add_admin_get_keyboard(callback.message, state, -1)
 
 
 @rt.callback_query(Text(startswith='stop_add_admin'), MenuAddAdmin.step_add_admin)
-# @main_admin_command
-async def add_admin_finish(callback: CallbackQuery, state: FSMContext):
+async def add_admin_finish(callback: CallbackQuery, state: FSMContext,):
     await callback.message.delete()
     await callback.message.answer('Добавление администраторов закончено')
     await state.clear()

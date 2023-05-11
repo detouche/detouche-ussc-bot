@@ -1,6 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-admin_delete_competencies = ReplyKeyboardMarkup(
+admin_create_competence = ReplyKeyboardMarkup(
     keyboard=[
         [
             KeyboardButton(text='Назад в меню компетенций')
@@ -8,3 +8,4 @@ admin_delete_competencies = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True
 )
+

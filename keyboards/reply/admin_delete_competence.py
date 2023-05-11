@@ -1,9 +1,9 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-user_start_evaluation = ReplyKeyboardMarkup(
+admin_delete_competence = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text='Начать оценку')
+            KeyboardButton(text='Назад в меню компетенций')
         ]
     ],
     resize_keyboard=True
