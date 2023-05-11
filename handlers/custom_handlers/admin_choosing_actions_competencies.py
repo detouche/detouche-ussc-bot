@@ -10,7 +10,7 @@ import io
 from keyboards.reply.admin_choosing_actions_competencies import admin_choosing_actions_competencies
 from keyboards.reply.admin_create_competence import admin_create_competence
 
-from database.connection_db import get_competencies_list, get_competence_description
+from database.connection_db import get_competencies_list, get_competence_description, get_competence_title
 
 from states.competencies import Competence
 
@@ -24,17 +24,17 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 @admin_command
 async def choosing_actions_competencies(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.clear()
-    await message.answer(text="Вы вошли в меню 'Компетенции'",
+    await message.answer(text="Вы вошли в меню <b>Компетенции</b>",
                          reply_markup=admin_choosing_actions_competencies)
 
 
 @rt.message(Text('Список компетенций'))
 @admin_command
 async def competencies_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
-    competence_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', get_competencies_list())))
+    competence_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x[0]}]</b> {x[1].capitalize()}', get_competencies_list())))
     await state.set_state(Competence.check_description)
     await message.answer(text=f'Введите ID компетенции для просмотра ее описания. \n'
-                              f'Список всех имеющихся компетенций:\n{competence_list}',
+                              f'Список всех компетенций:\n\n{competence_list}',
                          reply_markup=admin_create_competence)
     await creating_pdf(bot=bot, message=message)
 
@@ -43,11 +43,13 @@ async def competencies_list(message: types.Message, state: FSMContext, bot: Bot,
 async def check_competence_description(message: types.Message):
     description = get_competence_description(message.text.lower())
     if description:
+        competence_name = get_competence_title(message.text.lower())[0]
         desc = ('\n'.join(map(str, description)))
-        await message.answer(text=f'{desc}',
+        await message.answer(text=f'<b>Компетенция:</b> [ID: {message.text.lower()}] {competence_name.capitalize()}\n\n'
+                                  f'<b>Описание:</b> {desc}',
                              reply_markup=admin_create_competence)
     else:
-        await message.answer(text='Введите существующий ID')
+        await message.answer(text=f'<b>Ошибка:</b> Компетенция с ID: {message.text.lower()} не найдена, повторите ввод')
 
 
 async def creating_pdf(bot: Bot, message: types.Message):
@@ -56,7 +58,7 @@ async def creating_pdf(bot: Bot, message: types.Message):
     template = env.get_template(r"html/competencies-list/index.html")
     data_list = get_competencies_list()
     competencies_id = (list(map(lambda x: x[0], data_list)))
-    competencies_name = (list(map(lambda x: x[1], data_list)))
+    competencies_name = (list(map(lambda x: x[1].capitalize(), data_list)))
     number_repetitions = len(competencies_name)
     pdf_template = template.render(
         {

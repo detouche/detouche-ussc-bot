@@ -8,9 +8,9 @@ def change_profile():
                                  callback_data='change_desc_title'),
         ],
         [
-            InlineKeyboardButton(text=f"Добавить компетенции в профиль",
+            InlineKeyboardButton(text=f"Добавить компетенции",
                                  callback_data='add_comp_from_desc'),
-            InlineKeyboardButton(text=f"Удалить компетенции из профиля",
+            InlineKeyboardButton(text=f"Удалить компетенции",
                                  callback_data='delete_comp_from_desc')
         ],
     ]

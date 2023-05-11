@@ -18,8 +18,8 @@ async def admin_start(message: types.Message, state: FSMContext, *args, **kwargs
     await state.clear()
     admin_id = message.chat.id
     if admin_id in get_admins_list_by_column(0):
-        await message.answer(text=f'Что выберете?',
+        await message.answer(text=f'Здравствуйте! Что вы хотите сделать?',
                              reply_markup=admin_connection)
     else:
-        await message.answer(text=f'Что выберете?',
+        await message.answer(text=f'Здравствуйте! Что вы хотите сделать?',
                              reply_markup=main_admin_connection)

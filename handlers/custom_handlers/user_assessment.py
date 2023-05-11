@@ -19,7 +19,7 @@ from database.connection_db import get_current_comp_desc_session, get_current_co
 @rt.message(Text("Начать оценку"))
 @user_command
 async def user_grading_process(message: Message, *args, **kwargs):
-    await message.answer(text=f'Вы начали оценку сессии',
+    await message.answer(text=f'Вы начали оценку сессии!',
                          reply_markup=user_end_grading)
     await user_grading_get_keyboard(message)
 
@@ -31,9 +31,9 @@ async def add_admin_confirmation(callback: CallbackQuery, callback_data: UserGra
     competence_desc = get_current_comp_desc_session(competence_id)
     competence_grade = get_current_comp_grade_session(competence_id)
     competence_grade = grade_text_converter(int(competence_grade))
-    await callback.message.edit_text(text=f"Название компетенции: {competence_name}\n\n"
-                                          f"Описание компетенции: {competence_desc}\n\n"
-                                          f"Текущая оценка: {competence_grade}",
+    await callback.message.edit_text(text=f"<b>Название компетенции:</b> {competence_name.capitalize()}\n"
+                                          f"<b>Описание компетенции:</b> {competence_desc.capitalize()}\n\n"
+                                          f"Текущая оценка: <b>{competence_grade}</b>",
                                      reply_markup=user_grade_get_keyboard())
     await CompetenceSessionInfo.set_data(state, data={'competence_id': competence_id})
 

@@ -11,7 +11,7 @@ from keyboards.inline.confirmation_delete_competence import confirmation_delete_
 
 from states.competencies import Competence
 
-from database.connection_db import delete_competence, get_competencies_list, check_competence_id
+from database.connection_db import delete_competence, get_competencies_list, check_competence_id, get_competence_title
 
 from handlers.custom_handlers.admin_choosing_actions_competencies import choosing_actions_competencies
 from handlers.custom_handlers.admin_choosing_actions_competencies import creating_pdf
@@ -22,9 +22,9 @@ from handlers.custom_handlers.role import admin_command
 @admin_command
 async def delete_competencies(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     await state.set_state(Competence.delete)
-    comp_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', get_competencies_list())))
-    await message.answer(text=f'Введите ID компетенции, которую необходимо удалить. \n'
-                              f'Список всех имеющихся компетенций: \n{comp_list}',
+    comp_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x[0]}]</b> {x[1].capitalize()}', get_competencies_list())))
+    await message.answer(text=f'Введите ID компетенции, которую хотите удалить\n'
+                              f'Список всех компетенций:\n\n{comp_list}',
                          reply_markup=admin_delete_competence)
     await creating_pdf(bot=bot, message=message)
 
@@ -33,10 +33,12 @@ async def delete_competencies(message: types.Message, state: FSMContext, bot: Bo
 async def delete_competence_handler(message: types.Message, state: FSMContext):
     await state.update_data(delete=message.text)
     if check_competence_id(competence_id=message.text):
-        await message.answer(text=f"Вы уверены что хотите удалить компетенцию с ID:{message.text} ",
+        competence_name = get_competence_title(message.text.lower())[0]
+        await message.answer(text=f"Вы уверены, что хотите удалить компетенцию:\n\n"
+                                  f"<b>[ID: {message.text}]</b> {competence_name.capitalize()}?",
                              reply_markup=confirmation_delete_competence())
     else:
-        await message.answer(text='Такого ID компетенции не существует!',
+        await message.answer(text=f'<b>Ошибка:</b> Компетенция с ID: {message.text.lower()} не найдена, повторите ввод',
                              reply_markup=admin_choosing_actions_competencies)
 
 
@@ -44,7 +46,9 @@ async def delete_competence_handler(message: types.Message, state: FSMContext):
 async def delete_competence_true(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     competence_id = data['delete']
-    await callback.message.edit_text(text='Компетенция успешно удалена.')
+    competence_name = get_competence_title(competence_id)[0]
+    await callback.message.edit_text(text=f'Компетенция <b>[ID: {competence_id}] {competence_name.capitalize()}</b> '
+                                          f'успешно удалена')
     delete_competence(competence_id=competence_id)
     await state.clear()
     await choosing_actions_competencies(message=callback.message, state=state)

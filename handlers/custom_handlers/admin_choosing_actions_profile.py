@@ -9,7 +9,7 @@ import pdfkit
 import io
 
 from database.connection_db import get_profile_list, get_profile_competencies, get_competence_title, \
-    get_competencies_list
+    get_competencies_list, get_profile_name, get_competence_id
 
 from keyboards.reply.admin_choosing_actions_profile import admin_choosing_actions_profile
 from keyboards.reply.admin_delete_profile import admin_delete_profile
@@ -26,17 +26,17 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 @admin_command
 async def choosing_actions_profile(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.clear()
-    await message.answer(text=f'Вы вошли в меню "Профили"',
+    await message.answer(text=f'Вы вошли в меню <b>Профили</b>',
                          reply_markup=admin_choosing_actions_profile)
 
 
 @rt.message(Text('Список профилей'))
 @admin_command
 async def profile_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
-    data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', get_profile_list())))
+    data_profile_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x[0]}]</b> {x[1].capitalize()}', get_profile_list())))
     await state.set_state(Profile.check_competencies)
-    await message.answer(text=f'Введите ID профиля для просмотра входящих компетенций. \n'
-                              f'Список всех имеющихся профилей:\n{data_profile_list}',
+    await message.answer(text=f'Введите ID профиля для просмотра его компетенций. \n'
+                              f'Список всех профилей:\n\n{data_profile_list}',
                          reply_markup=admin_delete_profile)
     await creating_pdf(bot=bot, message=message)
 
@@ -45,13 +45,14 @@ async def profile_list(message: types.Message, state: FSMContext, bot: Bot, *arg
 async def get_competencies_in_profile(message: types.Message, state: FSMContext):
     comp_list = list(map(get_competence_title, get_profile_competencies(message.text.lower())))
     if comp_list:
-        title = '\n'.join(list(map(lambda x: f'Компетенция: {x[0]}', comp_list)))
-        await message.answer(text=f'Компетенции входящие в профиль\n'
-                                  f'{title}',
+        profile_name = get_profile_name(message.text)
+        title = '\n'.join(list(map(lambda x: f'<b>[ID: {get_competence_id(x[0])[0]}]</b> {x[0].capitalize()}', comp_list)))
+        await message.answer(text=f'Профиль <b>[ID: {message.text}]</b> {profile_name.capitalize()}\n\n'
+                                  f'Компетенции:\n{title}',
                              reply_markup=admin_delete_profile)
     else:
-        await message.answer(text='В профиле нет компетенций или он не существует. \n'
-                                  'Повторите ввод ID')
+        await message.answer(text=f'<b>Ошибка:</b> В профиле с <b>[ID: {message.text}]</b> '
+                                  f'нет компетенций или он не существует, повторите ввод')
 
 
 async def creating_pdf(bot: Bot, message: types.Message):
@@ -64,7 +65,7 @@ async def creating_pdf(bot: Bot, message: types.Message):
     profile_competencies = []
     for i in range(len(profile_id)):
         profile_competencies.append(get_profile_competencies(profile_id[i]))
-    profile_name = (list(map(lambda x: x[1], data_profile_list)))
+    profile_name = (list(map(lambda x: x[1].capitalize(), data_profile_list)))
     number_repetitions_profile = len(profile_id)
 
     competencies_list = get_competencies_list()

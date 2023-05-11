@@ -8,7 +8,7 @@ from handlers.custom_handlers.user_connection import user_start
 
 from database.connection_db import get_session_info, get_candidate_name, get_profile_name_session, \
     user_session_info, get_user_session_info, user_has_active_session, get_comp_name_session, get_comp_desc_session, \
-    get_admins_list_by_column
+    get_admins_list_by_column, get_competence_id
 
 from states.user_info import User
 
@@ -29,7 +29,7 @@ async def user_start_grading_info(message: types.Message, state: FSMContext):
         connection_code_int = int(connection_code)
     except ValueError:
         if message.chat.id not in get_admins_list_by_column(0):
-            await message.answer(text=f'Вы ввели неправильный код сессии.')
+            await message.answer(text=f'<b>Ошибка:</b> Вы ввели неправильный код сессии')
             await user_start(message=message, state=state)
         return
 
@@ -49,13 +49,12 @@ async def user_start_grading_info(message: types.Message, state: FSMContext):
                                   user_id=user_id,
                                   grade=DEFAULT_GRADE)
 
-        competence_title = '\n'.join(list(map(lambda x: f'— {x[0]}', competencies_list_name)))
-        await message.answer(text=f'Информация о кандидате:\n'
-                                  f'— Имя кандидата: {get_user_session_info(1, connection_code)[0]}\n'
-                                  f'— Профиль: {get_user_session_info(2, connection_code)[0]}\n'
-                                  f'— Компетенции входящие в профиль:\n'
-                                  f'{competence_title}\n'
-                                  f'Методичка по оценкам',
+        competence_title = '\n'.join(list(map(lambda x: f'— <b>[ID: {get_competence_id(x[0])[0]}]</b> {x[0].capitalize()}', competencies_list_name)))
+        await message.answer(text=f'Информация о кандидате:\n\n'
+                                  f'<b>Имя кандидата:</b> {get_user_session_info(1, connection_code)[0].capitalize()}\n'
+                                  f'<b>Профиль:</b> {get_user_session_info(2, connection_code)[0].capitalize()}\n'
+                                  f'<b>Компетенции входящие в профиль:</b>\n'
+                                  f'{competence_title}\n',
                              reply_markup=user_start_grading)
     else:
         await message.answer(text=f'Код указан неверно')

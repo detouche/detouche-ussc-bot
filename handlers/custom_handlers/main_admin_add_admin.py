@@ -41,9 +41,9 @@ async def add_admin_confirmation(callback: CallbackQuery, callback_data: Confirm
     confirmation = callback_data.confirmation_choice
     if confirmation:
         if user_id in admins_id:
-            await callback.message.edit_text(text=f"{user_name} уже является администратором")
+            await callback.message.edit_text(text=f"<b>{user_name.capitalize()}</b> уже является администратором")
         else:
-            await callback.message.edit_text(text=f"Успешно! {user_name} теперь администратор c id {user_id}")
+            await callback.message.edit_text(text=f"Успешно! <b>[ID: {user_id}] {user_name.capitalize()}</b> теперь администратор")
             main_admin_add_admin(user_id, user_name)
         await add_admin_keyboard(callback.message, state)
     else:

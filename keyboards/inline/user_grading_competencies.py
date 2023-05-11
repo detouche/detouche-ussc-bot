@@ -11,10 +11,10 @@ async def user_grading_get_keyboard(message: Message):
     connection_code = get_connection_code_session(current_id)[0]
     comp_list_name = get_comp_name_session(connection_code)
     buttons = []
-    comp_info = '\n'.join(list(map(lambda x: f'{x[0]}\n'
-                                             f'Оценка: {grade_text_converter(float(get_assessment_comp_session(str(x[0]), current_id)))}\n',
+    comp_info = '\n'.join(list(map(lambda x: f'<b>Компетенция:</b> {x[0].capitalize()}\n'
+                                             f'<b>Оценка:</b> {grade_text_converter(float(get_assessment_comp_session(str(x[0]), current_id)))}\n',
                                    comp_list_name)))
-    await message.answer(text=f'Информация о компетенциях:\n \n{comp_info}')
+    await message.answer(text=f'Информация о компетенциях:\n\n{comp_info}')
     for i in range(len(comp_list_name)):
         competence_id = get_id_comp_session(comp_list_name[i][0], current_id)
         button = [InlineKeyboardButton(text=f"{comp_list_name[i][0]}",

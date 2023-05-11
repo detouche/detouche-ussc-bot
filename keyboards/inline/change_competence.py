@@ -4,9 +4,9 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 def change_competence():
     buttons = [
         [
-            InlineKeyboardButton(text=f"Изменить название компетенции",
+            InlineKeyboardButton(text=f"Изменить название",
                                  callback_data='change_competence_title'),
-            InlineKeyboardButton(text=f"Изменить описание коммпетенции",
+            InlineKeyboardButton(text=f"Изменить описание",
                                  callback_data='change_competence_description')
         ],
     ]

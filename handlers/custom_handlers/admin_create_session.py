@@ -28,8 +28,8 @@ async def create_session(message: types.Message, state: FSMContext, *args, **kwa
                              reply_markup=admin_create_session)
         await state.set_state(AdminSession.name)
     else:
-        await message.answer(text=f'У Вас уже есть созданная сессия.\n'
-                                  f'Закончите её, чтобы начать новую',
+        await message.answer(text=f'<b>Ошибка:</b> У вас уже есть созданная сессия.\n'
+                                  f'Закончите ее, чтобы начать новую',
                              reply_markup=admin_delete_session)
 
 
@@ -51,7 +51,7 @@ async def get_confirmation(callback: CallbackQuery, callback_data: ConfirmationC
     candidate_name = data['candidate_name']
     if confirmation:
         await callback.message.delete()
-        await callback.message.answer(f"Выберите профили для {candidate_name}")
+        await callback.message.answer(f"Выберите профили для <b>{candidate_name.capitalize()}</b>")
         await profile_list_session(message=callback.message, bot=bot)
         await state.set_state(AdminSession.profile_number)
     else:
@@ -61,6 +61,7 @@ async def get_confirmation(callback: CallbackQuery, callback_data: ConfirmationC
 
 async def profile_list_session(message: types.Message, bot: Bot):
     data_profile_list = get_profile_list()
-    data_profile_list = '\n'.join(list(map(lambda x: f'ID: {x[0]} Name: {x[1]}', data_profile_list)))
-    await message.answer(text=f'Список всех имеющихся профилей:\n{data_profile_list}')
+    data_profile_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x[0]}]</b> {x[1].capitalize()}', data_profile_list)))
+    await message.answer(text=f'Список всех имеющихся профилей:\n\n'
+                              f'{data_profile_list}')
     await creating_pdf(bot, message)

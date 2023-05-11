@@ -135,9 +135,9 @@ def get_competencies_list():
     return cursor.execute('SELECT competence_id, competence_name FROM competencies').fetchall()
 
 
-def get_competence_description(competence_description):
+def get_competence_description(competence_id):
     description = cursor.execute(
-        f"SELECT competence_description FROM competencies WHERE competence_id = '{competence_description}'").fetchone()
+        f"SELECT competence_description FROM competencies WHERE competence_id = '{competence_id}'").fetchone()
     if description is None:
         return False
     else:
@@ -147,7 +147,7 @@ def get_competence_description(competence_description):
 def create_profile_db(profile_name):
     status = cursor.execute(f"SELECT profile_name FROM profiles WHERE profile_name = '{profile_name}'").fetchone()
     if status is None:
-        cursor.execute("INSERT INTO profiles(profile_name) VALUES(?)", profile_name)
+        cursor.execute("INSERT INTO profiles(profile_name) VALUES(?)", [profile_name])
         conn.commit()
         return True
     else:
@@ -212,6 +212,10 @@ def get_competence_title(competence_id):
         f"SELECT competence_name FROM competencies WHERE competence_id = '{competence_id}'").fetchone()
 
 
+def get_competence_id(competence_title):
+    return cursor.execute(
+        f"SELECT competence_id FROM competencies WHERE competence_name = '{competence_title}'").fetchone()
+
 def change_competence_title(competence_id, new_competence_name):
     status_title = cursor.execute(
         f"SELECT competence_name FROM competencies WHERE competence_name = '{new_competence_name}'").fetchone()
@@ -261,6 +265,14 @@ def competencies_in_profile(profile_id):
         comp_list = cursor.execute(
             f"SELECT competence_id FROM competence_profile WHERE profile_id ='{profile_id}'").fetchall()
         return list(map(lambda x: x[0], comp_list))
+
+
+def competence_in_profile(profile_id, competence_id):
+    status = cursor.execute(f"SELECT competence_id, profile_id FROM competence_profile "
+                            f"WHERE profile_id = {profile_id} AND competence_id = {competence_id}").fetchone()
+    if status is None:
+        return False
+    return True
 
 
 def delete_competence_from_profile(competence_id, profile_id):

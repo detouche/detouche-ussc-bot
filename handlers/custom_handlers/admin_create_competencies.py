@@ -30,7 +30,7 @@ async def create_competence_title(message: types.Message, state: FSMContext):
         await message.answer(text=f'Введите описание компетенции')
         await state.set_state(Competence.description)
     else:
-        await message.answer(text="Такая компетения уже существует.",
+        await message.answer(text=f'Компетенция с названием "{message.text.capitalize()}" уже существует',
                              reply_markup=admin_change_competence)
         await state.clear()
         await create_competence(message=message, state=state)
@@ -42,6 +42,7 @@ async def create_competence_description(message: types.Message, state: FSMContex
     competence_data = await state.get_data()
     await state.clear()
     add_competence(cometence_name=competence_data['title'], competence_description=competence_data['description'])
-    await message.answer(text=f'Компетенция {competence_data["title"]} успешно создана.\n'
-                              f'Ее описание: {competence_data["description"]}',
+    await message.answer(text=f'Вы успешно создали компетенцию\n\n'
+                              f'<b>Название</b>: {competence_data["title"].capitalize()}\n'
+                              f'<b>Описание:</b> {competence_data["description"].capitalize()}',
                          reply_markup=admin_choosing_actions_competencies)

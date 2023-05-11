@@ -36,7 +36,7 @@ async def end_session(message: Message, state: FSMContext, *args, **kwargs):
 @rt.callback_query(Text('confirmation_delete_session'))
 async def confirmation_delete_session(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await callback.message.delete()
-    await callback.message.answer(text=f'Сессия закончена.\n Пожалуйста, дождитесь генерации результатов')
+    await callback.message.answer(text=f'Сессия закончена! Дождитесь генерации отчетов')
     admin_id = callback.message.chat.id
     connection_code = get_session_code_admin(admin_id=admin_id)
     competence_names = list(map(lambda x: x[0], get_competence_names(connection_code=connection_code)))

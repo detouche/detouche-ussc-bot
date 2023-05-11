@@ -47,11 +47,11 @@ async def session_successful_creation(message: Message, state: FSMContext, bot: 
         img_bytes = base64.b64decode(img_base64)
         qr = io.BytesIO(img_bytes)
         pdf_file = BufferedInputFile(qr.getvalue(), filename="QRCode")
-        await message.answer(text=f'Сессия успешно создана.\n'
-                                  f'Код для присоединения к сессии: {connection_code}.\n'
-                                  f'{session_link}',
+        await message.answer(text=f'Сессия успешно создана\n'
+                                  f'Код для присоединения к сессии: <b>{connection_code}</b>\n'
+                                  f'Ссылка для подключения (альтернативный вариант): {session_link}',
                              reply_markup=admin_successful_creation)
         await bot.send_photo(message.chat.id, photo=pdf_file)
         await state.clear()
     else:
-        await message.answer(text='Такого профиля не существует.\n Выберите, пожалуйста, другой')
+        await message.answer(text=f'Такого профиля не существует или он пустой, выберите другой ID профиля')

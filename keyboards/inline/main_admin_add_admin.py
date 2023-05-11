@@ -35,11 +35,11 @@ async def add_admin_get_keyboard(message: Message, state: FSMContext, menu_page_
     buttons.append(stop_button)
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     if menu_page_shift == 0:
-        await message.answer(text='Вы можете сделать администратором следующих людей:',
+        await message.answer(text='Вы можете сделать администратором следующих пользователей:',
                              reply_markup=keyboard)
     else:
         try:
-            await message.edit_text(text='Вы можете сделать администратором следующих людей:',
+            await message.edit_text(text='Вы можете сделать администратором следующих пользователей:',
                                     reply_markup=keyboard)
         except TelegramBadRequest:
             pass
