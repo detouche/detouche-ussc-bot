@@ -447,3 +447,8 @@ def get_competence_grades(competence_name, connection_code):
 def get_user_grades(user_id, connection_code):
     return cursor.execute(f"SELECT competence_name, grade FROM user_session "
                           f"WHERE user_id = {user_id} AND connection_code = {connection_code}").fetchall()
+
+
+def active_session(user_id: int):
+    exists = cursor.execute("SELECT user_id FROM user_session WHERE user_id = ?", [user_id]).fetchone()
+    return True if exists else False

@@ -8,20 +8,24 @@ from keyboards.inline.user_grading_competencies import user_grading_get_keyboard
 from keyboards.inline.user_grade import user_grade_get_keyboard
 from keyboards.reply.user_end_grading import user_end_grading
 
-from handlers.custom_handlers.role import user_command
+from handlers.custom_handlers.role import user_command, get_role
 
 from states.user_grading_competence import UserGrading, UserGrade, CompetenceSessionInfo
 
 from database.connection_db import get_current_comp_desc_session, get_current_comp_name_session, \
-    get_current_comp_grade_session, transform_grade_current_comp
+    get_current_comp_grade_session, transform_grade_current_comp, active_session
 
 
 @rt.message(Text("Начать оценку"))
 @user_command
-async def user_grading_process(message: Message, *args, **kwargs):
-    await message.answer(text=f'Вы начали оценку сессии!',
-                         reply_markup=user_end_grading)
-    await user_grading_get_keyboard(message)
+async def user_grading_process(message: Message, state: FSMContext, *args, **kwargs):
+    if active_session(message.chat.id):
+        await message.answer(text=f'Вы начали оценку сессии!',
+                             reply_markup=user_end_grading)
+        await user_grading_get_keyboard(message)
+    else:
+        await message.answer(text=f'<b>Ошибка:</b> Данная сессия уже закончена!')
+        await get_role(message, state)
 
 
 @rt.callback_query(UserGrading.filter(F.action == 'assessment'))
