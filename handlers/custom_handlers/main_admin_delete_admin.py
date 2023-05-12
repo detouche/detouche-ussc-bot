@@ -39,7 +39,7 @@ async def delete_admin_confirmation(callback: CallbackQuery, callback_data: Conf
     admin_id = data['admin_id']
     confirmation = callback_data.confirmation_choice
     if confirmation:
-        await callback.message.edit_text(text=f"Успешно! <b>[ID: {admin_id}] {admin_name.capitalize()}</b> "
+        await callback.message.edit_text(text=f"Успешно! <b>[ID: {admin_id}] {admin_name.title()}</b> "
                                               f"теперь перестал быть администратором")
         main_admin_delete_admin(admin_id)
         await delete_admin_keyboard(callback.message, state)
