@@ -71,7 +71,6 @@ async def add_competencies_in_profile(message: types.Message, state: FSMContext,
 @rt.callback_query(Text('end_adding_competencies'))
 async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    print(data)
     profile_id = get_profile_id(data['title'])
     competencies_list = get_profile_competencies(profile_id=profile_id)
     comp_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x}]</b> {get_competence_title(x)[0].capitalize()}',
