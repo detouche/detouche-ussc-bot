@@ -51,7 +51,7 @@ async def user_start_grading_info(message: types.Message, state: FSMContext):
 
         competence_title = '\n'.join(list(map(lambda x: f'— <b>[ID: {get_competence_id(x[0])[0]}]</b> {x[0].capitalize()}', competencies_list_name)))
         await message.answer(text=f'Информация о кандидате:\n\n'
-                                  f'<b>Имя кандидата:</b> {get_user_session_info(1, connection_code)[0].capitalize()}\n'
+                                  f'<b>Имя кандидата:</b> {get_user_session_info(1, connection_code)[0].title()}\n'
                                   f'<b>Профиль:</b> {get_user_session_info(2, connection_code)[0].capitalize()}\n'
                                   f'<b>Компетенции входящие в профиль:</b>\n'
                                   f'{competence_title}\n',

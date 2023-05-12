@@ -387,7 +387,7 @@
                             Кандидат
                         </p>
                         <p class="candidate__name">
-                            {{ candidate_name }}
+                            {{ candidate_name.title() }}
                         </p>
                     </div>
                     <div class="profile__group">
@@ -395,7 +395,7 @@
                             Профиль
                         </p>
                         <p class="profile__name">
-                            {{ profile_name }}
+                            {{ profile_name.capitalize() }}
                         </p>
                     </div>
                 </td>
@@ -407,7 +407,7 @@
                         {% for comp_name, comp_value in grade_dicts.items() %}
                         <tr>
                             <td>
-                                <p class="graph__text">{{ comp_name }}</p>
+                                <p class="graph__text">{{ comp_name.capitalize() }}</p>
                             </td>
                             <td class="graph__line">
                                 <div class="item" style="width:{{ comp_value }}%;"></div>
@@ -476,7 +476,7 @@
             <li class="evaluating_card">
                 <div class="evaluating__block">
                     <p class="evaluating__name">
-                        {{ user_name }}
+                        {{ user_name.title() }}
                     </p>
                     <svg width="50" height="1" viewBox="0 0 50 1" fill="none" xmlns="http://www.w3.org/2000/svg" class="evaluating__block_line">
                         <line y1="0.5" x2="50" y2="0.5" stroke="#F29212"/>
@@ -487,7 +487,7 @@
                         <tr class="evaluating__competency">
                             <td class="evaluating__competency_name_position">
                                 <p class="evaluating__competency_name">
-                                    {{ comp_name }}
+                                    {{ comp_name.capitalize() }}
                                 </p>
                             </td>
                             <td>

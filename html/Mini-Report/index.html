@@ -204,7 +204,7 @@
                         Кандидат
                     </p>
                     <p class="candidate__name">
-                        {{ candidate_name }}
+                        {{ candidate_name.title() }}
                     </p>
                 </td>
                 <td class="profile__group">
@@ -212,7 +212,7 @@
                         Профиль
                     </p>
                     <p class="profile__name">
-                        {{ profile_name }}
+                        {{ profile_name.capitalize() }}
                     </p>
                 </td>
             </tr>
@@ -223,7 +223,7 @@
             {% for comp_name, comp_value in grade_dicts.items() %}
             <tr>
                 <td>
-                    <p class="graph__text">{{ comp_name }}</p>
+                    <p class="graph__text">{{ comp_name.capitalize() }}</p>
                 </td>
                 <td class="graph__line">
                     <div class="item" style="width:{{ comp_value }}%;"></div>
