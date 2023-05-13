@@ -161,10 +161,14 @@ def get_profile_id(profile_name):
 
 
 def add_competence_in_profile(competence_id, profile_id):
-    status_exists = cursor.execute(
-        f"SELECT competence_id FROM competencies WHERE competence_id = {competence_id}").fetchone()
-    status_add = cursor.execute(f"SELECT competence_id, profile_id FROM competence_profile "
-                                f"WHERE competence_id = '{competence_id}' AND profile_id = '{profile_id}'").fetchone()
+    try:
+        status_exists = cursor.execute(
+            f"SELECT competence_id FROM competencies WHERE competence_id = {competence_id}").fetchone()
+        status_add = cursor.execute(f"SELECT competence_id, profile_id FROM competence_profile "
+                                    f"WHERE competence_id = '{competence_id}' AND profile_id = '{profile_id}'").fetchone()
+    except sqlite3.OperationalError:
+        return False
+
     if status_exists is None or status_add:
         return False
     else:
@@ -268,8 +272,11 @@ def competencies_in_profile(profile_id):
 
 
 def competence_in_profile(profile_id, competence_id):
-    status = cursor.execute(f"SELECT competence_id, profile_id FROM competence_profile "
-                            f"WHERE profile_id = {profile_id} AND competence_id = {competence_id}").fetchone()
+    try:
+        status = cursor.execute(f"SELECT competence_id, profile_id FROM competence_profile "
+                                f"WHERE profile_id = {profile_id} AND competence_id = {competence_id}").fetchone()
+    except sqlite3.OperationalError:
+        return False
     if status is None:
         return False
     return True

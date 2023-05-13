@@ -40,12 +40,13 @@ async def get_changeable_description_id(message: types.Message, state: FSMContex
         competencies_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x}]</b> {get_competence_title(x)[0].capitalize()}',
                                                get_profile_competencies(message.text))))
         await message.answer(text=f'Что хотите изменить в профиле?\n\n'
-                                  f'<b>Название:</b> {profile_name}\n'
+                                  f'<b>Название:</b> {profile_name.capitalize()}\n'
                                   f'<b>Компетенции:</b>\n'
                                   f'{competencies_list}',
                              reply_markup=change_profile())
     else:
-        await message.answer(text=f'<b>Ошибка:</b> Профиль с ID: {message.text.lower()} не найден, повторите ввод')
+        await message.answer(text=f'<b>Ошибка:</b> Профиль с <b>[ID: {message.text.lower()}]</b> '
+                                  f'не найден, повторите ввод')
         await state.clear()
         await change_profiles(message=message, state=state, bot=bot)
 
@@ -124,7 +125,7 @@ async def add_competence_from_profile_start(message: types.Message, state: FSMCo
                                   f'уже добавлена, удалите ее или продолжите ввод',
                              reply_markup=change_profile_end_adding_competencies())
     else:
-        await message.answer(text=f"<b>Ошибка:</b> Компетенция с ID: {message.text.lower()} "
+        await message.answer(text=f"<b>Ошибка:</b> Компетенция с <b>[ID: {message.text.lower()}]</b> "
                                   f"не найдена, повторите ввод",
                              reply_markup=end_change_profile_end_adding_competencies())
 
