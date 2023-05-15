@@ -27,7 +27,7 @@ async def add_admin(message: Message, state: FSMContext, *args, **kwargs):
 async def add_admin_callbacks(callback: CallbackQuery, callback_data: AdminAction, state: FSMContext):
     user_id = callback_data.user_id
     user_name = get_user_name_for_id(user_id)
-    await callback.message.edit_text(text=f'Вы уверены?',
+    await callback.message.edit_text(text=f'Вы уверены, что хотите сделать {user_name} администратором?',
                                      reply_markup=get_keyboard_confirmation())
     await UserInfo.set_data(state, data={'user_name': user_name, 'user_id': user_id})
 

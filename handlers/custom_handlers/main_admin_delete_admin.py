@@ -27,7 +27,7 @@ async def delete_admin(message: Message, state: FSMContext, *args, **kwargs):
 async def delete_admin_callbacks(callback: CallbackQuery, callback_data: AdminAction, state: FSMContext):
     admin_id = callback_data.admin_id
     admin_name = get_admins_name_for_id(admin_id)
-    await callback.message.edit_text(text=f'Вы уверены?',
+    await callback.message.edit_text(text=f'Вы уверены, что хотите удалить {admin_name} из списка администраторов?',
                                      reply_markup=get_keyboard_confirmation())
     await AdminInfo.set_data(state, data={'admin_name': admin_name, 'admin_id': admin_id})
 
