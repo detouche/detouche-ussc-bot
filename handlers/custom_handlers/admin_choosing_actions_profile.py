@@ -26,14 +26,14 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 @admin_command
 async def choosing_actions_profile(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.clear()
-    await message.answer(text=f'Вы вошли в меню <b>Профили</b>',
+    await message.answer(text=f'Вы вошли в меню Профили',
                          reply_markup=admin_choosing_actions_profile)
 
 
 @rt.message(Text('Список профилей'))
 @admin_command
 async def profile_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
-    data_profile_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x[0]}]</b> {x[1].capitalize()}', get_profile_list())))
+    data_profile_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_profile_list())))
     await state.set_state(Profile.check_competencies)
     await message.answer(text=f'Введите ID профиля для просмотра его компетенций. \n'
                               f'Список всех профилей:\n\n{data_profile_list}',
@@ -46,12 +46,12 @@ async def get_competencies_in_profile(message: types.Message, state: FSMContext)
     comp_list = list(map(get_competence_title, get_profile_competencies(message.text.lower())))
     if comp_list:
         profile_name = get_profile_name(message.text)
-        title = '\n'.join(list(map(lambda x: f'<b>[ID: {get_competence_id(x[0])[0]}]</b> {x[0].capitalize()}', comp_list)))
-        await message.answer(text=f'Профиль <b>[ID: {message.text}]</b> {profile_name.capitalize()}\n\n'
+        title = '\n'.join(list(map(lambda x: f'[ID: {get_competence_id(x[0])[0]}] {x[0].capitalize()}', comp_list)))
+        await message.answer(text=f'Профиль [ID: {message.text}] {profile_name.capitalize()}\n\n'
                                   f'Компетенции:\n{title}',
                              reply_markup=admin_delete_profile)
     else:
-        await message.answer(text=f'<b>Ошибка:</b> В профиле с <b>[ID: {message.text}]</b> '
+        await message.answer(text=f'Ошибка:В профиле с [ID: {message.text}] '
                                   f'нет компетенций или он не существует, повторите ввод')
 
 

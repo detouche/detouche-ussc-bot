@@ -13,6 +13,10 @@ def change_profile():
             InlineKeyboardButton(text=f"Удалить компетенции",
                                  callback_data='delete_comp_from_desc')
         ],
+        [
+            InlineKeyboardButton(text=f"Выбрать другой профиль",
+                                 callback_data='select_any_profile'),
+        ],
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)

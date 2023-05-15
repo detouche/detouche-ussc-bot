@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from keyboards.reply.user_connection import user_connection
 
 from database.connection_db import user_register, auth_validation, user_rename, user_has_active_session, \
-    get_session_code
+    get_session_code, get_user_name_for_id
 
 from states.user_info import User
 
@@ -19,7 +19,7 @@ async def user_start(message: types.Message, state: FSMContext, url_code: str = 
     authorized = auth_validation(user_id)
     if authorized:
         if user_has_active_session(user_id):
-            await message.answer(text=f'<b>Предупреждение:</b> Вы не закончили оценивание прошлой сессии')
+            await message.answer(text=f'Предупреждение: Вы не закончили оценивание прошлой сессии')
             await state.set_state(User.connection_code)
             await state.update_data(connection_code=get_session_code(user_id))
 
@@ -27,6 +27,8 @@ async def user_start(message: types.Message, state: FSMContext, url_code: str = 
             await user_start_grading_info(message, state)
         else:
             if url_code is None:
+                user_name = get_user_name_for_id(user_id)
+                await message.answer(text=f'Здравствуйте, {user_name.title()}')
                 await message.answer(text=f'Введите код сессии или перейдите по ссылке от администратора',
                                      reply_markup=user_connection)
                 await state.set_state(User.connection_code)
@@ -46,7 +48,7 @@ async def user_enter_name(message: types.Message, state: FSMContext):
     await state.update_data(name=message.text)
     user_data = await state.get_data()
     user_id = message.from_user.id
-    await message.answer(f"Вы успешно зарегистрировались, <b>{user_data['name']}</b>!")
+    await message.answer(f"Вы успешно зарегистрировались, {user_data['name']}!")
     await state.clear()
     user_register(user_id, user_data['name'])
     await user_start(message, state)
@@ -64,7 +66,7 @@ async def user_enter_rename(message: types.Message, state: FSMContext):
     await state.update_data(rename=message.text)
     user_data = await state.get_data()
     current_id = message.from_user.id
-    await message.answer(f"Вы перезаписаны, <b>{user_data['rename']}</b>!")
+    await message.answer(f"Вы перезаписаны, {user_data['rename'].title()}!")
     await state.clear()
     user_rename(current_id, user_data['rename'])
     await user_start(message, state)

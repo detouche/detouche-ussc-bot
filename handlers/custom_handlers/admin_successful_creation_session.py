@@ -48,7 +48,7 @@ async def session_successful_creation(message: Message, state: FSMContext, bot: 
         qr = io.BytesIO(img_bytes)
         pdf_file = BufferedInputFile(qr.getvalue(), filename="QRCode")
         await message.answer(text=f'Сессия успешно создана\n'
-                                  f'Код для присоединения к сессии: <b>{connection_code}</b>\n'
+                                  f'Код для присоединения к сессии: {connection_code}\n'
                                   f'Ссылка для подключения (альтернативный вариант): {session_link}',
                              reply_markup=admin_successful_creation)
         await bot.send_photo(message.chat.id, photo=pdf_file)

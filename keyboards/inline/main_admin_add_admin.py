@@ -21,7 +21,7 @@ async def add_admin_get_keyboard(message: Message, state: FSMContext, menu_page_
     buttons = []
     index = new_page_index * PAGE_SIZE
     for i in range(len(users_name[index:index+PAGE_SIZE])):
-        button = [InlineKeyboardButton(text=f"{users_name[i+index]}",
+        button = [InlineKeyboardButton(text=f"{users_name[i+index].title()}",
                                        callback_data=AdminAction(action="add",
                                                                  user_id=users_id[i+index]).pack())]
         buttons.append(button)

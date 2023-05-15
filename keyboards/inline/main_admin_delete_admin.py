@@ -21,7 +21,7 @@ async def delete_admin_get_keyboard(message: Message, state: FSMContext, menu_pa
     buttons = []
     index = new_page_index * PAGE_SIZE
     for i in range(len(admins_name[index:index+PAGE_SIZE])):
-        button = [InlineKeyboardButton(text=f"{admins_name[i+index]}",
+        button = [InlineKeyboardButton(text=f"{admins_name[i+index].title()}",
                                        callback_data=AdminAction(action="delete",
                                                                  admin_id=admins_id[i+index]).pack())]
         buttons.append(button)

@@ -1,5 +1,5 @@
 from loader import rt
-from aiogram import F
+from aiogram import F, Bot
 from aiogram.filters import Text
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
@@ -14,6 +14,7 @@ from states.page_switcher import MenuAddAdmin
 
 from keyboards.inline.main_admin_add_admin import add_admin_get_keyboard
 from keyboards.inline.confirmation_add import get_keyboard_confirmation
+from handlers.custom_handlers.main_admin_delete_or_add_admin import delete_or_add_admin
 
 
 @rt.message(Text('Добавить администратора'))
@@ -32,7 +33,7 @@ async def add_admin_callbacks(callback: CallbackQuery, callback_data: AdminActio
 
 
 @rt.callback_query(Confirmation.filter(F.action == 'confirmation_add'))
-async def add_admin_confirmation(callback: CallbackQuery, callback_data: Confirmation, state: FSMContext):
+async def add_admin_confirmation(callback: CallbackQuery, callback_data: Confirmation, state: FSMContext, bot: Bot):
     data = await state.get_data()
     await state.clear()
     user_name = data['user_name']
@@ -41,15 +42,16 @@ async def add_admin_confirmation(callback: CallbackQuery, callback_data: Confirm
     confirmation = callback_data.confirmation_choice
     if confirmation:
         if user_id in admins_id:
-            await callback.message.edit_text(text=f"<b>{user_name.title()}</b> уже является администратором")
+            await callback.message.edit_text(text=f"{user_name.title()} уже является администратором")
         else:
-            await callback.message.edit_text(text=f"Успешно! <b>[ID: {user_id}] {user_name.title()}</b> "
+            await callback.message.edit_text(text=f"Успешно! [ID: {user_id}] {user_name.title()} "
                                                   f"теперь администратор")
+            await bot.send_message(text=f"Вас назначили администратором!", chat_id=user_id)
             main_admin_add_admin(user_id, user_name)
-        await add_admin_keyboard(callback.message, state)
+        await delete_or_add_admin(callback.message, state)
     else:
         await callback.message.delete()
-        await add_admin_keyboard(callback.message, state)
+        await delete_or_add_admin(callback.message, state)
 
 
 async def add_admin_keyboard(message: Message, state: FSMContext):
@@ -73,3 +75,4 @@ async def add_admin_finish(callback: CallbackQuery, state: FSMContext,):
     await callback.message.delete()
     await callback.message.answer('Добавление администраторов закончено')
     await state.clear()
+    await delete_or_add_admin(callback.message, state)

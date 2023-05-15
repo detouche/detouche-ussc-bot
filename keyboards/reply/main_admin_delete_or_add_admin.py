@@ -10,5 +10,5 @@ main_admin_delete_or_add_admin = ReplyKeyboardMarkup(
             KeyboardButton(text='Назад в главное меню')
         ]
     ],
-    resize_keyboard=True
+    resize_keyboard=True, one_time_keyboard=True
 )

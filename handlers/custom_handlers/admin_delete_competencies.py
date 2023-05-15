@@ -22,7 +22,7 @@ from handlers.custom_handlers.role import admin_command
 @admin_command
 async def delete_competencies(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     await state.set_state(Competence.delete)
-    comp_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x[0]}]</b> {x[1].capitalize()}', get_competencies_list())))
+    comp_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_competencies_list())))
     await message.answer(text=f'Введите ID компетенции, которую хотите удалить\n'
                               f'Список всех компетенций:\n\n{comp_list}',
                          reply_markup=admin_delete_competence)
@@ -31,15 +31,17 @@ async def delete_competencies(message: types.Message, state: FSMContext, bot: Bo
 
 @rt.message(Competence.delete)
 async def delete_competence_handler(message: types.Message, state: FSMContext):
+    await state.clear()
     await state.update_data(delete=message.text)
     if check_competence_id(competence_id=message.text):
         competence_name = get_competence_title(message.text.lower())[0]
         await message.answer(text=f"Вы уверены, что хотите удалить компетенцию:\n\n"
-                                  f"<b>[ID: {message.text}]</b> {competence_name.capitalize()}?",
+                                  f"[ID: {message.text}] {competence_name.capitalize()}?",
                              reply_markup=confirmation_delete_competence())
     else:
-        await message.answer(text=f'<b>Ошибка:</b> Компетенция с ID: {message.text.lower()} не найдена, повторите ввод',
+        await message.answer(text=f'Ошибка: Компетенция с ID: {message.text.lower()} не найдена, повторите ввод',
                              reply_markup=admin_choosing_actions_competencies)
+        await state.set_state(Competence.delete)
 
 
 @rt.callback_query(Text('delete_competence_true'))
@@ -47,7 +49,7 @@ async def delete_competence_true(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     competence_id = data['delete']
     competence_name = get_competence_title(competence_id)[0]
-    await callback.message.edit_text(text=f'Компетенция <b>[ID: {competence_id}] {competence_name.capitalize()}</b> '
+    await callback.message.edit_text(text=f'Компетенция [ID: {competence_id}] {competence_name.capitalize()} '
                                           f'успешно удалена')
     delete_competence(competence_id=competence_id)
     await state.clear()

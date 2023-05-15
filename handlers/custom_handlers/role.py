@@ -20,7 +20,7 @@ MAIN_ADMINS = list(map(int, os.getenv("MAIN_ADMINS").split()))
 
 @rt.message(Command("start"))
 async def get_role(message: types.Message, state: FSMContext):
-    await message.answer(text=f'Ваш TelegramID: <b>{message.chat.id}</b>')
+    await message.answer(text=f'Ваш TelegramID: {message.chat.id}')
     customer_id = message.chat.id
 
     from handlers.custom_handlers.admin_connection import admin_start
@@ -42,7 +42,7 @@ def admin_command(func):
     async def wrapped(message, *args, **kwargs):
         customer_id = message.chat.id
         if customer_id not in get_admins_list_by_column(0) and customer_id not in MAIN_ADMINS:
-            await message.answer(text=f'<b>Ошибка:</b> У вас недостаточно прав для выполнения команды',
+            await message.answer(text=f'Ошибка: У вас недостаточно прав для выполнения команды',
                                  reply_markup=types.ReplyKeyboardRemove())
             return
         await func(message, *args, **kwargs)
@@ -54,7 +54,7 @@ def user_command(func):
     async def wrapped(message, *args, **kwargs):
         customer_id = message.chat.id
         if customer_id in get_admins_list_by_column(0) or customer_id in MAIN_ADMINS:
-            await message.answer(text=f'<b>Ошибка:</b> У вас недостаточно прав для выполнения команды',
+            await message.answer(text=f'Ошибка: У вас недостаточно прав для выполнения команды',
                                  reply_markup=types.ReplyKeyboardRemove())
             return
         await func(message, *args, **kwargs)
@@ -66,7 +66,7 @@ def main_admin_command(func):
     async def wrapped(message, *args, **kwargs):
         customer_id = message.chat.id
         if customer_id not in MAIN_ADMINS:
-            await message.answer(text=f'<b>Ошибка:</b> У вас недостаточно прав для выполнения команды',
+            await message.answer(text=f'Ошибка: У вас недостаточно прав для выполнения команды',
                                  reply_markup=types.ReplyKeyboardRemove())
             return
         await func(message, *args, **kwargs)
