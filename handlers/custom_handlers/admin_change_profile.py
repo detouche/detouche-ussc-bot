@@ -19,6 +19,7 @@ from states.profiles import Profile
 
 from handlers.custom_handlers.role import admin_command
 from handlers.custom_handlers.admin_choosing_actions_profile import choosing_actions_profile, creating_pdf
+from handlers.custom_handlers.admin_choosing_actions_competencies import creating_pdf as creating_pdf_competencies
 
 
 @rt.message(Text('Редактировать профиль'))
@@ -96,12 +97,13 @@ async def change_desc_title_false(callback: CallbackQuery, state: FSMContext, bo
 
 
 @rt.callback_query(Text('add_comp_from_desc'))
-async def add_competence_from_profile(callback: CallbackQuery, state: FSMContext):
+async def add_competence_from_profile(callback: CallbackQuery, state: FSMContext, bot: Bot):
     comp_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_competencies_list())))
     await callback.message.answer(text=f'Введите ID компетенции, которую хотите добавить в профиль\n'
                                        f'Список компетенций:\n\n'
                                        f'{comp_list}')
     await state.set_state(Profile.add_competence)
+    await creating_pdf_competencies(bot=bot, message=callback.message)
 
 
 @rt.message(Profile.add_competence)
@@ -127,8 +129,8 @@ async def add_competence_from_profile_start(message: types.Message, state: FSMCo
 async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await state.clear()
     await callback.message.delete()
-    await change_profiles(message=callback.message, state=state, bot=bot)
     await callback.message.answer(text='Компетенции успешно добавлены в профиль')
+    await change_profiles(message=callback.message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('change_profile_delete_competencies'))
@@ -181,4 +183,4 @@ async def end_add_comp_in_profile(callback: CallbackQuery, state: FSMContext, bo
 async def change_competence_title_start(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await state.clear()
     await callback.message.delete()
-    await change_profiles(callback.message, state, bot)
+    await change_profiles(message=callback.message, state=state, bot=bot)

@@ -1,10 +1,11 @@
 from loader import rt
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from handlers.custom_handlers.role import admin_command
+from handlers.custom_handlers.admin_choosing_actions_competencies import creating_pdf
 
 from keyboards.reply.admin_change_competence import admin_change_competence
 
@@ -20,16 +21,17 @@ from database.connection_db import change_competence_title, get_competencies_lis
 
 @rt.message(Text('Изменить компетенцию'))
 @admin_command
-async def change_competencies(message: types.Message, state: FSMContext, *args, **kwargs):
+async def change_competencies(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     competencies_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_competencies_list())))
     await message.answer(text=f'Введите ID компетенции, которую хотите изменить\n'
                               f'Список всех компетенций:\n\n{competencies_list}',
                          reply_markup=admin_change_competence)
     await state.set_state(Competence.changeable_id)
+    await creating_pdf(bot=bot, message=message)
 
 
 @rt.message(Competence.changeable_id)
-async def get_changeable_competence_id(message: types.Message, state: FSMContext):
+async def get_changeable_competence_id(message: types.Message, state: FSMContext, bot: Bot):
     await state.clear()
     if check_competence_id(competence_id=message.text):
         competence_name = get_competence_title(message.text.lower())[0]
@@ -41,7 +43,7 @@ async def get_changeable_competence_id(message: types.Message, state: FSMContext
                              reply_markup=change_competence())
     else:
         await message.answer(text=f'Ошибка: Компетенция с ID: {message.text.lower()} не найдена, повторите ввод')
-        await change_competencies(message=message, state=state)
+        await change_competencies(message=message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('change_competence_title'))
@@ -68,27 +70,27 @@ async def change_competence_title_confirmation(message: types.Message, state: FS
 
 
 @rt.callback_query(Text('change_competence_title_true'))
-async def change_competence_title_true(callback: CallbackQuery, state: FSMContext):
+async def change_competence_title_true(callback: CallbackQuery, state: FSMContext, bot: Bot):
     data = await state.get_data()
     competence_id = data['changeable_id']
     competence_title = data['change_title']
     if change_competence_title(competence_id=competence_id, new_competence_name=competence_title):
         await callback.message.edit_text(text='Название компетенции успешно изменено')
         await state.clear()
-        await change_competencies(message=callback.message, state=state)
+        await change_competencies(message=callback.message, state=state, bot=bot)
     else:
         await callback.message.edit_text(
             text=f'Ошибка: Компетенция с названием {competence_title.capitalize()} уже существует, '
                  f'либо был введен неверный ID')
         await state.clear()
-        await change_competencies(message=callback.message, state=state)
+        await change_competencies(message=callback.message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('change_competence_title_false'))
-async def change_competence_title_false(callback: CallbackQuery, state: FSMContext):
+async def change_competence_title_false(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await state.clear()
     await callback.message.delete()
-    await change_competencies(message=callback.message, state=state)
+    await change_competencies(message=callback.message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('change_competence_description'))
@@ -115,25 +117,25 @@ async def change_competence_description_confirmation(message: types.Message, sta
 
 
 @rt.callback_query(Text('change_competence_desc_true'))
-async def change_competence_description_true(callback: CallbackQuery, state: FSMContext):
+async def change_competence_description_true(callback: CallbackQuery, state: FSMContext, bot: Bot):
     data = await state.get_data()
     competence_id = data['changeable_id']
     competence_desc = data['change_description']
     if change_competence_description(competence_id=competence_id, new_competence_description=competence_desc):
         await callback.message.edit_text(text=f'Описание компетенции успешно изменено')
         await state.clear()
-        await change_competencies(message=callback.message, state=state)
+        await change_competencies(message=callback.message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('change_competence_desc_false'))
-async def change_competence_description_false(callback: CallbackQuery, state: FSMContext):
+async def change_competence_description_false(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await state.clear()
     await callback.message.delete()
-    await change_competencies(message=callback.message, state=state)
+    await change_competencies(message=callback.message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('select_any_competence'))
-async def change_competence_title_start(callback: CallbackQuery, state: FSMContext):
+async def change_competence_title_start(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await state.clear()
     await callback.message.delete()
-    await change_competencies(callback.message, state)
+    await change_competencies(message=callback.message, state=state, bot=bot)

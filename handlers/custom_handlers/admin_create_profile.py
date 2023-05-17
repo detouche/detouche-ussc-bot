@@ -1,5 +1,5 @@
 from loader import rt
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.types import CallbackQuery
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
@@ -10,6 +10,7 @@ from keyboards.reply.admin_choosing_actions_profile import admin_choosing_action
 from keyboards.inline.end_adding_competencies import end_adding_competencies, end_adding_competencies_error
 
 from handlers.custom_handlers.role import admin_command
+from handlers.custom_handlers.admin_choosing_actions_competencies import creating_pdf
 
 from states.profiles import Profile
 
@@ -26,7 +27,7 @@ async def create_profile(message: types.Message, state: FSMContext, *args, **kwa
 
 
 @rt.message(Profile.title)
-async def create_profile_title(message: types.Message, state: FSMContext):
+async def create_profile_title(message: types.Message, state: FSMContext, bot: Bot):
     comp_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_competencies_list())))
     if create_profile_db(message.text.lower()):
         await message.answer(text=f"Профиль компетенций {message.text.capitalize()} успешно создан")
@@ -34,6 +35,7 @@ async def create_profile_title(message: types.Message, state: FSMContext):
         await state.update_data(title=message.text.lower().title())
         await message.answer(text=f"Введите ID компетенций, которые хотите добавить в профиль\n"
                                   f"Список всех имеющихся компетенций:\n\n{comp_list}")
+        await creating_pdf(bot=bot, message=message)
     else:
         await message.answer(text=f"Ошибка: Профиль с названием {message.text.capitalize()} уже существует",
                              reply_markup=admin_choosing_actions_profile)
