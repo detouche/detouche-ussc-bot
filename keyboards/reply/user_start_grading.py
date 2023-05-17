@@ -3,8 +3,8 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 user_start_grading = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton(text='Начать оценку')
+            KeyboardButton(text='Приступить к оцениванию')
         ]
     ],
-    resize_keyboard=True
+    resize_keyboard=True, one_time_keyboard=True
 )

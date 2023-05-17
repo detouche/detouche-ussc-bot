@@ -1,5 +1,5 @@
 from loader import rt
-from aiogram import F
+from aiogram import F, Bot
 from aiogram.filters import Text
 from aiogram.types import CallbackQuery, Message
 from aiogram.fsm.context import FSMContext
@@ -14,6 +14,7 @@ from states.page_switcher import MenuDeleteAdmin
 
 from keyboards.inline.main_admin_delete_admin import delete_admin_get_keyboard
 from keyboards.inline.confirmation_delele import get_keyboard_confirmation
+from handlers.custom_handlers.main_admin_delete_or_add_admin import delete_or_add_admin
 
 
 @rt.message(Text('Удалить администратора'))
@@ -26,26 +27,27 @@ async def delete_admin(message: Message, state: FSMContext, *args, **kwargs):
 async def delete_admin_callbacks(callback: CallbackQuery, callback_data: AdminAction, state: FSMContext):
     admin_id = callback_data.admin_id
     admin_name = get_admins_name_for_id(admin_id)
-    await callback.message.edit_text(text=f'Вы уверены?',
+    await callback.message.edit_text(text=f'Вы уверены, что хотите удалить {admin_name} из списка администраторов?',
                                      reply_markup=get_keyboard_confirmation())
     await AdminInfo.set_data(state, data={'admin_name': admin_name, 'admin_id': admin_id})
 
 
 @rt.callback_query(Confirmation.filter(F.action == 'confirmation_delete'))
-async def delete_admin_confirmation(callback: CallbackQuery, callback_data: Confirmation, state: FSMContext):
+async def delete_admin_confirmation(callback: CallbackQuery, callback_data: Confirmation, state: FSMContext, bot: Bot):
     data = await state.get_data()
     await state.clear()
     admin_name = data['admin_name']
     admin_id = data['admin_id']
     confirmation = callback_data.confirmation_choice
     if confirmation:
-        await callback.message.edit_text(text=f"Успешно! <b>[ID: {admin_id}] {admin_name.title()}</b> "
+        await callback.message.edit_text(text=f"Успешно! [ID: {admin_id}] {admin_name.title()} "
                                               f"теперь перестал быть администратором")
+        await bot.send_message(text=f"Вы перестали быть администратором!", chat_id=admin_id)
         main_admin_delete_admin(admin_id)
-        await delete_admin_keyboard(callback.message, state)
+        await delete_or_add_admin(callback.message, state)
     else:
         await callback.message.delete()
-        await delete_admin_keyboard(callback.message, state)
+        await delete_or_add_admin(callback.message, state)
 
 
 async def delete_admin_keyboard(message: Message, state: FSMContext):
@@ -69,3 +71,4 @@ async def delete_admin_finish(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer('Удаление администраторов закончено')
     await state.clear()
+    await delete_or_add_admin(callback.message, state)

@@ -9,6 +9,10 @@ def change_competence():
             InlineKeyboardButton(text=f"Изменить описание",
                                  callback_data='change_competence_description')
         ],
+        [
+            InlineKeyboardButton(text=f"Выбрать другую компетенцию",
+                                 callback_data='select_any_competence'),
+        ]
     ]
 
     return InlineKeyboardMarkup(inline_keyboard=buttons)

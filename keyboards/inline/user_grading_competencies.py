@@ -11,8 +11,8 @@ async def user_grading_get_keyboard(message: Message):
     connection_code = get_connection_code_session(current_id)[0]
     comp_list_name = get_comp_name_session(connection_code)
     buttons = []
-    comp_info = '\n'.join(list(map(lambda x: f'<b>Компетенция:</b> {x[0].capitalize()}\n'
-                                             f'<b>Оценка:</b> {grade_text_converter(float(get_assessment_comp_session(str(x[0]), current_id)))}\n',
+    comp_info = '\n'.join(list(map(lambda x: f'Компетенция: {x[0].capitalize()}\n'
+                                             f'Оценка: {grade_text_converter(float(get_assessment_comp_session(str(x[0]), current_id)))}\n',
                                    comp_list_name)))
     await message.answer(text=f'Информация о компетенциях:\n\n{comp_info}')
     for i in range(len(comp_list_name)):
@@ -21,6 +21,12 @@ async def user_grading_get_keyboard(message: Message):
                                        callback_data=UserGrading(action="assessment",
                                                                  competence_id=competence_id).pack())]
         buttons.append(button)
+    empty_button = [InlineKeyboardButton(text=f' ',
+                                         callback_data='empty')]
+    buttons.append(empty_button)
+    stop_button = [InlineKeyboardButton(text=f'Закончить оценивание',
+                                        callback_data='stop_grading')]
+    buttons.append(stop_button)
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
     await message.answer(text='Вы можете оценить следующие компетенции:', reply_markup=keyboard)
 

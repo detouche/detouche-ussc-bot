@@ -37,12 +37,12 @@ async def create_competence_title(message: types.Message, state: FSMContext):
 
 
 @rt.message(Competence.description)
-async def create_competence_description(message: types.Message, state: FSMContext):
+async def create_competence_description(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.update_data(description=message.text)
     competence_data = await state.get_data()
     await state.clear()
     add_competence(cometence_name=competence_data['title'], competence_description=competence_data['description'])
     await message.answer(text=f'Вы успешно создали компетенцию\n\n'
-                              f'<b>Название</b>: {competence_data["title"].capitalize()}\n'
-                              f'<b>Описание:</b> {competence_data["description"].capitalize()}',
+                              f'Название: {competence_data["title"].capitalize()}\n'
+                              f'Описание: {competence_data["description"]}',
                          reply_markup=admin_choosing_actions_competencies)

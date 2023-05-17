@@ -24,14 +24,14 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 @admin_command
 async def choosing_actions_competencies(message: types.Message, state: FSMContext, *args, **kwargs):
     await state.clear()
-    await message.answer(text="Вы вошли в меню <b>Компетенции</b>",
+    await message.answer(text="Вы вошли в меню Компетенции",
                          reply_markup=admin_choosing_actions_competencies)
 
 
 @rt.message(Text('Список компетенций'))
 @admin_command
 async def competencies_list(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
-    competence_list = '\n'.join(list(map(lambda x: f'<b>[ID: {x[0]}]</b> {x[1].capitalize()}', get_competencies_list())))
+    competence_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_competencies_list())))
     await state.set_state(Competence.check_description)
     await message.answer(text=f'Введите ID компетенции для просмотра ее описания. \n'
                               f'Список всех компетенций:\n\n{competence_list}',
@@ -45,11 +45,11 @@ async def check_competence_description(message: types.Message):
     if description:
         competence_name = get_competence_title(message.text.lower())[0]
         desc = ('\n'.join(map(str, description)))
-        await message.answer(text=f'<b>Компетенция:</b> [ID: {message.text.lower()}] {competence_name.capitalize()}\n\n'
-                                  f'<b>Описание:</b> {desc}',
+        await message.answer(text=f'Компетенция: [ID: {message.text.lower()}] {competence_name.capitalize()}\n\n'
+                                  f'Описание: {desc}',
                              reply_markup=admin_create_competence)
     else:
-        await message.answer(text=f'<b>Ошибка:</b> Компетенция с ID: {message.text.lower()} не найдена, повторите ввод')
+        await message.answer(text=f'Ошибка: Компетенция с ID: {message.text.lower()} не найдена, повторите ввод')
 
 
 async def creating_pdf(bot: Bot, message: types.Message):

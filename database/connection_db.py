@@ -132,7 +132,7 @@ def delete_competence(competence_id):
 
 
 def get_competencies_list():
-    return cursor.execute('SELECT competence_id, competence_name FROM competencies').fetchall()
+    return cursor.execute('SELECT competence_id, competence_name FROM competencies ORDER BY competence_name').fetchall()
 
 
 def get_competence_description(competence_id):
@@ -199,7 +199,7 @@ def delete_profile(profile_id):
 
 
 def get_profile_list():
-    return cursor.execute('SELECT profile_id, profile_name FROM profiles').fetchall()
+    return cursor.execute('SELECT profile_id, profile_name FROM profiles ORDER BY profile_name').fetchall()
 
 
 def get_profile_competencies(profile_id):

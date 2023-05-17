@@ -1,6 +1,7 @@
 from loader import rt
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.fsm.context import FSMContext
+from aiogram.types import FSInputFile
 
 from keyboards.reply.user_start_grading import user_start_grading
 
@@ -16,7 +17,7 @@ DEFAULT_GRADE = -1
 
 
 @rt.message(User.connection_code)
-async def user_start_grading_info(message: types.Message, state: FSMContext):
+async def user_start_grading_info(message: types.Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     if data:
         connection_code = data['connection_code']
@@ -29,8 +30,8 @@ async def user_start_grading_info(message: types.Message, state: FSMContext):
         connection_code_int = int(connection_code)
     except ValueError:
         if message.chat.id not in get_admins_list_by_column(0):
-            await message.answer(text=f'<b>Ошибка:</b> Вы ввели неправильный код сессии')
-            await user_start(message=message, state=state)
+            await message.answer(text=f'Ошибка: Вы ввели неправильный код сессии')
+            await user_start(message=message, state=state, bot=bot)
         return
 
     if connection_code_int in get_session_info(3):
@@ -49,13 +50,15 @@ async def user_start_grading_info(message: types.Message, state: FSMContext):
                                   user_id=user_id,
                                   grade=DEFAULT_GRADE)
 
-        competence_title = '\n'.join(list(map(lambda x: f'— <b>[ID: {get_competence_id(x[0])[0]}]</b> {x[0].capitalize()}', competencies_list_name)))
+        competence_title = '\n'.join(list(map(lambda x: f'— [ID: {get_competence_id(x[0])[0]}] {x[0].capitalize()}', competencies_list_name)))
         await message.answer(text=f'Информация о кандидате:\n\n'
-                                  f'<b>Имя кандидата:</b> {get_user_session_info(1, connection_code)[0].title()}\n'
-                                  f'<b>Профиль:</b> {get_user_session_info(2, connection_code)[0].capitalize()}\n'
-                                  f'<b>Компетенции входящие в профиль:</b>\n'
+                                  f'Имя кандидата: {get_user_session_info(1, connection_code)[0].title()}\n'
+                                  f'Профиль: {get_user_session_info(2, connection_code)[0].capitalize()}\n'
+                                  f'Компетенции входящие в профиль:\n'
                                   f'{competence_title}\n',
                              reply_markup=user_start_grading)
+
+        await bot.send_document(chat_id=message.chat.id, document=FSInputFile(r"photo\manual.jpg"))
     else:
         await message.answer(text=f'Код указан неверно')
-        await user_start(message, state)
+        await user_start(message=message, state=state, bot=bot)

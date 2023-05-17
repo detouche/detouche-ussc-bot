@@ -1,8 +1,6 @@
 from . import user_connection
 from . import admin_connection
 from . import user_start_grading
-from . import user_end_grading
-from . import confirmation
 from . import admin_create_session
 from . import admin_successful_creation
 from . import admin_choosing_actions_competencies
@@ -13,6 +11,5 @@ from . import admin_choosing_actions_profile
 from . import admin_delete_profile
 from . import admin_change_profile
 from . import admin_create_profile
-from . import admin_successful_create_profile
 from . import main_admin_delete_or_add_admin
 from . import main_admin_connection
