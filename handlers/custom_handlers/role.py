@@ -1,7 +1,7 @@
 import os
 
 from loader import rt
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
@@ -19,7 +19,7 @@ MAIN_ADMINS = list(map(int, os.getenv("MAIN_ADMINS").split()))
 
 
 @rt.message(Command("start"))
-async def get_role(message: types.Message, state: FSMContext):
+async def get_role(message: types.Message, state: FSMContext, bot: Bot):
     await message.answer(text=f'Ваш TelegramID: {message.chat.id}')
     customer_id = message.chat.id
 
@@ -33,9 +33,9 @@ async def get_role(message: types.Message, state: FSMContext):
     else:
         await state.clear()
         if len(message.text.split()) == 2 and "start" in message.text:
-            await user_start(message, state, message.text.split()[1])
+            await user_start(message=message, state=state, bot=bot, url_code=message.text.split()[1])
         else:
-            await user_start(message, state)
+            await user_start(message=message, state=state, bot=bot)
 
 
 def admin_command(func):

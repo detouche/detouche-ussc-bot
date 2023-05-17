@@ -44,6 +44,7 @@ async def delete_profile_end(message: types.Message, state: FSMContext):
 @rt.callback_query(Text('confirm_delete_profile'))
 async def confirmation_delete(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
+    await callback.message.delete()
     profile_name = get_profile_name(data['delete'])
     delete_profile(profile_id=data['delete'])
     await callback.message.answer(text=f'Профиль [ID: {data["delete"]}] '

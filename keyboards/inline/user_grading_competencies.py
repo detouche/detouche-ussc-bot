@@ -21,6 +21,9 @@ async def user_grading_get_keyboard(message: Message):
                                        callback_data=UserGrading(action="assessment",
                                                                  competence_id=competence_id).pack())]
         buttons.append(button)
+    empty_button = [InlineKeyboardButton(text=f' ',
+                                         callback_data='empty')]
+    buttons.append(empty_button)
     stop_button = [InlineKeyboardButton(text=f'Закончить оценивание',
                                         callback_data='stop_grading')]
     buttons.append(stop_button)

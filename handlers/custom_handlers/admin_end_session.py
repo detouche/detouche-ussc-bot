@@ -24,13 +24,13 @@ WKHTMLTOPDF_PATH = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 # @admin_command
 @rt.message(Text('Завершить сессию'))
 @admin_command
-async def end_session(message: Message, state: FSMContext, *args, **kwargs):
+async def end_session(message: Message, state: FSMContext, bot: Bot, *args, **kwargs):
     if message.chat.id in get_admins_list_by_column(0) or message.chat.id in MAIN_ADMINS:
         await message.answer(text=f'Вы уверены?',
                              reply_markup=get_keyboard_confirmation_delete())
     else:
         await message.answer(text=f'Вы не являетесь администратором')
-        await get_role(message=message, state=state)
+        await get_role(message=message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('confirmation_delete_session'))
@@ -75,7 +75,7 @@ async def confirmation_delete_session(callback: CallbackQuery, state: FSMContext
                          profile_name=profile_name)
 
     delete_session(admin_id=callback.from_user.id)
-    await get_role(message=callback.message, state=state)
+    await get_role(message=callback.message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('cancel_delete_session'))

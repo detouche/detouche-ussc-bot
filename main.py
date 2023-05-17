@@ -1,13 +1,22 @@
 from loader import bot, rt
 import handlers  # noqa
-from utils.set_bot_commands import set_default_commands
-from aiogram import Dispatcher
 import asyncio
+
+from aiogram import Dispatcher
+from aiogram.types import BotCommand
+
+
+async def set_default_commands():
+    bot_commands = [
+        BotCommand(command="/start", description="Запуск бота")
+    ]
+    await bot.set_my_commands(bot_commands)
 
 
 async def main():
     dp = Dispatcher()
     dp.include_router(rt)
+    dp.startup.register(set_default_commands)
     await dp.start_polling(bot)
 
 

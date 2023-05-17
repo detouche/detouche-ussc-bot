@@ -1,6 +1,7 @@
 from loader import rt
-from aiogram import types
+from aiogram import types, Bot
 from aiogram.fsm.context import FSMContext
+from aiogram.types import FSInputFile
 
 from keyboards.reply.user_start_grading import user_start_grading
 
@@ -16,7 +17,7 @@ DEFAULT_GRADE = -1
 
 
 @rt.message(User.connection_code)
-async def user_start_grading_info(message: types.Message, state: FSMContext):
+async def user_start_grading_info(message: types.Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     if data:
         connection_code = data['connection_code']
@@ -30,7 +31,7 @@ async def user_start_grading_info(message: types.Message, state: FSMContext):
     except ValueError:
         if message.chat.id not in get_admins_list_by_column(0):
             await message.answer(text=f'Ошибка: Вы ввели неправильный код сессии')
-            await user_start(message=message, state=state)
+            await user_start(message=message, state=state, bot=bot)
         return
 
     if connection_code_int in get_session_info(3):
@@ -56,6 +57,8 @@ async def user_start_grading_info(message: types.Message, state: FSMContext):
                                   f'Компетенции входящие в профиль:\n'
                                   f'{competence_title}\n',
                              reply_markup=user_start_grading)
+
+        await bot.send_document(chat_id=message.chat.id, document=FSInputFile(r"photo\manual.jpg"))
     else:
         await message.answer(text=f'Код указан неверно')
-        await user_start(message, state)
+        await user_start(message=message, state=state, bot=bot)
