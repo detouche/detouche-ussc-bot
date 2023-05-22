@@ -1,11 +1,11 @@
-![detouche-logo](https://github.com/detouche/detouche-ussc-bot/assets/91479557/607fb8a7-22d3-4166-88ac-a0c477282f6a)
+![image](https://github.com/detouche/detouche-ussc-bot/assets/91479557/b66e81be-3499-4df7-b935-647d685481c7)
 
 
 <h1 align="center">Interview Bot by detouche</h1>
 
 ### Чат-бот для экспресс-оценки управленческих компетенций на собеседовании в компании ООО “УЦСБ”. ###
 
-![image](https://github.com/detouche/detouche-ussc-bot/assets/91479557/ff6bac98-a751-4d53-8871-e6335a7329fa)
+![image](https://github.com/detouche/detouche-ussc-bot/assets/91479557/0823a9e3-8fa2-4769-9949-1c70645ba633)
 
 
 <h2 align="center">Оглавление</h2>
@@ -169,4 +169,4 @@ MAIN_ADMINS = "ID_Первого_Администратора ID_Второго_
 
 :newspaper: VK: [detouche](https://vk.com/detouche)
 
-![detouche-logo](https://github.com/detouche/detouche-ussc-bot/assets/91479557/607fb8a7-22d3-4166-88ac-a0c477282f6a)
+![image](https://github.com/detouche/detouche-ussc-bot/assets/91479557/8dd1bc03-8b64-46ff-93ad-156d1fa4d5e8)
