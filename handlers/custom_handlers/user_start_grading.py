@@ -1,7 +1,6 @@
 from loader import rt
 from aiogram import types, Bot
 from aiogram.fsm.context import FSMContext
-from aiogram.types import FSInputFile
 
 from keyboards.reply.user_start_grading import user_start_grading
 
@@ -9,7 +8,7 @@ from handlers.custom_handlers.user_connection import user_start
 
 from database.connection_db import get_session_info, get_candidate_name, get_profile_name_session, \
     user_session_info, get_user_session_info, user_has_active_session, get_comp_name_session, get_comp_desc_session, \
-    get_admins_list_by_column, get_competence_id
+    get_admins_list_by_column
 
 from states.user_info import User
 
@@ -50,15 +49,14 @@ async def user_start_grading_info(message: types.Message, state: FSMContext, bot
                                   user_id=user_id,
                                   grade=DEFAULT_GRADE)
 
-        competence_title = '\n'.join(list(map(lambda x: f'— [ID: {get_competence_id(x[0])[0]}] {x[0].capitalize()}', competencies_list_name)))
+        competence_title = '\n'.join(list(map(lambda x: f'— {x[0].capitalize()}', competencies_list_name)))
         await message.answer(text=f'Информация о кандидате:\n\n'
                                   f'Имя кандидата: {get_user_session_info(1, connection_code)[0].title()}\n'
-                                  f'Профиль: {get_user_session_info(2, connection_code)[0].capitalize()}\n'
-                                  f'Компетенции входящие в профиль:\n'
-                                  f'{competence_title}\n',
+                                  f'Оцениваемый профиль: {get_user_session_info(2, connection_code)[0].capitalize()}\n'
+                                  f'Компетенции входящие в оцениваемый профиль:\n'
+                                  f'{competence_title}\n\n'
+                                  f'Для начала оценки, нажмите на кнопку "Приступить к оценке"\n',
                              reply_markup=user_start_grading)
-
-        await bot.send_document(chat_id=message.chat.id, document=FSInputFile(r"photo\manual.jpg"))
     else:
         await message.answer(text=f'Код указан неверно')
         await user_start(message=message, state=state, bot=bot)

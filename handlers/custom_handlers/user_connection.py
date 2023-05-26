@@ -2,6 +2,7 @@ from loader import rt
 from aiogram import types, Bot
 from aiogram.filters import Text
 from aiogram.fsm.context import FSMContext
+from aiogram.types import FSInputFile
 
 from keyboards.reply.user_connection import user_connection
 
@@ -19,7 +20,7 @@ async def user_start(message: types.Message, state: FSMContext, bot: Bot, url_co
     authorized = auth_validation(user_id)
     if authorized:
         if user_has_active_session(user_id):
-            await message.answer(text=f'Предупреждение: Вы не закончили оценивание прошлой сессии')
+            await message.answer(text=f'Предупреждение: Вы не закончили оценку прошлой сессии')
             await state.set_state(User.connection_code)
             await state.update_data(connection_code=get_session_code(user_id))
 
@@ -31,11 +32,12 @@ async def user_start(message: types.Message, state: FSMContext, bot: Bot, url_co
                 await message.answer(text=f'Здравствуйте, {user_name.title()}')
                 await message.answer(text=f'Введите код сессии или перейдите по ссылке от администратора',
                                      reply_markup=user_connection)
+                await bot.send_document(chat_id=message.chat.id, document=FSInputFile(r"photo\manual.jpg"))
                 await state.set_state(User.connection_code)
             else:
+                await bot.send_document(chat_id=message.chat.id, document=FSInputFile(r"photo\manual.jpg"))
                 await state.set_state(User.connection_code)
                 await state.update_data(connection_code=url_code)
-
                 from handlers.custom_handlers.user_start_grading import user_start_grading_info
                 await user_start_grading_info(message, state, bot)
     else:

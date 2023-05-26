@@ -21,7 +21,7 @@ from handlers.custom_handlers.role import admin_command
 async def delete_profile_start(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     await state.set_state(Profile.delete)
     data_profile_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_profile_list())))
-    await message.answer(text=f'Введите ID профиля, который необходимо удалить\n'
+    await message.answer(text=f'Введите ID профиля (только цифру), который необходимо удалить\n'
                               f'Список всех профилей:\n\n{data_profile_list}',
                          reply_markup=admin_delete_profile)
     await creating_pdf(bot=bot, message=message)

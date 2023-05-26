@@ -23,7 +23,7 @@ from handlers.custom_handlers.role import admin_command
 async def delete_competencies(message: types.Message, state: FSMContext, bot: Bot, *args, **kwargs):
     await state.set_state(Competence.delete)
     comp_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_competencies_list())))
-    await message.answer(text=f'Введите ID компетенции, которую хотите удалить\n'
+    await message.answer(text=f'Введите ID компетенции (только цифру), которую хотите удалить\n'
                               f'Список всех компетенций:\n\n{comp_list}',
                          reply_markup=admin_delete_competence)
     await creating_pdf(bot=bot, message=message)

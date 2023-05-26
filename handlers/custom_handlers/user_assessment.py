@@ -16,7 +16,7 @@ from database.connection_db import get_current_comp_desc_session, get_current_co
     get_current_comp_grade_session, transform_grade_current_comp, active_session, get_session_code
 
 
-@rt.message(Text("Приступить к оцениванию"))
+@rt.message(Text("Приступить к оценке"))
 @user_command
 async def user_grading_process(message: Message, state: FSMContext, bot: Bot, *args, **kwargs):
     if active_session(user_id=message.chat.id):
@@ -35,7 +35,7 @@ async def user_grading_info(callback: CallbackQuery, callback_data: UserGrading,
     competence_grade = get_current_comp_grade_session(competence_id=competence_id)
     competence_grade = grade_text_converter(grade=int(competence_grade))
     await callback.message.edit_text(text=f"Название компетенции: {competence_name.capitalize()}\n"
-                                          f"Описание компетенции: {competence_desc.capitalize()}\n\n"
+                                          f"Описание компетенции: {competence_desc}\n\n"
                                           f"Текущая оценка: {competence_grade}",
                                      reply_markup=user_grade_get_keyboard())
     await CompetenceSessionInfo.set_data(state, data={'competence_id': competence_id})
@@ -57,9 +57,9 @@ async def delete_admin_finish(callback: CallbackQuery, state: FSMContext, bot: B
     await callback.message.delete()
     await state.clear()
     if active_session(user_id=callback.message.chat.id):
-        await callback.message.answer(text=f'Проверка кандидата завершена!\n'
-                                           f'Вы можете изменить поставленные оценки, нажав '
-                                           f'Приступить к оцениванию')
+        await callback.message.answer(text=f'Проверка кандидата завершена, дождитесь окончания сессии администратором.\n'
+                                           f'Или вы можете изменить поставленные оценки, нажав '
+                                           f'"Приступить к оценке"')
         user_id = callback.message.chat.id
         connection_code = get_session_code(user_id=user_id)
         await state.set_state(User.connection_code)
