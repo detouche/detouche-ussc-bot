@@ -41,7 +41,7 @@ async def create_competence_description(message: types.Message, state: FSMContex
     await state.update_data(description=message.text)
     competence_data = await state.get_data()
     await state.clear()
-    add_competence(cometence_name=competence_data['title'], competence_description=competence_data['description'])
+    add_competence(competence_name=competence_data['title'], competence_description=competence_data['description'])
     await message.answer(text=f'Вы успешно создали компетенцию\n\n'
                               f'Название: {competence_data["title"].capitalize()}\n'
                               f'Описание: {competence_data["description"]}',

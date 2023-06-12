@@ -7,18 +7,15 @@ from aiogram.types import CallbackQuery
 from keyboards.reply.admin_change_profile import admin_change_profile
 from keyboards.inline.change_profile import change_profile
 from keyboards.inline.confirmation_change_desc_title import confirmation_change_desc_title
-from keyboards.inline.end_adding_competencies import change_profile_end_adding_competencies, \
-    end_change_profile_end_adding_competencies
-from keyboards.inline.confirmation_end_adding_competence import confirmation_end_adding_competence
 
 from database.connection_db import get_profile_list, check_profile, change_profile_title, add_competence_in_profile, \
-    get_competencies_list, remove_competence_from_profile, competencies_in_profile, get_competence_title, \
+    get_competencies_list, competencies_in_profile, get_competence_title, \
     delete_competence_from_profile, get_profile_name, get_profile_competencies, competence_in_profile
 
 from states.profiles import Profile
 
 from handlers.custom_handlers.role import admin_command
-from handlers.custom_handlers.admin_choosing_actions_profile import choosing_actions_profile, creating_pdf
+from handlers.custom_handlers.admin_choosing_actions_profile import creating_pdf
 from handlers.custom_handlers.admin_choosing_actions_competencies import creating_pdf as creating_pdf_competencies
 
 
@@ -55,7 +52,11 @@ async def get_changeable_description_id(message: types.Message, state: FSMContex
 @rt.callback_query(Text('change_desc_title'))
 async def change_desc_title_start(callback: CallbackQuery, state: FSMContext):
     await state.set_state(Profile.change_title)
-    await callback.message.answer(text='Введите новое название для профиля')
+    data = await state.get_data()
+    profile_id = data['changeable_id']
+    profile_name = get_profile_name(profile_id).capitalize()
+    await callback.message.answer(text=f'Введите новое название для профиля:\n\n'
+                                       f'[ID: {profile_id}] {profile_name}')
 
 
 @rt.message(Profile.change_title)
@@ -99,50 +100,48 @@ async def change_desc_title_false(callback: CallbackQuery, state: FSMContext, bo
 @rt.callback_query(Text('add_comp_from_desc'))
 async def add_competence_from_profile(callback: CallbackQuery, state: FSMContext, bot: Bot):
     comp_list = '\n'.join(list(map(lambda x: f'[ID: {x[0]}] {x[1].capitalize()}', get_competencies_list())))
-    await callback.message.answer(text=f'Введите ID компетенции, которую хотите добавить в профиль\n'
+    data = await state.get_data()
+    profile_id = data['changeable_id']
+    profile_title = get_profile_name(profile_id).capitalize()
+    await callback.message.answer(text=f'Через запятую введите ID компетенций (только цифры), '
+                                       f'которые хотите добавить в профиль "{profile_title}"\n'
                                        f'Список компетенций:\n\n'
-                                       f'{comp_list}')
+                                       f'{comp_list}\n\n'
+                                       f'Рекомендуется не более 5-7 компетенций в профиле\n')
     await state.set_state(Profile.add_competence)
     await creating_pdf_competencies(bot=bot, message=callback.message)
 
 
 @rt.message(Profile.add_competence)
-async def add_competence_from_profile_start(message: types.Message, state: FSMContext):
+async def add_competence_from_profile_start(message: types.Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     profile_id = data['changeable_id']
-    await state.update_data(add_competence=message.text)
-    if add_competence_in_profile(competence_id=message.text, profile_id=profile_id):
-        await message.answer(text=f"Компетенция c ID: {message.text} успешно добавлена. \n"
-                                  f"Введите ID Следующей компетенции, которую хотите добавить",
-                             reply_markup=change_profile_end_adding_competencies())
-    elif competence_in_profile(profile_id=profile_id, competence_id=message.text):
-        await message.answer(text=f'Ошибка: Компетенция с [ID: {message.text.lower()}] '
-                                  f'уже добавлена, удалите ее или продолжите ввод',
-                             reply_markup=change_profile_end_adding_competencies())
-    else:
-        await message.answer(text=f"Ошибка: Компетенция с [ID: {message.text.lower()}] "
-                                  f"не найдена, повторите ввод",
-                             reply_markup=end_change_profile_end_adding_competencies())
-
-
-@rt.callback_query(Text('change_profile_end_adding_competencies'))
-async def end_add_competencies_profile(callback: CallbackQuery, state: FSMContext, bot: Bot):
+    competencies_id = [int(competence_id) for competence_id in message.text.split(',') if competence_id.isdigit()]
+    added_competencies_id = []
+    already_competencies_id = []
+    missing_competencies_id = []
+    for competence_id in competencies_id:
+        if add_competence_in_profile(competence_id=competence_id, profile_id=profile_id):
+            added_competencies_id.append(competence_id)
+        elif competence_in_profile(competence_id=competence_id, profile_id=profile_id):
+            already_competencies_id.append(competence_id)
+        else:
+            missing_competencies_id.append(competence_id)
+    added_competencies_list = '...' if len(added_competencies_id) == 0 \
+        else "\n".join(list(map(lambda x: f"[ID: {x}] {get_competence_title(x)[0].capitalize()}", added_competencies_id)))
+    already_competencies_list = '...' if len(already_competencies_id) == 0 \
+        else "\n".join(list(map(lambda x: f"[ID: {x}] {get_competence_title(x)[0].capitalize()}", already_competencies_id)))
+    missing_competencies_list = '...' if len(missing_competencies_id) == 0 \
+        else ", ".join(list(map(lambda x: f"[ID: {x}]", missing_competencies_id)))
+    profile_title = get_profile_name(profile_id).capitalize()
+    await message.answer(text=f'В профиль "{profile_title}" добавлены компетенции:'
+                              f'\n{added_competencies_list}\n\n'
+                              f'В профиле "{profile_title}" уже имеются следующие компетенции, поэтому они не добавлены:'
+                              f'\n{already_competencies_list}\n\n'
+                              f'Введены несуществующие ID компетенций:'
+                              f'\n{missing_competencies_list}')
     await state.clear()
-    await callback.message.delete()
-    await callback.message.answer(text='Компетенции успешно добавлены в профиль')
-    await change_profiles(message=callback.message, state=state, bot=bot)
-
-
-@rt.callback_query(Text('change_profile_delete_competencies'))
-async def delete_competence_profile(callback: CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    profile_id = data['changeable_id']
-    competence_id = data['add_competence']
-    remove_competence_from_profile(competence_id=competence_id, profile_id=profile_id)
-    await callback.message.delete()
-    await callback.message.answer(text=f'Компетенция [ID: {competence_id}] {get_competence_title(competence_id)[0].capitalize()} '
-                                       f'удалена из профиля, продолжайте ввод',
-                                  reply_markup=end_change_profile_end_adding_competencies())
+    await change_profiles(message=message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('delete_comp_from_desc'))
@@ -152,31 +151,40 @@ async def delete_competence_from_profile_start(callback: CallbackQuery, state: F
     data_list = competencies_in_profile(profile_id)
     title_list = list(map(lambda x: get_competence_title(x), data_list))
     competence_list = '\n'.join(list(map(lambda x, y: f'[ID: {y}] {x[0].capitalize()}', title_list, data_list)))
-    await callback.message.answer(text=f'Введите ID компетенции, которую хотите удалить из профиля '
-                                       f'{get_profile_name(profile_id).capitalize()}\n'
+    await callback.message.answer(text=f'Через запятую введите ID компетенций (только цифры), '
+                                       f'которые хотите удалить из профиля '
+                                       f'"{get_profile_name(profile_id).capitalize()}"\n'
                                        f'Список компетенций в профиле:\n\n'
                                        f'{competence_list}')
     await state.set_state(Profile.delete_competence)
 
 
 @rt.message(Profile.delete_competence)
-async def delete_competence_from_profile_end(message: types.Message, state: FSMContext):
+async def delete_competence_from_profile_end(message: types.Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     profile_id = data['changeable_id']
-    if delete_competence_from_profile(competence_id=message.text, profile_id=profile_id):
-        await message.answer(text=f'Компетенция [ID: {message.text}] {get_competence_title(message.text)[0].capitalize()} '
-                                  f'успешно удалена из профиля, продолжайте ввод',
-                             reply_markup=confirmation_end_adding_competence())
-    else:
-        await message.answer(text=f'Ошибка: Компетенции с [ID: {message.text.lower()}] '
-                                  f'нет в профиле, либо был введен неверный ID, повторите ввод')
+    competencies_id = [int(competence_id) for competence_id in message.text.split(',') if competence_id.isdigit()]
+    delete_competencies_id = []
+    missing_competencies_id = []
+    for competence_id in competencies_id:
+        if delete_competence_from_profile(competence_id=competence_id, profile_id=profile_id):
+            delete_competencies_id.append(competence_id)
+        else:
+            missing_competencies_id.append(competence_id)
 
-
-@rt.callback_query(Text('end_add_competence_in_profile'))
-async def end_add_comp_in_profile(callback: CallbackQuery, state: FSMContext, bot: Bot):
+    delete_competencies_list = '...' if len(delete_competencies_id) == 0 \
+        else "\n".join(
+        list(map(lambda x: f"[ID: {x}] {get_competence_title(x)[0].capitalize()}", delete_competencies_id)))
+    missing_competencies_list = '...' if len(missing_competencies_id) == 0 \
+        else ", ".join(list(map(lambda x: f"[ID: {x}]", missing_competencies_id)))
+    profile_title = get_profile_name(profile_id).capitalize()
+    await state.update_data(competencies_list=delete_competencies_list)
+    await message.answer(text=f'Из профилья "{profile_title}" удалены компетенции:'
+                              f'\n{delete_competencies_list}\n\n'
+                              f'Введены несуществующие ID компетенций:'
+                              f'\n{missing_competencies_list}')
     await state.clear()
-    await choosing_actions_profile(message=callback.message, state=state)
-    await change_profiles(message=callback.message, state=state, bot=bot)
+    await change_profiles(message=message, state=state, bot=bot)
 
 
 @rt.callback_query(Text('select_any_profile'))

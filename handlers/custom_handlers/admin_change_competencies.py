@@ -39,7 +39,7 @@ async def get_changeable_competence_id(message: types.Message, state: FSMContext
         await state.update_data(changeable_id=message.text)
         await message.answer(text=f'Что хотите изменить в компетенции?\n\n'
                                   f'Название: {competence_name.capitalize()}\n'
-                                  f'Описание: {competence_description.capitalize()}',
+                                  f'Описание: {competence_description}',
                              reply_markup=change_competence())
     else:
         await message.answer(text=f'Ошибка: Компетенция с ID: {message.text.lower()} не найдена, повторите ввод')
@@ -106,13 +106,13 @@ async def change_competence_description_start(callback: CallbackQuery, state: FS
 async def change_competence_description_confirmation(message: types.Message, state: FSMContext):
     data = await state.get_data()
     await state.clear()
-    await state.update_data(change_description=message.text.lower())
+    await state.update_data(change_description=message.text)
     await state.update_data(changeable_id=data['changeable_id'])
     competence_id = data['changeable_id']
     competence_description = get_competence_description(competence_id=competence_id)[0]
     await message.answer(text=f'Вы уверены, что хотите изменить описание компетенции?\n\n'
-                              f'Старое описание: {competence_description.capitalize()}\n'
-                              f'Новое описание: {message.text.capitalize()}',
+                              f'Старое описание: {competence_description}\n'
+                              f'Новое описание: {message.text}',
                          reply_markup=confirmation_change_competence_desc())
 
 

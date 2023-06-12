@@ -17,14 +17,11 @@ async def user_grading_get_keyboard(message: Message):
     await message.answer(text=f'Информация о компетенциях:\n\n{comp_info}')
     for i in range(len(comp_list_name)):
         competence_id = get_id_comp_session(comp_list_name[i][0], current_id)
-        button = [InlineKeyboardButton(text=f"{comp_list_name[i][0]}",
+        button = [InlineKeyboardButton(text=f"{comp_list_name[i][0].capitalize()}",
                                        callback_data=UserGrading(action="assessment",
                                                                  competence_id=competence_id).pack())]
         buttons.append(button)
-    empty_button = [InlineKeyboardButton(text=f' ',
-                                         callback_data='empty')]
-    buttons.append(empty_button)
-    stop_button = [InlineKeyboardButton(text=f'Закончить оценивание',
+    stop_button = [InlineKeyboardButton(text=f'Закончить оценку',
                                         callback_data='stop_grading')]
     buttons.append(stop_button)
     keyboard = InlineKeyboardMarkup(inline_keyboard=buttons)
